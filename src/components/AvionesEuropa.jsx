@@ -5,7 +5,7 @@ function PIA() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch('https://api.adsb.lol/v2/pia')  // Use PIA endpoint
+    fetch('/api/pia')  // Use PIA endpoint
       .then(response => {
         if (!response.ok) {
           throw new Error('Error en la solicitud: ' + response.statusText);
