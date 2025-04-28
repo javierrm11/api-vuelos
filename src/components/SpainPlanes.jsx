@@ -5,10 +5,10 @@ function SpainPlanes() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch('/api/espana') // Usamos el endpoint de España
+    fetch('/api/SpainPlanes') // Usamos el endpoint de España
       .then(response => {
         if (!response.ok) {
-          throw new Error('Error en la solicitud: ' + response.statusText);
+          throw new Error('xError en la solicitud: ' + response.statusText);
         }
         return response.json();
       })
