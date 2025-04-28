@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 
-function SpainPlanes() {
+function EuropaPlanes() {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
 
   const fetchData = () => {
-    fetch('/api/SpainPlanes')
+    fetch('/api/EuropaPlanes')
       .then(response => {
         if (!response.ok) {
           throw new Error('Error en la solicitud: ' + response.statusText);
@@ -44,21 +44,21 @@ function SpainPlanes() {
   return (
     <div>
       <h2>Avión más rápido</h2>
-      <p>Hex: {data.masRapido.hex}</p>
-      <p>Velocidad: {data.masRapido.velocidad} km/h</p>
+      <p>Hex: {data.masRapidoDeEuropa.hex}</p>
+      <p>Velocidad: {data.masRapidoDeEuropa.velocidad} km/h</p>
 
       <h2>Avión más lento</h2>
-      <p>Hex: {data.masLento.hex}</p>
-      <p>Velocidad: {data.masLento.velocidad} km/h</p>
+      <p>Hex: {data.masLentoDeEuropa.hex}</p>
+      <p>Velocidad: {data.masLentoDeEuropa.velocidad} km/h</p>
 
       <h2>Todos los aviones detectados</h2>
       <ul>
-        {data.aviones.map((hex, index) => (
-          <li key={index}>{hex}</li>
+        {data.todosAviones.map((avion, index) => (
+          <li key={index}>{avion}</li>
         ))}
       </ul>
     </div>
   );
 }
 
-export default SpainPlanes;
+export default EuropaPlanes;
