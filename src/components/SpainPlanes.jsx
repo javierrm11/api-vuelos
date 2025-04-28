@@ -7,7 +7,7 @@ function SpainPlanes() {
 
   const fetchData = () => {
     setUpdating(true);
-    fetch('/api/espana')
+    fetch('/api/SpainPlanes')
       .then(response => {
         if (!response.ok) {
           throw new Error('Error en la solicitud: ' + response.statusText);
