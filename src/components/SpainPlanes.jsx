@@ -13,11 +13,11 @@ function SpainPlanes() {
         return response.json();
       })
       .then(newData => {
-        // Verificar si los datos son diferentes antes de actualizar el estado
-        if (JSON.stringify(newData) !== JSON.stringify(data)) {
+        // Actualizar siempre si data es null o si los datos son diferentes
+        if (!data || JSON.stringify(newData) !== JSON.stringify(data)) {
           setData(newData);
           const currentTime = new Date().toLocaleTimeString();
-          console.log(`Actualizado a las ${currentTime}`);
+          console.log(`Datos actualizados a las ${currentTime}`);
         }
         setError(null);
       })
