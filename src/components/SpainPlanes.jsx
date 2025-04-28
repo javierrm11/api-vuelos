@@ -3,10 +3,8 @@ import { useEffect, useState } from 'react';
 function SpainPlanes() {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
-  const [updating, setUpdating] = useState(false); // Nuevo: saber si estamos actualizando
 
   const fetchData = () => {
-    setUpdating(true);
     fetch('/api/SpainPlane')
       .then(response => {
         if (!response.ok) {
@@ -15,14 +13,16 @@ function SpainPlanes() {
         return response.json();
       })
       .then(newData => {
-        setData(newData);
+        // Verificar si los datos son diferentes antes de actualizar el estado
+        if (JSON.stringify(newData) !== JSON.stringify(data)) {
+          setData(newData);
+          const currentTime = new Date().toLocaleTimeString();
+          console.log(`Actualizado a las ${currentTime}`);
+        }
         setError(null);
       })
       .catch(error => {
         setError(error.message);
-      })
-      .finally(() => {
-        setUpdating(false); // Terminó de actualizar
       });
   };
 
@@ -31,21 +31,19 @@ function SpainPlanes() {
     const intervalId = setInterval(fetchData, 10000); // Luego cada 10 segundos
 
     return () => clearInterval(intervalId); // Limpiar intervalo al desmontar
-  }, []);
+  }, []); // Dependencias vacías para ejecutar solo al montar
 
   if (error) {
     return <div>Error: {error}</div>;
   }
 
   if (!data) {
-    return <div>Cargando datos iniciales...</div>; // Solo en primera carga
+    return <div>Cargando datos iniciales...</div>;
   }
 
   return (
     <div>
       <h1>Aviones sobre España</h1>
-
-      {updating && <p>Actualizando datos...</p>} {/* Pequeño mensaje mientras refresca */}
 
       <h2>Avión más rápido</h2>
       <p>Hex: {data.masRapido.hex}</p>
