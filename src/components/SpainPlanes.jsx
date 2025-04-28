@@ -5,7 +5,7 @@ function SpainPlanes() {
   const [error, setError] = useState(null);
 
   const fetchData = () => {
-    fetch('/api/SpainPlane')
+    fetch('/api/SpainPlanes')
       .then(response => {
         if (!response.ok) {
           throw new Error('Error en la solicitud: ' + response.statusText);
