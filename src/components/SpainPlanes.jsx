@@ -5,15 +5,21 @@ function SpainPlanes() {
   const [error, setError] = useState(null);
 
   const fetchData = () => {
-    fetch('/api/SpainPlanes') // ojo, aquí corregí a '/api/espana' porque tu endpoint se llama espana.js
+    fetch('/api/SpainPlanes')
       .then(response => {
         if (!response.ok) {
           throw new Error('Error en la solicitud: ' + response.statusText);
         }
         return response.json();
       })
-      .then(data => {
-        setData(data);
+      .then(newData => {
+        // Actualizar siempre si data es null o si los datos son diferentes
+        if (!data || JSON.stringify(newData) !== JSON.stringify(data)) {
+          setData(newData);
+          const currentTime = new Date().toLocaleTimeString();
+          console.log(`Datos actualizados a las ${currentTime}`);
+        }
+        setError(null);
       })
       .catch(error => {
         setError(error.message);
@@ -24,15 +30,15 @@ function SpainPlanes() {
     fetchData(); // Primera carga
     const intervalId = setInterval(fetchData, 10000); // Luego cada 10 segundos
 
-    return () => clearInterval(intervalId); // Limpiar el intervalo cuando se desmonte
-  }, []);
+    return () => clearInterval(intervalId); // Limpiar intervalo al desmontar
+  }, []); // Dependencias vacías para ejecutar solo al montar
 
   if (error) {
     return <div>Error: {error}</div>;
   }
 
   if (!data) {
-    return <div>Cargando datos...</div>;
+    return <div>Cargando datos iniciales...</div>;
   }
 
   return (
