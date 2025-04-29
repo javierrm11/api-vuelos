@@ -1,38 +1,86 @@
 // src/pages/api/espana.js (o en functions)
 
 export async function GET() {
-  return fetch(`https://api.adsb.lol/v2/lat/40.4168/lon/-3.7038/dist/250`)
-    .then(res => res.json())
-    .then(data => {
-      if (!data.ac || data.ac.length === 0) {
-        return new Response(
-          JSON.stringify({ error: "No se encontraron aviones en la zona." }),
-          {
-            status: 404,
-            headers: {
-              'Content-Type': 'application/json',
-              'Access-Control-Allow-Origin': '*',
-            },
-          }
-        );
-      }
+  try {
+    const response = await fetch(`https://api.adsb.lol/v2/lat/40.4168/lon/-3.7038/dist/250`);
+    let data;
 
-      return new Response(JSON.stringify({
+    try {
+      data = await response.json();
+    } catch (error) {
+      return new Response(
+        JSON.stringify({ error: "Error al procesar la respuesta del servidor." }),
+        {
+          status: 500,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+          },
+        }
+      );
+    }
+
+    if (!data.ac || data.ac.length === 0) {
+      return new Response(
+        JSON.stringify({ error: "No se encontraron aviones en la zona." }),
+        {
+          status: 404,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+          },
+        }
+      );
+    }
+
+    const avionesVolando = data.ac.filter(avion => (avion.gs || 0) > 0);
+
+    if (avionesVolando.length === 0) {
+      return new Response(
+        JSON.stringify({ error: "No hay aviones volando en la zona." }),
+        {
+          status: 404,
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+          },
+        }
+      );
+    }
+
+    const masRapido = avionesVolando
+      .map(avion => ({ hex: avion.hex, velocidad: avion.gs }))
+      .sort((a, b) => b.velocidad - a.velocidad)[0];
+
+    const masLento = avionesVolando
+      .map(avion => ({ hex: avion.hex, velocidad: avion.gs }))
+      .sort((a, b) => a.velocidad - b.velocidad)[0];
+
+    return new Response(
+      JSON.stringify({
         pais: "España",
-        aviones: data.ac.map(avion => avion.hex),
-        masRapido: data.ac
-          .map(avion => ({ hex: avion.hex, velocidad: avion.gs || 0 }))
-          .sort((a, b) => b.velocidad - a.velocidad)[0],
-        masLento: data.ac
-          .map(avion => ({ hex: avion.hex, velocidad: avion.gs || 0 }))
-          .sort((a, b) => b.velocidad - a.velocidad)
-          .slice(-1)[0],
-      }), {
+        aviones: avionesVolando.map(avion => avion.hex),
+        masRapido,
+        masLento,
+      }),
+      {
         status: 200,
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*',
         },
-      });
-    });
+      }
+    );
+  } catch (error) {
+    return new Response(
+      JSON.stringify({ error: "Error al realizar la solicitud al servidor." }),
+      {
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+        },
+      }
+    );
+  }
 }
