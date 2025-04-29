@@ -4,6 +4,7 @@ function SpainPlanes() {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
 
+  // Función para obtener los datos
   const fetchData = () => {
     fetch('/api/SpainPlanes')
       .then(response => {
@@ -13,13 +14,10 @@ function SpainPlanes() {
         return response.json();
       })
       .then(newData => {
-        // Actualizar siempre si data es null o si los datos son diferentes
-        if (!data || JSON.stringify(newData) !== JSON.stringify(data)) {
-          setData(newData);
-          const currentTime = new Date().toLocaleTimeString();
-          console.log(`Datos actualizados a las ${currentTime}`);
-        }
+        setData(newData);  // Actualizar los datos siempre
         setError(null);
+        const currentTime = new Date().toLocaleTimeString();
+        console.log(`Datos actualizados a las ${currentTime}`);
       })
       .catch(error => {
         setError(error.message);
@@ -27,11 +25,11 @@ function SpainPlanes() {
   };
 
   useEffect(() => {
-    fetchData(); // Primera carga
-    const intervalId = setInterval(fetchData, 10000); // Luego cada 10 segundos
+    fetchData(); // Cargar datos al iniciar
+    const intervalId = setInterval(fetchData, 10000); // Actualizar cada 10 segundos
 
-    return () => clearInterval(intervalId); // Limpiar intervalo al desmontar
-  }, []); // Dependencias vacías para ejecutar solo al montar
+    return () => clearInterval(intervalId); // Limpiar al desmontar
+  }, []); // Ejecutar solo una vez, al montar
 
   if (error) {
     return <div>Error: {error}</div>;
