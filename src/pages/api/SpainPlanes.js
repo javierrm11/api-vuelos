@@ -1,106 +1,69 @@
+// /src/pages/api/SpainPlanes.js
 export const dynamic = 'force-dynamic';
+
+const defaultHeaders = {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Cache-Control': 'no-cache, no-store, must-revalidate, proxy-revalidate',
+  'Pragma': 'no-cache',
+  'Expires': '0',
+  'Surrogate-Control': 'no-store',
+};
 
 export async function GET() {
   try {
-    const response = await fetch(`https://api.adsb.lol/v2/lat/40.4168/lon/-3.7038/dist/250`);
+    const response = await fetch(
+      `https://api.adsb.lol/v2/lat/40.4168/lon/-3.7038/dist/250`
+    );
     let data;
-
     try {
       data = await response.json();
-    } catch (error) {
+    } catch {
       return new Response(
         JSON.stringify({ error: "Error al procesar la respuesta del servidor." }),
-        {
-          status: 500,
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Cache-Control': 'no-cache, no-store, must-revalidate, proxy-revalidate',
-            'Pragma': 'no-cache',
-            'Expires': '0',
-            'Surrogate-Control': 'no-store',
-          },
-        }
+        { status: 500, headers: defaultHeaders }
       );
     }
 
-    if (!data.ac || data.ac.length === 0) {
+    if (!data.ac?.length) {
       return new Response(
         JSON.stringify({ error: "No se encontraron aviones en la zona." }),
-        {
-          status: 404,
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Cache-Control': 'no-cache, no-store, must-revalidate, proxy-revalidate',
-            'Pragma': 'no-cache',
-            'Expires': '0',
-            'Surrogate-Control': 'no-store',
-          },
-        }
+        { status: 404, headers: defaultHeaders }
       );
     }
 
-    const avionesVolando = data.ac.filter(avion => (avion.gs || 0) > 0);
-
-    if (avionesVolando.length === 0) {
+    const avionesVolando = data.ac.filter(av => (av.gs || 0) > 0);
+    if (!avionesVolando.length) {
       return new Response(
         JSON.stringify({ error: "No hay aviones volando en la zona." }),
-        {
-          status: 404,
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Cache-Control': 'no-cache, no-store, must-revalidate, proxy-revalidate',
-            'Pragma': 'no-cache',
-            'Expires': '0',
-            'Surrogate-Control': 'no-store',
-          },
-        }
+        { status: 404, headers: defaultHeaders }
       );
     }
 
-    const masRapido = avionesVolando
-      .map(avion => ({ hex: avion.hex, velocidad: avion.gs }))
-      .sort((a, b) => b.velocidad - a.velocidad)[0];
+    const masRapido = avionesVolando.reduce((a, b) => (b.gs > a.gs ? b : a), avionesVolando[0]);
+    const masLento  = avionesVolando.reduce((a, b) => (b.gs < a.gs ? b : a), avionesVolando[0]);
 
-    const masLento = avionesVolando
-      .map(avion => ({ hex: avion.hex, velocidad: avion.gs }))
-      .sort((a, b) => a.velocidad - b.velocidad)[0];
+    const avionesHex  = avionesVolando.map(av => av.hex);
+    const avionesInfo = avionesVolando.map(av => ({
+      hex: av.hex,
+      gs: av.gs,
+      alt_baro: av.alt_baro
+    }));
 
     return new Response(
       JSON.stringify({
         pais: "España",
-        aviones: avionesVolando.map(avion => avion.hex),
-        masRapido,
-        masLento,
+        masRapido: { hex: masRapido.hex, velocidad: masRapido.gs },
+        masLento:  { hex: masLento.hex,  velocidad: masLento.gs },
+        aviones:        avionesHex,
+        avionesInfo     // <-- incluye gs y alt_baro
       }),
-      {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-          'Cache-Control': 'no-cache, no-store, must-revalidate, proxy-revalidate',
-          'Pragma': 'no-cache',
-          'Expires': '0',
-          'Surrogate-Control': 'no-store',
-        },
-      }
+      { status: 200, headers: defaultHeaders }
     );
   } catch (error) {
     return new Response(
       JSON.stringify({ error: "Error al realizar la solicitud al servidor." }),
-      {
-        status: 500,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-          'Cache-Control': 'no-cache, no-store, must-revalidate, proxy-revalidate',
-          'Pragma': 'no-cache',
-          'Expires': '0',
-          'Surrogate-Control': 'no-store',
-        },
-      }
+      { status: 500, headers: defaultHeaders }
     );
   }
 }
