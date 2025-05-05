@@ -43,7 +43,7 @@ export async function GET() {
     const masRapido = avionesVolando.reduce((a, b) => (b.gs > a.gs ? b : a), avionesVolando[0]);
     const masLento  = avionesVolando.reduce((a, b) => (b.gs < a.gs ? b : a), avionesVolando[0]);
 
-    const avionesHex  = avionesVolando.map(av => av.hex);
+    const avionesHexT = avionesVolando.map(av => ({ hex: av.hex, t: av.t }));
     const avionesInfo = avionesVolando.map(av => ({
       hex: av.hex,
       gs: av.gs,
@@ -55,7 +55,7 @@ export async function GET() {
         pais: "España",
         masRapido: { hex: masRapido.hex, velocidad: masRapido.gs },
         masLento:  { hex: masLento.hex,  velocidad: masLento.gs },
-        aviones:        avionesHex,
+        aviones:        avionesHexT,
         avionesInfo     // <-- incluye gs y alt_baro
       }),
       { status: 200, headers: defaultHeaders }

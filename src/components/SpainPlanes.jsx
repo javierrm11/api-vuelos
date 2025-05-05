@@ -109,8 +109,11 @@ function SpainPlanes() {
       <p>Emisión media: {avgCO2} kg CO₂/h</p>
 
       <h2>Todos los aviones detectados</h2>
+      <p>{aviones.length} aviones</p>
       <ul>
-        {aviones.map(hex => <li key={hex}>{hex}</li>)}
+        {aviones.map((avion, index) => (
+          <li key={index}>{avion.hex} - {avion.t}</li>
+        ))}
       </ul>
     </div>
   );

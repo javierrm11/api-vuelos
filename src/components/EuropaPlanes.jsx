@@ -52,11 +52,9 @@ function EuropaPlanes() {
       <p>Velocidad: {data.masLentoDeEuropa.velocidad} km/h</p>
 
       <h2>Todos los aviones detectados</h2>
-      <ul>
-        {data.todosAviones.map((avion, index) => (
-          <li key={index}>{avion}</li>
-        ))}
-      </ul>
+      <p>
+        {data.todosAviones.length}
+      </p>
     </div>
   );
 }
