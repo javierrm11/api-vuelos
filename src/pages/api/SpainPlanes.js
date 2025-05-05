@@ -47,8 +47,11 @@ export async function GET() {
     const avionesInfo = avionesVolando.map(av => ({
       hex: av.hex,
       gs: av.gs,
-      alt_baro: av.alt_baro
+      alt_baro: av.alt_baro,
+      lat: av.lat,
+      lon: av.lon
     }));
+    
 
     return new Response(
       JSON.stringify({
@@ -56,10 +59,10 @@ export async function GET() {
         masRapido: { hex: masRapido.hex, velocidad: masRapido.gs },
         masLento:  { hex: masLento.hex,  velocidad: masLento.gs },
         aviones:        avionesHexT,
-        avionesInfo     // <-- incluye gs y alt_baro
+        avionesInfo     // Ahora incluye también lat y lon
       }),
       { status: 200, headers: defaultHeaders }
-    );
+    );    
   } catch (error) {
     return new Response(
       JSON.stringify({ error: "Error al realizar la solicitud al servidor." }),
