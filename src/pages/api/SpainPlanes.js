@@ -49,7 +49,8 @@ export async function GET() {
       gs: av.gs,
       alt_baro: av.alt_baro,
       lat: av.lat,
-      lon: av.lon
+      lon: av.lon,
+      track: av.track,
     }));
     
 
