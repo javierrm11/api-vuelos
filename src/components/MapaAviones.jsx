@@ -5,6 +5,7 @@ const MapaAviones = () => {
   const mapInstance = useRef(null);
   const markersMap = useRef(new Map()); // hex -> marker
   const planeIconRef = useRef(null);
+  const avionImagenUrl = new URL('../assets/avion.png', import.meta.url).href; // Al importar la imagen para usarla daba error, al usarla en public reiteraba peticiones, así que construimos la URL de la imagen aquí para posterior uso.
 
   const obtenerAviones = async () => {
     const response = await fetch('/api/SpainPlanes');
@@ -64,7 +65,7 @@ const MapaAviones = () => {
 
       // Icono definido una sola vez
       planeIconRef.current = L.icon({
-        iconUrl: '/avion.png',
+        iconUrl: avionImagenUrl,
         iconSize: [32, 32],
         iconAnchor: [16, 16],
         popupAnchor: [0, -16],
