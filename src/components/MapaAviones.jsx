@@ -7,7 +7,7 @@ const MapaAviones = () => {
   const planeIconRef = useRef(null);
 
   const obtenerAviones = async () => {
-    const response = await fetch('/api/SpainPlanes');
+    const response = await fetch('/api/SpainPlanes', { cache: 'no-store' });
     const data = await response.json();
     return data.avionesInfo || [];
   };
