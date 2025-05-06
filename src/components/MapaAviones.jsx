@@ -5,7 +5,7 @@ const MapaAviones = () => {
   const mapInstance = useRef(null);
   const markersMap = useRef(new Map()); // hex -> marker
   const planeIconRef = useRef(null);
-  const avionImagenUrl = new URL('../assets/avion.png', import.meta.url).href; // Al importar la imagen para usarla daba error, al usarla en public reiteraba peticiones, así que construimos la URL de la imagen aquí para posterior uso.
+  const avionImagenUrl = new URL('../assets/avion.svg', import.meta.url).href; // Al importar la imagen para usarla daba error, al usarla en public reiteraba peticiones, así que construimos la URL de la imagen aquí para posterior uso.
 
   const obtenerAviones = async () => {
     const response = await fetch('/api/SpainPlanes');
