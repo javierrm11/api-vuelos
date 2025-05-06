@@ -1,0 +1,25 @@
+---
+import EuropaPlanes from '../components/EuropaPlanes.jsx';
+---
+
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aviones sobre España</title>
+  </head>
+  <body>
+    <header style="background-color: #333; color: white; padding: 1rem;">
+      <nav style="display: flex; gap: 1rem;">
+        <a href="/" style="color: white; text-decoration: none;">Inicio</a>
+        <a href="/Spain" style="color: white; text-decoration: none;">España</a>
+        <a href="/Europa" style="color: white; text-decoration: none;">Europa</a>
+      </nav>
+    </header>
+
+    <main style="padding: 1rem;">
+      <h1>Aviones sobre Europa</h1>
+      <EuropaPlanes client:load />
+    </main>
+  </body>
+</html>
