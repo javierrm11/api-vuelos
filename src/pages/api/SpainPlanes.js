@@ -42,6 +42,14 @@ export async function GET() {
     }
 
     const avionesVolando = data.ac.filter(avion => (avion.gs || 0) > 0);
+    const avionesInfo = avionesVolando.map(av => ({
+      hex: av.hex,
+      gs: av.gs,
+      alt_baro: av.alt_baro,
+      lat: av.lat,
+      lon: av.lon,
+      track: av.track,
+    }));
 
     if (avionesVolando.length === 0) {
       return new Response(
@@ -72,6 +80,7 @@ export async function GET() {
       JSON.stringify({
         pais: "España",
         aviones: avionesVolando.map(avion => avion.hex),
+        avionesInfo,
         masRapido,
         masLento,
       }),
