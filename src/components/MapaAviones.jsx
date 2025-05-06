@@ -84,7 +84,9 @@ const MapaAviones = () => {
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors',
       }).addTo(map);
+    };
 
+    const startFetching = async () => {
       // Carga inicial
       const aviones = await obtenerAviones();
       updateMarkers(aviones);
@@ -97,13 +99,9 @@ const MapaAviones = () => {
     };
 
     if (!mapInstance.current) {
-      initMap();
+      initMap().then(startFetching);
     } else {
-      // Si el mapa ya está inicializado, solo actualizamos los marcadores
-      (async () => {
-        const aviones = await obtenerAviones();
-        updateMarkers(aviones);
-      })();
+      startFetching();
     }
 
     return () => {
