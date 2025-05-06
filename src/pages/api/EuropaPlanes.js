@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 const paisesEuropeos = [
     { nombre: "España", lat: 40.4168, lon: -3.7038 },
     { nombre: "Francia", lat: 48.8566, lon: 2.3522 },
@@ -13,70 +15,108 @@ const paisesEuropeos = [
 ];
 
 export async function GET() {
-    const resultados = await Promise.all(
-        paisesEuropeos.map(async (pais) => {
-            const response = await fetch(
-                `https://api.adsb.lol/v2/lat/${pais.lat}/lon/${pais.lon}/dist/250`
-            );
-            let data;
-            try {
-                data = await response.json();
-            } catch (error) {
-                return { pais: pais.nombre, error: "Error al procesar la respuesta del servidor." };
-            }
+    try {
+        const resultados = await Promise.all(
+            paisesEuropeos.map(async (pais) => {
+                const response = await fetch(
+                    `https://api.adsb.lol/v2/lat/${pais.lat}/lon/${pais.lon}/dist/250`
+                );
+                let data;
 
-            if (!data.ac || data.ac.length === 0) {
-                return { pais: pais.nombre, error: "No se encontraron aviones en la zona." };
-            }
+                try {
+                    data = await response.json();
+                } catch (error) {
+                    return { pais: pais.nombre, error: "Error al procesar la respuesta del servidor." };
+                }
 
-            const avionesVolando = data.ac.filter((avion) => (avion.gs || 0) > 0);
+                if (!data.ac || data.ac.length === 0) {
+                    return { pais: pais.nombre, error: "No se encontraron aviones en la zona." };
+                }
 
-            if (avionesVolando.length === 0) {
-                return { pais: pais.nombre, error: "No hay aviones volando en la zona." };
-            }
+                const avionesVolando = data.ac.filter((avion) => (avion.gs || 0) > 0);
 
-            return {
-                pais: pais.nombre,
-                aviones: avionesVolando.map((avion) => avion.hex),
-                masRapido: avionesVolando
+                if (avionesVolando.length === 0) {
+                    return { pais: pais.nombre, error: "No hay aviones volando en la zona." };
+                }
+
+                const avionesInfo = avionesVolando.map((av) => ({
+                    hex: av.hex,
+                    gs: av.gs,
+                    alt_baro: av.alt_baro,
+                    lat: av.lat,
+                    lon: av.lon,
+                    track: av.track,
+                }));
+
+                const masRapido = avionesVolando
                     .map((avion) => ({ hex: avion.hex, velocidad: avion.gs }))
-                    .sort((a, b) => b.velocidad - a.velocidad)[0],
-                masLento: avionesVolando
+                    .sort((a, b) => b.velocidad - a.velocidad)[0];
+
+                const masLento = avionesVolando
                     .map((avion) => ({ hex: avion.hex, velocidad: avion.gs }))
-                    .sort((a, b) => b.velocidad - a.velocidad)
-                    .slice(-1)[0],
-            };
-        })
-    );
+                    .sort((a, b) => a.velocidad - b.velocidad)[0];
 
-    const todosAviones = resultados
-        .filter((resultado) => !resultado.error)
-        .flatMap((resultado) => resultado.aviones);
-
-    const avionesConVelocidad = resultados
-        .filter((resultado) => !resultado.error)
-        .flatMap((resultado) =>
-            resultado.aviones.map((_, index) => ({
-                hex: resultado.masRapido.hex,
-                velocidad: resultado.masRapido.velocidad,
-            }))
+                return {
+                    pais: pais.nombre,
+                    aviones: avionesVolando.map((avion) => avion.hex),
+                    avionesInfo,
+                    masRapido,
+                    masLento,
+                };
+            })
         );
 
-    const masRapidoDeEuropa = avionesConVelocidad.sort((a, b) => b.velocidad - a.velocidad)[0];
-    const masLentoDeEuropa = avionesConVelocidad.sort((a, b) => a.velocidad - b.velocidad)[0];
+        const todosAviones = resultados
+            .filter((resultado) => !resultado.error)
+            .flatMap((resultado) => resultado.aviones);
 
-    return new Response(
-        JSON.stringify({
-            todosAviones,
-            masRapidoDeEuropa,
-            masLentoDeEuropa,
-        }),
-        {
-            status: 200,
-            headers: {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "*",
-            },
-        }
-    );
+        const avionesInfo = resultados
+            .filter((resultado) => !resultado.error)
+            .flatMap((resultado) => resultado.avionesInfo);
+
+        const masRapidoDeEuropa = resultados
+            .filter((resultado) => !resultado.error)
+            .map((resultado) => resultado.masRapido)
+            .sort((a, b) => b.velocidad - a.velocidad)[0];
+
+        const masLentoDeEuropa = resultados
+            .filter((resultado) => !resultado.error)
+            .map((resultado) => resultado.masLento)
+            .sort((a, b) => a.velocidad - b.velocidad)[0];
+
+        return new Response(
+            JSON.stringify({
+                todosAviones,
+                avionesInfo,
+                masRapidoDeEuropa,
+                masLentoDeEuropa,
+            }),
+            {
+                status: 200,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                    'Cache-Control': 'no-cache, no-store, must-revalidate, proxy-revalidate',
+                    'Pragma': 'no-cache',
+                    'Expires': '0',
+                    'Surrogate-Control': 'no-store',
+                },
+            }
+        );
+    } catch (error) {
+        return new Response(
+            JSON.stringify({ error: "Error al realizar la solicitud al servidor." }),
+            {
+                status: 500,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                    'Cache-Control': 'no-cache, no-store, must-revalidate, proxy-revalidate',
+                    'Pragma': 'no-cache',
+                    'Expires': '0',
+                    'Surrogate-Control': 'no-store',
+                },
+            }
+        );
+    }
 }

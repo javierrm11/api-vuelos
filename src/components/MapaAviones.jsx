@@ -1,20 +1,27 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const MapaAviones = () => {
   const mapRef = useRef(null);
   const mapInstance = useRef(null);
   const markersMap = useRef(new Map()); // hex -> marker
   const planeIconRef = useRef(null);
-  const avionImagenUrl = new URL('../assets/avion.svg', import.meta.url).href; // Al importar la imagen para usarla daba error, al usarla en public reiteraba peticiones, así que construimos la URL de la imagen aquí para posterior uso.
+  const avionImagenUrl = new URL('../assets/avion.svg', import.meta.url).href;
+  const [pais, setPais] = useState('Spain'); // Estado para el país seleccionado
 
   const obtenerAviones = async () => {
-    const response = await fetch('/api/SpainPlanes');
-    const data = await response.json();
-    return data.avionesInfo || [];
+    const apiEndpoint = pais === 'Europa' ? 'Europa' : pais; // Mapeo de valores
+    try {
+      const response = await fetch(`/api/${apiEndpoint}Planes`); // URL dinámica según el país seleccionado
+      const data = await response.json();
+      return data.avionesInfo || [];
+    } catch (error) {
+      console.error('Error al obtener los aviones:', error);
+      return [];
+    }
   };
 
   const updateMarkers = (aviones) => {
-    const nuevosHex = new Set(aviones.map(av => av.hex));
+    const nuevosHex = new Set(aviones.map((av) => av.hex));
 
     // Eliminar marcadores que ya no existen
     for (const [hex, marker] of markersMap.current.entries()) {
@@ -25,7 +32,7 @@ const MapaAviones = () => {
     }
 
     // Crear o actualizar marcadores
-    aviones.forEach(avion => {
+    aviones.forEach((avion) => {
       const { hex, lat, lon, track } = avion;
 
       if (markersMap.current.has(hex)) {
@@ -75,7 +82,7 @@ const MapaAviones = () => {
       mapInstance.current = map;
 
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors'
+        attribution: '&copy; OpenStreetMap contributors',
       }).addTo(map);
 
       // Carga inicial
@@ -89,14 +96,31 @@ const MapaAviones = () => {
       }, 3000);
     };
 
-    initMap();
+    if (!mapInstance.current) {
+      initMap();
+    } else {
+      // Si el mapa ya está inicializado, solo actualizamos los marcadores
+      (async () => {
+        const aviones = await obtenerAviones();
+        updateMarkers(aviones);
+      })();
+    }
 
     return () => {
+      // Limpiar el intervalo al desmontar o cambiar el país
       if (intervalId) clearInterval(intervalId);
     };
-  }, []);
+  }, [pais]); // Dependencia en el país seleccionado
 
-  return <div ref={mapRef} style={{ height: '100vh', width: '100%' }}></div>;
+  return (
+    <>
+      <select value={pais} onChange={(e) => setPais(e.target.value)}>
+        <option value="Spain">Españistán</option>
+        <option value="Europa">Europe</option>
+      </select>
+      <div ref={mapRef} style={{ height: '100vh', width: '100%' }}></div>
+    </>
+  );
 };
 
 export default MapaAviones;
