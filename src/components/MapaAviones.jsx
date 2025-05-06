@@ -5,13 +5,9 @@ const MapaAviones = () => {
   const mapInstance = useRef(null);
   const markersMap = useRef(new Map()); // hex -> marker
   const planeIconRef = useRef(null);
-  const avionImagenUrl = new URL('../assets/avion.png', import.meta.url).href; // Al importar la imagen para usarla daba error, al usarla en public reiteraba peticiones, así que construimos la URL de la imagen aquí para posterior uso.
 
   const obtenerAviones = async () => {
-    const apiUrl = process.env.NODE_ENV === 'production' 
-      ? 'https://your-production-domain.com/api/SpainPlanes' 
-      : '/api/SpainPlanes';
-    const response = await fetch(apiUrl);
+    const response = await fetch('/api/SpainPlanes');
     const data = await response.json();
     return data.avionesInfo || [];
   };
@@ -68,7 +64,7 @@ const MapaAviones = () => {
 
       // Icono definido una sola vez
       planeIconRef.current = L.icon({
-        iconUrl: avionImagenUrl,
+        iconUrl: '/avion.png',
         iconSize: [32, 32],
         iconAnchor: [16, 16],
         popupAnchor: [0, -16],
