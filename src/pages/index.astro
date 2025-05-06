@@ -1,5 +1,6 @@
 ---
 import PIA from '../components/AvionesEuropa.jsx';
+import Nav from '../components/Nav.astro';
 export const prerender = false
 ---
 
@@ -10,14 +11,7 @@ export const prerender = false
     <title>Proyecto Astro con React</title>
   </head>
   <body>
-    <header style="background-color: #333; color: white; padding: 1rem;">
-      <nav style="display: flex; gap: 1rem;">
-        <a href="/" style="color: white; text-decoration: none;">Inicio</a>
-        <a href="/Spain" style="color: white; text-decoration: none;">España</a>
-        <a href="/Europa" style="color: white; text-decoration: none;">Europa</a>
-      </nav>
-    </header>
-
+    <Nav />
     <main style="padding: 1rem;">
       <h1>PROYECTO AVIONES</h1>
       <PIA client:load />
