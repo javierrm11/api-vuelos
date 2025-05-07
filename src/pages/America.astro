@@ -1,0 +1,20 @@
+---
+import AmericaPlanes from '../components/AmericaPlanes';
+import Nav from '../components/Nav.astro';
+---
+
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aviones en América</title>
+  </head>
+  <body>
+    <Nav />
+
+    <main style="padding: 1rem;">
+      <h1>Aviones detectados en América</h1>
+      <AmericaPlanes client:load />
+    </main>
+  </body>
+</html>

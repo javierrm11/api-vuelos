@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-function SpainPlanes() {
+function OceaniaPlanes() {
   const [data, setData]       = useState(null);
   const [error, setError]     = useState(null);
   const [avgFuel, setAvgFuel] = useState(null);
@@ -18,7 +18,7 @@ function SpainPlanes() {
   const expISA   = 5.256;
 
   const fetchData = () => {
-    fetch('/api/SpainPlanes')
+    fetch('/api/OceaniaPlanes')
       .then(response => {
         if (!response.ok) {
           throw new Error('Error en la solicitud: ' + response.statusText);
@@ -93,21 +93,21 @@ function SpainPlanes() {
 
   return (
     <div>
-      <h2>Avión más rápido</h2>
-      <p>Hex: {data.masRapido.hex}</p>
-      <p>Velocidad: {data.masRapido.velocidad} km/h</p>
+      <h2>Avión más rápido de Oceanía</h2>
+      <p>Hex: {data.masRapidoDeOceania.hex}</p>
+      <p>Velocidad: {data.masRapidoDeOceania.velocidad} km/h</p>
 
-      <h2>Avión más lento</h2>
-      <p>Hex: {data.masLento.hex}</p>
-      <p>Velocidad: {data.masLento.velocidad} km/h</p>
+      <h2>Avión más lento de Oceanía</h2>
+      <p>Hex: {data.masLentoDeOceania.hex}</p>
+      <p>Velocidad: {data.masLentoDeOceania.velocidad} km/h</p>
 
       <h2>Consumo y emisiones promedio</h2>
       <p>Consumo medio: {avgFuel ?? 'Calculando...'} L/h</p>
       <p>Emisión media: {avgCO2 ?? 'Calculando...'} kg CO₂/h</p>
 
-      <h2>Todos los aviones detectados</h2>
+      <h2>Todos los aviones detectados en Oceanía</h2>
       <ul>
-        {data.aviones.map((hex, index) => (
+        {data.todosAviones.map((hex, index) => (
           <li key={index}>{hex}</li>
         ))}
       </ul>
@@ -115,4 +115,4 @@ function SpainPlanes() {
   );
 }
 
-export default SpainPlanes;
+export default OceaniaPlanes;

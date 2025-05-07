@@ -1,0 +1,17 @@
+---
+import AsiaPlanes from '../components/AsiaPlanes';
+import Nav from '../components/Nav.astro';
+---
+
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aviones en Asia</title>
+  </head>
+  <body>
+    <Nav />
+    <h1>Aviones detectados en Asia</h1>
+    <AsiaPlanes client:load/>
+  </body>
+</html>
