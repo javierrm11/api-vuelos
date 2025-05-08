@@ -4,6 +4,8 @@ import setupProxy from './proxy.js';
 
 import vercel from '@astrojs/vercel';
 
+import tailwindcss from '@tailwindcss/vite';
+
 export default defineConfig({
   integrations: [react()],
 
@@ -12,7 +14,12 @@ export default defineConfig({
   },
 
   output: 'server',
+
   adapter: vercel({
     edgeMiddleware: true,
   }),
+
+  vite: {
+    plugins: [tailwindcss()],
+  },
 });
