@@ -115,6 +115,10 @@ const MapaAviones = () => {
       <select value={pais} onChange={(e) => setPais(e.target.value)}>
         <option value="Spain">Españistán</option>
         <option value="Europa">Europe</option>
+        <option value="Africa">Africa</option>
+        <option value="Asia">Asia</option>
+        <option value="America">America</option>
+        <option value="Oceania">Oceania</option>
       </select>
       <div ref={mapRef} style={{ height: '100vh', width: '100%' }}></div>
     </>

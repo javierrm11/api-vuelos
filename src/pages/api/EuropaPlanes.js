@@ -14,57 +14,77 @@ const paisesEuropeos = [
     // Agrega más países según sea necesario
 ];
 
+async function fetchWithConcurrencyLimit(tasks, limit) {
+    const results = [];
+    const executing = [];
+
+    for (const task of tasks) {
+        const promise = task().then((result) => {
+            executing.splice(executing.indexOf(promise), 1);
+            return result;
+        });
+        results.push(promise);
+        executing.push(promise);
+
+        if (executing.length >= limit) {
+            await Promise.race(executing);
+        }
+    }
+
+    return Promise.all(results);
+}
+
 export async function GET() {
     try {
-        const resultados = await Promise.all(
-            paisesEuropeos.map(async (pais) => {
-                const response = await fetch(
-                    `https://api.adsb.lol/v2/lat/${pais.lat}/lon/${pais.lon}/dist/250`
-                );
-                let data;
+        const taskFunctions = paisesEuropeos.map((pais) => async () => {
+            const response = await fetch(
+                `https://api.adsb.lol/v2/lat/${pais.lat}/lon/${pais.lon}/dist/250`
+            );
+            let data;
 
-                try {
-                    data = await response.json();
-                } catch (error) {
-                    return { pais: pais.nombre, error: "Error al procesar la respuesta del servidor." };
-                }
+            try {
+                data = await response.json();
+            } catch (error) {
+                return { pais: pais.nombre, error: "Error al procesar la respuesta del servidor." };
+            }
 
-                if (!data.ac || data.ac.length === 0) {
-                    return { pais: pais.nombre, error: "No se encontraron aviones en la zona." };
-                }
+            if (!data.ac || data.ac.length === 0) {
+                return { pais: pais.nombre, error: "No se encontraron aviones en la zona." };
+            }
 
-                const avionesVolando = data.ac.filter((avion) => (avion.gs || 0) > 0);
+            const avionesVolando = data.ac.filter((avion) => (avion.gs || 0) > 0);
 
-                if (avionesVolando.length === 0) {
-                    return { pais: pais.nombre, error: "No hay aviones volando en la zona." };
-                }
+            if (avionesVolando.length === 0) {
+                return { pais: pais.nombre, error: "No hay aviones volando en la zona." };
+            }
 
-                const avionesInfo = avionesVolando.map((av) => ({
-                    hex: av.hex,
-                    gs: av.gs,
-                    alt_baro: av.alt_baro,
-                    lat: av.lat,
-                    lon: av.lon,
-                    track: av.track,
-                }));
+            const avionesInfo = avionesVolando.map((av) => ({
+                hex: av.hex,
+                gs: av.gs,
+                alt_baro: av.alt_baro,
+                lat: av.lat,
+                lon: av.lon,
+                track: av.track,
+            }));
 
-                const masRapido = avionesVolando
-                    .map((avion) => ({ hex: avion.hex, velocidad: avion.gs }))
-                    .sort((a, b) => b.velocidad - a.velocidad)[0];
+            const masRapido = avionesVolando
+                .map((avion) => ({ hex: avion.hex, velocidad: avion.gs }))
+                .sort((a, b) => b.velocidad - a.velocidad)[0];
 
-                const masLento = avionesVolando
-                    .map((avion) => ({ hex: avion.hex, velocidad: avion.gs }))
-                    .sort((a, b) => a.velocidad - b.velocidad)[0];
+            const masLento = avionesVolando
+                .map((avion) => ({ hex: avion.hex, velocidad: avion.gs }))
+                .sort((a, b) => a.velocidad - b.velocidad)[0];
 
-                return {
-                    pais: pais.nombre,
-                    aviones: avionesVolando.map((avion) => avion.hex),
-                    avionesInfo,
-                    masRapido,
-                    masLento,
-                };
-            })
-        );
+            return {
+                pais: pais.nombre,
+                aviones: avionesVolando.map((avion) => avion.hex),
+                avionesInfo,
+                masRapido,
+                masLento,
+            };
+        });
+
+        const resultados = await fetchWithConcurrencyLimit(taskFunctions, 3); // Limita a 3 peticiones concurrentes
 
         const todosAviones = resultados
             .filter((resultado) => !resultado.error)
