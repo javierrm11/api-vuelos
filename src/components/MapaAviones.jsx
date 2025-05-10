@@ -4,14 +4,12 @@ const MapaAviones = () => {
   const mapRef = useRef(null);
   const mapInstance = useRef(null);
   const markersMap = useRef(new Map()); // hex -> marker
-  const planeIconRef = useRef(null);
-  const avionImagenUrl = new URL('../assets/avion.svg', import.meta.url).href;
-  const [pais, setPais] = useState('Spain'); // Estado para el país seleccionado
+  const [pais, setPais] = useState('Spain');
 
   const obtenerAviones = async () => {
-    const apiEndpoint = pais === 'Europa' ? 'Europa' : pais; // Mapeo de valores
+    const apiEndpoint = pais === 'Europa' ? 'Europa' : pais;
     try {
-      const response = await fetch(`/api/${apiEndpoint}Planes`); // URL dinámica según el país seleccionado
+      const response = await fetch(`/api/${apiEndpoint}Planes`);
       const data = await response.json();
       return data.avionesInfo || [];
     } catch (error) {
@@ -20,10 +18,33 @@ const MapaAviones = () => {
     }
   };
 
+  const generarIconoPorAltitud = (alt_baro) => {
+    let color = '#00cc44'; // Azul por defecto
+
+    if (alt_baro <= 10000) {
+      color = '#ff0000'; // Rojo
+    } else if (alt_baro > 10000 && alt_baro <= 30000) {
+      color = '#ffaa00'; // Amarillo
+    }
+
+    const svgHTML = `
+      <svg width="32" height="32" viewBox="-0.8 -0.8 17.60 17.60" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7 0L6 2V5L0 9V11H1L6 10L7 13L5 14V16H11V14L9 13L10 10L15 11H16V9L10 5V2L9 0H7Z" fill="${color}" stroke="black" stroke-width="0.5"/>
+      </svg>
+    `;
+
+    return L.divIcon({
+      html: svgHTML,
+      className: '',
+      iconSize: [32, 32],
+      iconAnchor: [16, 16],
+      popupAnchor: [0, -16],
+    });
+  };
+
   const updateMarkers = (aviones) => {
     const nuevosHex = new Set(aviones.map((av) => av.hex));
 
-    // Eliminar marcadores que ya no existen
     for (const [hex, marker] of markersMap.current.entries()) {
       if (!nuevosHex.has(hex)) {
         marker.remove();
@@ -31,27 +52,27 @@ const MapaAviones = () => {
       }
     }
 
-    // Crear o actualizar marcadores
     aviones.forEach((avion) => {
-      const { hex, lat, lon, track } = avion;
+      const { hex, lat, lon, track, alt_baro, gs } = avion;
+
+      const iconoDinamico = generarIconoPorAltitud(alt_baro || 0);
 
       if (markersMap.current.has(hex)) {
-        // Actualizar posición y rotación
         const marker = markersMap.current.get(hex);
         marker.setLatLng([lat, lon]);
         marker.setRotationAngle(track || 0);
+        marker.setIcon(iconoDinamico);
       } else {
-        // Crear nuevo marcador con rotación
         const marker = L.marker([lat, lon], {
-          icon: planeIconRef.current,
+          icon: iconoDinamico,
           rotationAngle: track || 0,
           rotationOrigin: 'center center',
         }).addTo(mapInstance.current);
 
         marker.bindPopup(`
           <b>Hex:</b> ${hex}<br/>
-          <b>Velocidad:</b> ${avion.gs} kt<br/>
-          <b>Altitud:</b> ${avion.alt_baro} ft<br/>
+          <b>Velocidad:</b> ${gs} kt<br/>
+          <b>Altitud:</b> ${alt_baro} ft<br/>
           <b>Rumbo:</b> ${track || 'N/A'}°
         `);
 
@@ -66,17 +87,9 @@ const MapaAviones = () => {
     const initMap = async () => {
       await import('leaflet/dist/leaflet.css');
       const L = await import('leaflet');
-      await import('leaflet-rotatedmarker'); // Importación del plugin
+      await import('leaflet-rotatedmarker');
 
       if (!mapRef.current || mapInstance.current) return;
-
-      // Icono definido una sola vez
-      planeIconRef.current = L.icon({
-        iconUrl: avionImagenUrl,
-        iconSize: [32, 32],
-        iconAnchor: [16, 16],
-        popupAnchor: [0, -16],
-      });
 
       const map = L.map(mapRef.current).setView([40.4168, -3.7038], 6);
       mapInstance.current = map;
@@ -87,11 +100,9 @@ const MapaAviones = () => {
     };
 
     const startFetching = async () => {
-      // Carga inicial
       const aviones = await obtenerAviones();
       updateMarkers(aviones);
 
-      // Actualizar cada 3 segundos
       intervalId = setInterval(async () => {
         const nuevosAviones = await obtenerAviones();
         updateMarkers(nuevosAviones);
@@ -105,10 +116,9 @@ const MapaAviones = () => {
     }
 
     return () => {
-      // Limpiar el intervalo al desmontar o cambiar el país
       if (intervalId) clearInterval(intervalId);
     };
-  }, [pais]); // Dependencia en el país seleccionado
+  }, [pais]);
 
   return (
     <>
@@ -119,6 +129,7 @@ const MapaAviones = () => {
         <option value="Asia">Asia</option>
         <option value="America">America</option>
         <option value="Oceania">Oceania</option>
+        <option value="Global">Global</option>
       </select>
       <div ref={mapRef} style={{ height: '100vh', width: '100%' }}></div>
     </>
