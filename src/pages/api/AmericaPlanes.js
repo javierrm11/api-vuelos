@@ -37,6 +37,8 @@ const paisesAmericanos = [
     { nombre: "Uruguay", lat: -32.5228, lon: -55.7658 },
 ];
 
+const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+
 export async function GET() {
     try {
         const resultados = await Promise.all(

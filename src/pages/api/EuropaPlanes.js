@@ -11,51 +11,37 @@ const paisesEuropeos = [
     { nombre: "Bélgica", lat: 50.8503, lon: 4.3517 },
     { nombre: "Suiza", lat: 46.2044, lon: 6.1432 },
     { nombre: "Austria", lat: 48.2082, lon: 16.3738 },
-    // Agrega más países según sea necesario
 ];
 
-async function fetchWithConcurrencyLimit(tasks, limit) {
-    const results = [];
-    const executing = [];
-
-    for (const task of tasks) {
-        const promise = task().then((result) => {
-            executing.splice(executing.indexOf(promise), 1);
-            return result;
-        });
-        results.push(promise);
-        executing.push(promise);
-
-        if (executing.length >= limit) {
-            await Promise.race(executing);
-        }
-    }
-
-    return Promise.all(results);
-}
+const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 export async function GET() {
     try {
-        const taskFunctions = paisesEuropeos.map((pais) => async () => {
+        const resultados = [];
+
+        for (const pais of paisesEuropeos) {
             const response = await fetch(
                 `https://api.adsb.lol/v2/lat/${pais.lat}/lon/${pais.lon}/dist/250`
             );
-            let data;
 
+            let data;
             try {
                 data = await response.json();
             } catch (error) {
-                return { pais: pais.nombre, error: "Error al procesar la respuesta del servidor." };
+                resultados.push({ pais: pais.nombre, error: "Error al procesar la respuesta del servidor." });
+                continue;
             }
 
             if (!data.ac || data.ac.length === 0) {
-                return { pais: pais.nombre, error: "No se encontraron aviones en la zona." };
+                resultados.push({ pais: pais.nombre, error: "No se encontraron aviones en la zona." });
+                continue;
             }
 
             const avionesVolando = data.ac.filter((avion) => (avion.gs || 0) > 0);
 
             if (avionesVolando.length === 0) {
-                return { pais: pais.nombre, error: "No hay aviones volando en la zona." };
+                resultados.push({ pais: pais.nombre, error: "No hay aviones volando en la zona." });
+                continue;
             }
 
             const avionesInfo = avionesVolando.map((av) => ({
@@ -75,33 +61,28 @@ export async function GET() {
                 .map((avion) => ({ hex: avion.hex, velocidad: avion.gs }))
                 .sort((a, b) => a.velocidad - b.velocidad)[0];
 
-            return {
+            resultados.push({
                 pais: pais.nombre,
                 aviones: avionesVolando.map((avion) => avion.hex),
                 avionesInfo,
                 masRapido,
                 masLento,
-            };
-        });
+            });
 
-        const resultados = await fetchWithConcurrencyLimit(taskFunctions, 3); // Limita a 3 peticiones concurrentes
+            await delay(300); // Espera de 300ms entre cada país
+        }
 
-        const todosAviones = resultados
-            .filter((resultado) => !resultado.error)
-            .flatMap((resultado) => resultado.aviones);
+        const exitosos = resultados.filter((res) => !res.error);
 
-        const avionesInfo = resultados
-            .filter((resultado) => !resultado.error)
-            .flatMap((resultado) => resultado.avionesInfo);
+        const todosAviones = exitosos.flatMap((res) => res.aviones);
+        const avionesInfo = exitosos.flatMap((res) => res.avionesInfo);
 
-        const masRapidoDeEuropa = resultados
-            .filter((resultado) => !resultado.error)
-            .map((resultado) => resultado.masRapido)
+        const masRapidoDeEuropa = exitosos
+            .map((res) => res.masRapido)
             .sort((a, b) => b.velocidad - a.velocidad)[0];
 
-        const masLentoDeEuropa = resultados
-            .filter((resultado) => !resultado.error)
-            .map((resultado) => resultado.masLento)
+        const masLentoDeEuropa = exitosos
+            .map((res) => res.masLento)
             .sort((a, b) => a.velocidad - b.velocidad)[0];
 
         return new Response(
@@ -116,7 +97,7 @@ export async function GET() {
                 headers: {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*',
-                    'Cache-Control': 'no-cache, no-store, must-revalidate, proxy-revalidate',
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
                     'Pragma': 'no-cache',
                     'Expires': '0',
                     'Surrogate-Control': 'no-store',
@@ -125,16 +106,12 @@ export async function GET() {
         );
     } catch (error) {
         return new Response(
-            JSON.stringify({ error: "Error al realizar la solicitud al servidor." }),
+            JSON.stringify({ error: "Error general al procesar la solicitud." }),
             {
                 status: 500,
                 headers: {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*',
-                    'Cache-Control': 'no-cache, no-store, must-revalidate, proxy-revalidate',
-                    'Pragma': 'no-cache',
-                    'Expires': '0',
-                    'Surrogate-Control': 'no-store',
                 },
             }
         );

@@ -95,7 +95,7 @@ const MapaAviones = () => {
       intervalId = setInterval(async () => {
         const nuevosAviones = await obtenerAviones();
         updateMarkers(nuevosAviones);
-      }, 3000);
+      }, 10000);
     };
 
     if (!mapInstance.current) {
