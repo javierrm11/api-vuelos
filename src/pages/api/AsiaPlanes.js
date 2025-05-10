@@ -21,77 +21,78 @@ const paisesAsiaticos = [
     { nombre: "Afganistán", lat: 33.9391, lon: 67.71 },
     { nombre: "Uzbekistán", lat: 41.3775, lon: 64.5853 },
     { nombre: "Sri Lanka", lat: 7.8731, lon: 80.7718 },
-    // Agrega más países según sea necesario
 ];
+
+const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 export async function GET() {
     try {
-        const resultados = await Promise.all(
-            paisesAsiaticos.map(async (pais) => {
-                const response = await fetch(
-                    `https://api.adsb.lol/v2/lat/${pais.lat}/lon/${pais.lon}/dist/250`
-                );
-                let data;
+        const resultados = [];
 
-                try {
-                    data = await response.json();
-                } catch (error) {
-                    return { pais: pais.nombre, error: "Error al procesar la respuesta del servidor." };
-                }
+        for (const pais of paisesAsiaticos) {
+            const response = await fetch(
+                `https://api.adsb.lol/v2/lat/${pais.lat}/lon/${pais.lon}/dist/250`
+            );
 
-                if (!data.ac || data.ac.length === 0) {
-                    return { pais: pais.nombre, error: "No se encontraron aviones en la zona." };
-                }
+            let data;
+            try {
+                data = await response.json();
+            } catch (error) {
+                resultados.push({ pais: pais.nombre, error: "Error al procesar la respuesta del servidor." });
+                continue;
+            }
 
-                const avionesVolando = data.ac.filter((avion) => (avion.gs || 0) > 0);
+            if (!data.ac || data.ac.length === 0) {
+                resultados.push({ pais: pais.nombre, error: "No se encontraron aviones en la zona." });
+                continue;
+            }
 
-                if (avionesVolando.length === 0) {
-                    return { pais: pais.nombre, error: "No hay aviones volando en la zona." };
-                }
+            const avionesVolando = data.ac.filter((avion) => (avion.gs || 0) > 0);
 
-                const avionesInfo = avionesVolando.map((av) => ({
-                    hex: av.hex,
-                    gs: av.gs,
-                    alt_baro: av.alt_baro,
-                    lat: av.lat,
-                    lon: av.lon,
-                    track: av.track,
-                }));
+            if (avionesVolando.length === 0) {
+                resultados.push({ pais: pais.nombre, error: "No hay aviones volando en la zona." });
+                continue;
+            }
 
-                const masRapido = avionesVolando
-                    .map((avion) => ({ hex: avion.hex, velocidad: avion.gs }))
-                    .sort((a, b) => b.velocidad - a.velocidad)[0];
+            const avionesInfo = avionesVolando.map((av) => ({
+                hex: av.hex,
+                gs: av.gs,
+                alt_baro: av.alt_baro,
+                lat: av.lat,
+                lon: av.lon,
+                track: av.track,
+            }));
 
-                const masLento = avionesVolando
-                    .map((avion) => ({ hex: avion.hex, velocidad: avion.gs }))
-                    .sort((a, b) => a.velocidad - b.velocidad)[0];
+            const masRapido = avionesVolando
+                .map((avion) => ({ hex: avion.hex, velocidad: avion.gs }))
+                .sort((a, b) => b.velocidad - a.velocidad)[0];
 
-                return {
-                    pais: pais.nombre,
-                    aviones: avionesVolando.map((avion) => avion.hex),
-                    avionesInfo,
-                    masRapido,
-                    masLento,
-                };
-            })
-        );
+            const masLento = avionesVolando
+                .map((avion) => ({ hex: avion.hex, velocidad: avion.gs }))
+                .sort((a, b) => a.velocidad - b.velocidad)[0];
 
-        const todosAviones = resultados
-            .filter((resultado) => !resultado.error)
-            .flatMap((resultado) => resultado.aviones);
+            resultados.push({
+                pais: pais.nombre,
+                aviones: avionesVolando.map((avion) => avion.hex),
+                avionesInfo,
+                masRapido,
+                masLento,
+            });
 
-        const avionesInfo = resultados
-            .filter((resultado) => !resultado.error)
-            .flatMap((resultado) => resultado.avionesInfo);
+            await delay(300); // Espera de 300ms entre cada país
+        }
 
-        const masRapidoDeAsia = resultados
-            .filter((resultado) => !resultado.error)
-            .map((resultado) => resultado.masRapido)
+        const exitosos = resultados.filter((res) => !res.error);
+
+        const todosAviones = exitosos.flatMap((res) => res.aviones);
+        const avionesInfo = exitosos.flatMap((res) => res.avionesInfo);
+
+        const masRapidoDeAsia = exitosos
+            .map((res) => res.masRapido)
             .sort((a, b) => b.velocidad - a.velocidad)[0];
 
-        const masLentoDeAsia = resultados
-            .filter((resultado) => !resultado.error)
-            .map((resultado) => resultado.masLento)
+        const masLentoDeAsia = exitosos
+            .map((res) => res.masLento)
             .sort((a, b) => a.velocidad - b.velocidad)[0];
 
         return new Response(
@@ -106,7 +107,7 @@ export async function GET() {
                 headers: {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*',
-                    'Cache-Control': 'no-cache, no-store, must-revalidate, proxy-revalidate',
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
                     'Pragma': 'no-cache',
                     'Expires': '0',
                     'Surrogate-Control': 'no-store',
@@ -115,16 +116,12 @@ export async function GET() {
         );
     } catch (error) {
         return new Response(
-            JSON.stringify({ error: "Error al realizar la solicitud al servidor." }),
+            JSON.stringify({ error: "Error general al procesar la solicitud." }),
             {
                 status: 500,
                 headers: {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*',
-                    'Cache-Control': 'no-cache, no-store, must-revalidate, proxy-revalidate',
-                    'Pragma': 'no-cache',
-                    'Expires': '0',
-                    'Surrogate-Control': 'no-store',
                 },
             }
         );
