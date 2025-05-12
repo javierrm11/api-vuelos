@@ -19,7 +19,7 @@ const MapaAviones = () => {
   };
 
   const generarIconoPorAltitud = (alt_baro) => {
-    let color = '#00cc44'; // Azul por defecto
+    let color = '#00cc44'; // Verde por defecto
 
     if (alt_baro <= 10000) {
       color = '#ff0000'; // Rojo
@@ -97,6 +97,27 @@ const MapaAviones = () => {
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors',
       }).addTo(map);
+
+      // Agregar leyenda
+      const legend = L.control({ position: 'topright' });
+
+      legend.onAdd = function () {
+        const div = L.DomUtil.create('div', 'info legend');
+        div.innerHTML += `
+          <h4 style="margin-top: 0; margin-bottom: 4px;">Altitud</h4>
+          <i style="background:#ff0000;width:12px;height:12px;display:inline-block;margin-right:4px;"></i> ≤ 10.000 ft<br/>
+          <i style="background:#ffaa00;width:12px;height:12px;display:inline-block;margin-right:4px;"></i> 10.001 - 30.000 ft<br/>
+          <i style="background:#00cc44;width:12px;height:12px;display:inline-block;margin-right:4px;"></i> > 30.000 ft
+        `;
+        div.style.backgroundColor = 'white';
+        div.style.padding = '8px';
+        div.style.borderRadius = '5px';
+        div.style.boxShadow = '0 0 5px rgba(0,0,0,0.3)';
+        div.style.fontSize = '14px';
+        return div;
+      };
+
+      legend.addTo(map);
     };
 
     const startFetching = async () => {
@@ -123,7 +144,7 @@ const MapaAviones = () => {
   return (
     <>
       <select value={pais} onChange={(e) => setPais(e.target.value)}>
-        <option value="Spain">Españistán</option>
+        <option value="Spain">España</option>
         <option value="Europa">Europe</option>
         <option value="Africa">Africa</option>
         <option value="Asia">Asia</option>
