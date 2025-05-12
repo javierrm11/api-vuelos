@@ -1,20 +1,18 @@
 ---
 import SpainPlanes from '../components/SpainPlanes.jsx';
 import Nav from '../components/Nav.astro';
+import "../styles/global.css";
+
 ---
 
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Aviones sobre España</title>
+    <title>Aviones en Oceanía</title>
   </head>
-  <body>
-    <Nav />
-
-    <main style="padding: 1rem;">
-      <h1>Aviones sobre España</h1>
-      <SpainPlanes client:load />
-    </main>
-  </body>
+  <Nav>
+    <h1 class="text-2xl font-bold mb-4">PROYECTO AVIONES</h1>
+    <SpainPlanes client:load />
+  </Nav>
 </html>

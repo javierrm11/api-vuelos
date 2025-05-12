@@ -1,6 +1,7 @@
 ---
 import OceaniaPlanes from '../components/OceaniaPlanes';
 import Nav from '../components/Nav.astro';
+import "../styles/global.css";
 ---
 
 <html lang="es">
@@ -9,12 +10,8 @@ import Nav from '../components/Nav.astro';
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Aviones en Oceanía</title>
   </head>
-  <body>
-    <Nav />
-
-    <main style="padding: 1rem;">
-      <h1>Aviones detectados en Oceanía</h1>
-      <OceaniaPlanes client:load />
-    </main>
-  </body>
+  <Nav>
+    <h1 class="text-2xl font-bold mb-4">PROYECTO AVIONES</h1>
+    <OceaniaPlanes client:load />
+  </Nav>
 </html>

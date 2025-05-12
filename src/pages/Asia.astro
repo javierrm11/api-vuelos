@@ -1,6 +1,8 @@
 ---
 import AsiaPlanes from '../components/AsiaPlanes';
 import Nav from '../components/Nav.astro';
+import "../styles/global.css";
+
 ---
 
 <html lang="es">
@@ -9,9 +11,8 @@ import Nav from '../components/Nav.astro';
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Aviones en Asia</title>
   </head>
-  <body>
-    <Nav />
-    <h1>Aviones detectados en Asia</h1>
-    <AsiaPlanes client:load/>
-  </body>
+  <Nav>
+    <h1 class="text-2xl font-bold mb-4">PROYECTO AVIONES</h1>
+    <AsiaPlanes client:load />
+  </Nav>
 </html>
