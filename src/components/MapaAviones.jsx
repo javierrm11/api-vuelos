@@ -1,4 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
+import SpainPlanes from './SpainPlanes';
+import EuropaPlanes from './EuropaPlanes';
+import AfricaPlanes from './AfricaPlanes';
+import AsiaPlanes from './AsiaPlanes';
+import AmericaPlanes from './AmericaPlanes';
+import OceaniaPlanes from './OceaniaPlanes';
 
 const MapaAviones = () => {
   const mapRef = useRef(null);
@@ -141,8 +147,30 @@ const MapaAviones = () => {
     };
   }, [pais]);
 
+  const obtenerComponentePorPais = (pais) => {
+    switch (pais) {
+      case 'Spain':
+        return <SpainPlanes />;
+      case 'Europa':
+        return <EuropaPlanes />;
+      case 'Africa':
+        return <AfricaPlanes />;
+      case 'Asia':
+        return <AsiaPlanes />;
+      case 'America':
+        return <AmericaPlanes />;
+      case 'Oceania':
+        return <OceaniaPlanes />;
+      case 'Global':
+        return <GlobalPlanes />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <>
+      <h1>Aviones sobre {pais}</h1>
       <select value={pais} onChange={(e) => setPais(e.target.value)}>
         <option value="Spain">España</option>
         <option value="Europa">Europe</option>
@@ -152,7 +180,12 @@ const MapaAviones = () => {
         <option value="Oceania">Oceania</option>
         <option value="Global">Global</option>
       </select>
-      <div ref={mapRef} style={{ height: '100vh', width: '100%' }}></div>
+      <div style={{ display: 'flex', height: '90vh' }}>
+        <div ref={mapRef} style={{ flex: '2', height: '100%' }}></div>
+        <div style={{ flex: '1', padding: '1rem', overflowY: 'auto', background: '#f5f5f5' }}>
+          {obtenerComponentePorPais(pais)}
+        </div>
+      </div>
     </>
   );
 };
