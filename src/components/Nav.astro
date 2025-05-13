@@ -1,16 +1,8 @@
 ---
-// nav.astro
+// src/components/Nav.astro
+import LayoutWrapper from './LayoutWrapper.jsx';
 ---
 
-<header style="background-color: #333; color: white; padding: 1rem;">
-    <nav style="display: flex; gap: 1rem; align-items: center;">
-        <a href="/" style="color: white; text-decoration: none;">Inicio</a>
-        <a href="/Spain" style="color: white; text-decoration: none;">España</a>
-        <a href="/Europa" style="color: white; text-decoration: none;">Europa</a>
-        <a href="/Africa" style="color: white; text-decoration: none;">África</a>
-        <a href="/America" style="color: white; text-decoration: none;">América</a>
-        <a href="/Asia" style="color: white; text-decoration: none;">Asia</a>
-        <a href="/Oceania" style="color: white; text-decoration: none;">Oceanía</a>
-        <a href="/Mapa" style="color: white; text-decoration: none;">Mapa</a>
-    </nav>
-</header>
+<LayoutWrapper client:load>
+  <slot />
+</LayoutWrapper>

@@ -79,7 +79,6 @@ export async function GET() {
     return new Response(
       JSON.stringify({
         pais: "España",
-        aviones: avionesVolando.map(avion => avion.hex),
         avionesInfo,
         masRapido,
         masLento,
