@@ -1,10 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import SpainPlanesInfo from './SpainPlanes';
-import EuropaPlanes from './EuropaPlanes';
-import AfricaPlanes from './AfricaPlanes';
-import AsiaPlanes from './AsiaPlanes';
-import AmericaPlanes from './AmericaPlanes';
-import OceaniaPlanes from './OceaniaPlanes';
 
 const MapaAviones = () => {
   const mapRef = useRef(null);
@@ -13,13 +7,19 @@ const MapaAviones = () => {
   const [pais, setPais] = useState('Spain');
 
   const obtenerAviones = async () => {
-    const apiEndpoint = pais === 'Europa' ? 'Europa' : pais;
     try {
-      const response = await fetch(`/api/${apiEndpoint}Planes`);
+      const response = await fetch(`/api/planes?region=${pais}`);
       const data = await response.json();
-      return data.avionesInfo || [];
+  
+      if (data.error) {
+        console.error(`Error al obtener aviones para ${pais}:`, data.error);
+        return [];
+      }
+  
+      // Combinar todos los aviones de las ubicaciones en la región seleccionada
+      return data.flatMap((ubicacion) => ubicacion.avionesInfo || []);
     } catch (error) {
-      console.error('Error al obtener los aviones:', error);
+      console.error(`Error al realizar la solicitud para ${pais}:`, error);
       return [];
     }
   };
@@ -147,30 +147,8 @@ const MapaAviones = () => {
     };
   }, [pais]);
 
-  const obtenerComponentePorPais = (pais) => {
-    switch (pais) {
-      case 'Spain':
-        return <SpainPlanesInfo />;
-      case 'Europa':
-        return <EuropaPlanes />;
-      case 'Africa':
-        return <AfricaPlanes />;
-      case 'Asia':
-        return <AsiaPlanes />;
-      case 'America':
-        return <AmericaPlanes />;
-      case 'Oceania':
-        return <OceaniaPlanes />;
-      case 'Global':
-        return <GlobalPlanes />;
-      default:
-        return null;
-    }
-  };
-
   return (
     <>
-      <h1>Aviones sobre {pais}</h1>
       <select value={pais} onChange={(e) => setPais(e.target.value)}>
         <option value="Spain">España</option>
         <option value="Europa">Europe</option>
@@ -180,12 +158,7 @@ const MapaAviones = () => {
         <option value="Oceania">Oceania</option>
         <option value="Global">Global</option>
       </select>
-      <div style={{ display: 'flex', height: '90vh' }}>
-        <div ref={mapRef} style={{ flex: '2', height: '100%' }}></div>
-        <div style={{ flex: '1', padding: '1rem', overflowY: 'auto', background: '#f5f5f5' }}>
-          {obtenerComponentePorPais(pais)}
-        </div>
-      </div>
+      <div ref={mapRef} style={{ height: '100vh', width: '100%' }}></div>
     </>
   );
 };
