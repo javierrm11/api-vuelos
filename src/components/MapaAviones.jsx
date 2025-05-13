@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import SpainPlanes from './SpainPlanes';
+import SpainPlanesInfo from './SpainPlanes';
 import EuropaPlanes from './EuropaPlanes';
 import AfricaPlanes from './AfricaPlanes';
 import AsiaPlanes from './AsiaPlanes';
@@ -150,7 +150,7 @@ const MapaAviones = () => {
   const obtenerComponentePorPais = (pais) => {
     switch (pais) {
       case 'Spain':
-        return <SpainPlanes />;
+        return <SpainPlanesInfo />;
       case 'Europa':
         return <EuropaPlanes />;
       case 'Africa':
