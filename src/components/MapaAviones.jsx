@@ -185,7 +185,7 @@ const MapaAviones = () => {
         </table>
       </aside>
 
-      <main style={{ flex: 1 }}>
+      <div style={{ flex: 1 }}>
         <select
           value={pais}
           onChange={(e) => setPais(e.target.value)}
@@ -199,7 +199,7 @@ const MapaAviones = () => {
           <option value="Global">Global</option>
         </select>
         <div ref={mapRef} style={{ height: '95vh', width: '100%' }}></div>
-      </main>
+      </div>
     </div>
   );
 };
