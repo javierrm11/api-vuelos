@@ -198,7 +198,7 @@ const MapaAviones = () => {
           <option value="Oceania">Oceania</option>
           <option value="Global">Global</option>
         </select>
-        <div ref={mapRef} style={{ height: '95vh', width: '100%' }}></div>
+        <div ref={mapRef} style={{ height: '95vh', width: '100%', zIndex: 1 }}></div>
       </div>
     </div>
   );
