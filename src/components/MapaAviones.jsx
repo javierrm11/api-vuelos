@@ -5,18 +5,18 @@ const MapaAviones = () => {
   const mapInstance = useRef(null);
   const markersMap = useRef(new Map()); // hex -> marker
   const [pais, setPais] = useState('Spain');
+  const [avionesVisibles, setAvionesVisibles] = useState([]);
 
   const obtenerAviones = async () => {
     try {
       const response = await fetch(`/api/planes?region=${pais}`);
       const data = await response.json();
-  
+
       if (data.error) {
         console.error(`Error al obtener aviones para ${pais}:`, data.error);
         return [];
       }
-  
-      // Combinar todos los aviones de las ubicaciones en la región seleccionada
+
       return data.flatMap((ubicacion) => ubicacion.avionesInfo || []);
     } catch (error) {
       console.error(`Error al realizar la solicitud para ${pais}:`, error);
@@ -25,12 +25,12 @@ const MapaAviones = () => {
   };
 
   const generarIconoPorAltitud = (alt_baro) => {
-    let color = '#00cc44'; // Verde por defecto
+    let color = '#00cc44';
 
     if (alt_baro <= 10000) {
-      color = '#ff0000'; // Rojo
+      color = '#ff0000';
     } else if (alt_baro > 10000 && alt_baro <= 30000) {
-      color = '#ffaa00'; // Amarillo
+      color = '#ffaa00';
     }
 
     const svgHTML = `
@@ -60,7 +60,6 @@ const MapaAviones = () => {
 
     aviones.forEach((avion) => {
       const { hex, lat, lon, track, alt_baro, gs } = avion;
-
       const iconoDinamico = generarIconoPorAltitud(alt_baro || 0);
 
       if (markersMap.current.has(hex)) {
@@ -85,6 +84,8 @@ const MapaAviones = () => {
         markersMap.current.set(hex, marker);
       }
     });
+
+    setAvionesVisibles(aviones);
   };
 
   useEffect(() => {
@@ -104,7 +105,6 @@ const MapaAviones = () => {
         attribution: '&copy; OpenStreetMap contributors',
       }).addTo(map);
 
-      // Agregar leyenda
       const legend = L.control({ position: 'topright' });
 
       legend.onAdd = function () {
@@ -148,18 +148,59 @@ const MapaAviones = () => {
   }, [pais]);
 
   return (
-    <>
-      <select value={pais} onChange={(e) => setPais(e.target.value)}>
-        <option value="Spain">España</option>
-        <option value="Europa">Europe</option>
-        <option value="Africa">Africa</option>
-        <option value="Asia">Asia</option>
-        <option value="America">America</option>
-        <option value="Oceania">Oceania</option>
-        <option value="Global">Global</option>
-      </select>
-      <div ref={mapRef} style={{ height: '100vh', width: '100%' }}></div>
-    </>
+    <div style={{ display: 'flex' }}>
+      <aside
+        style={{
+          width: '300px',
+          height: '99vh',
+          overflowX: 'auto', // Scroll horizontal
+          overflowY: 'auto', // Scroll vertical
+          padding: '1rem',
+          backgroundColor: '#f5f5f5',
+          borderRight: '1px solid #ddd',
+          resize: 'horizontal', // Permitir redimensionar horizontalmente
+          minWidth: '150px', // Ancho mínimo
+          maxWidth: '500px', // Ancho máximo
+        }}
+      >
+        <table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr>
+              <th style={{ borderBottom: '1px solid #ccc' }}>País</th>
+              <th style={{ borderBottom: '1px solid #ccc' }}>Hex</th>
+              <th style={{ borderBottom: '1px solid #ccc' }}>Altitud</th>
+              <th style={{ borderBottom: '1px solid #ccc' }}>Vel. (kt)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {avionesVisibles.map((avion) => (
+              <tr key={avion.hex}>
+                <td>{avion.pais}</td>
+                <td>{avion.hex}</td>
+                <td>{avion.alt_baro || 'N/A'}</td>
+                <td>{avion.gs || 'N/A'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </aside>
+
+      <main style={{ flex: 1 }}>
+        <select
+          value={pais}
+          onChange={(e) => setPais(e.target.value)}
+        >
+          <option value="Spain">España</option>
+          <option value="Europa">Europe</option>
+          <option value="Africa">Africa</option>
+          <option value="Asia">Asia</option>
+          <option value="America">America</option>
+          <option value="Oceania">Oceania</option>
+          <option value="Global">Global</option>
+        </select>
+        <div ref={mapRef} style={{ height: '95vh', width: '100%' }}></div>
+      </main>
+    </div>
   );
 };
 
