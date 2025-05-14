@@ -85,7 +85,7 @@ const MapaAviones = () => {
       }
     });
 
-    setAvionesVisibles(aviones);
+    setAvionesVisibles(aviones.sort((a, b) => (b.gs || 0) - (a.gs || 0)));
   };
 
   useEffect(() => {
