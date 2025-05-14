@@ -1,7 +1,6 @@
 export default function Header({ onMenuClick, isOpen }) {
     return (
-        <header className="sm:hidden md:hidden flex justify-between items-center p-4 bg-gray-800 text-white fixed top-0 w-full z-50">
-            <div className="text-lg font-bold">MiLogo</div>
+        <header className="lg:hidden flex justify-between items-center p-4 bg-gray-800 text-white fixed top-0 w-full z-50">
             <button onClick={onMenuClick}>
                 {isOpen ? (
                     // ICONO X
@@ -19,6 +18,7 @@ export default function Header({ onMenuClick, isOpen }) {
                     </svg>
                 )}
             </button>
+            <div className="text-lg font-bold">MiLogo</div>
         </header>
     );
 }
