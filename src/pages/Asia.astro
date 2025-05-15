@@ -1,5 +1,5 @@
 ---
-import AsiaPlanes from '../components/AsiaPlanes';
+import Planes from '../components/Planes';
 import Nav from '../components/Nav.astro';
 import "../styles/global.css";
 
@@ -12,7 +12,6 @@ import "../styles/global.css";
     <title>Aviones en Asia</title>
   </head>
   <Nav>
-    <h1 class="text-2xl font-bold mb-4">PROYECTO AVIONES</h1>
-    <AsiaPlanes client:load />
+    <Planes region={"Asia"} client:load />
   </Nav>
 </html>
