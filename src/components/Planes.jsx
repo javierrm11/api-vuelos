@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 
 function Planes({ region }) {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const [error, setError] = useState(null);
   const [avgFuel, setAvgFuel] = useState(null);
   const [avgCO2, setAvgCO2] = useState(null);
   const [sortOption, setSortOption] = useState('');
+  const [masRapido, setMasRapido] = useState(null);
+  const [masLento, setMasLento] = useState(null);
 
   // Constantes físicas
   const S = 122;
@@ -19,27 +21,31 @@ function Planes({ region }) {
   const expISA = 5.256;
 
   const fetchData = () => {
-    fetch(`/api/${region}Planes`)
+    fetch(`/api/planes?region=${region}`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Error en la solicitud: ' + response.statusText);
         }
         return response.json();
       })
-      .then(newData => {
-        const { avgFuelLph, avgCO2Kgh, detalles } = calcularConsumoYEmisiones(newData.avionesInfo);
-        newData.avionesInfo = detalles;
+      .then(resultados => {
+        // Unificamos todos los aviones de todas las ubicaciones
+        const allAvionesInfo = resultados.flatMap(r => r.avionesInfo || []);
+        const { avgFuelLph, avgCO2Kgh, detalles } = calcularConsumoYEmisiones(allAvionesInfo);
 
-        // Calculamos más rápido y más lento
-        const masRapido = detalles.reduce((prev, curr) => (+curr.gs > +prev.gs ? curr : prev), detalles[0]);
-        const masLento = detalles.reduce((prev, curr) => (+curr.gs < +prev.gs ? curr : prev), detalles[0]);
-        newData.masRapido = { hex: masRapido.hex, velocidad: masRapido.gs.toFixed(0) };
-        newData.masLento = { hex: masLento.hex, velocidad: masLento.gs.toFixed(0) };
+        // Calculamos más rápido y más lento globales
+        let masRapido = null, masLento = null;
+        if (detalles.length > 0) {
+          masRapido = detalles.reduce((prev, curr) => (+curr.gs > +prev.gs ? curr : prev), detalles[0]);
+          masLento = detalles.reduce((prev, curr) => (+curr.gs < +prev.gs ? curr : prev), detalles[0]);
+        }
 
-        setData(newData);
+        setData(detalles); // Guardamos todos los aviones en un solo array
         setError(null);
         setAvgFuel(avgFuelLph);
         setAvgCO2(avgCO2Kgh);
+        setMasRapido(masRapido);
+        setMasLento(masLento);
         console.log(`Datos actualizados a las ${new Date().toLocaleTimeString()}`);
       })
       .catch(error => {
@@ -51,6 +57,7 @@ function Planes({ region }) {
     fetchData();
     const intervalId = setInterval(fetchData, 10000);
     return () => clearInterval(intervalId);
+    // eslint-disable-next-line
   }, [region]);
 
   const calcularConsumoYEmisiones = (avionesInfo = []) => {
@@ -154,7 +161,7 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
     return <div className="text-red-400 text-center mt-4">Error: {error}</div>;
   }
 
-  if (!data) {
+  if (!data.length) {
     return <div className="text-gray-300 text-center mt-4">Cargando datos iniciales...</div>;
   }
 
@@ -165,14 +172,14 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
       <div className="grid md:grid-cols-2 gap-6 mb-10">
         <div className="bg-gray-800 p-4 rounded-xl shadow-md">
           <h2 className="text-xl font-semibold mb-2">Avión más rápido</h2>
-          <p><strong>Hex:</strong> {data.masRapido.hex}</p>
-          <p><strong>Velocidad:</strong> {data.masRapido.velocidad} km/h</p>
+          <p><strong>Hex:</strong> {masRapido?.hex ?? 'N/A'}</p>
+          <p><strong>Velocidad:</strong> {masRapido?.gs?.toFixed(0) ?? 'N/A'} km/h</p>
         </div>
 
         <div className="bg-gray-800 p-4 rounded-xl shadow-md">
           <h2 className="text-xl font-semibold mb-2">Avión más lento</h2>
-          <p><strong>Hex:</strong> {data.masLento.hex}</p>
-          <p><strong>Velocidad:</strong> {data.masLento.velocidad} km/h</p>
+          <p><strong>Hex:</strong> {masLento?.hex ?? 'N/A'}</p>
+          <p><strong>Velocidad:</strong> {masLento?.gs?.toFixed(0) ?? 'N/A'} km/h</p>
         </div>
       </div>
 
@@ -210,9 +217,9 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-700">
-            {ordenarAviones(data.avionesInfo).map((avion, index) => (
+            {ordenarAviones(data).map((avion, index) => (
               <tr key={index} className="hover:bg-gray-800 transition-colors group">
-                <td className="px-4 py-2">{data.pais}</td>
+                <td className="px-4 py-2">{avion.pais ?? avion.ubicacion ?? 'N/A'}</td>
                 <td className="px-4 py-2">{avion.hex}</td>
                 <td className="px-4 py-2">{avion.lon ?? 'N/A'}</td>
                 <td className="px-4 py-2">{avion.lat ?? 'N/A'}</td>
