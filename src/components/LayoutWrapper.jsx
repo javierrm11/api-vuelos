@@ -28,15 +28,15 @@ export default function LayoutWrapper({ children }) {
       <div className="relative lg:flex min-h-screen">
         {/* Sidebar */}
         <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-  
+
         {/* Overlay para fondo oscuro en móvil */}
         {sidebarOpen && (
           <div
-            className="fixed inset-0 bg-gray-600 z-30 lg:hidden"
+            className="fixed inset-0 bg-gray-800/50 z-30 lg:hidden"
             onClick={() => setSidebarOpen(false)}
           ></div>
         )}
-  
+
         {/* Contenido principal */}
         <div className="flex-1">
           <Header onMenuClick={toggleSidebar} isOpen={sidebarOpen} />
