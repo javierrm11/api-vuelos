@@ -1,17 +1,10 @@
 ---
-import Nav from '../components/Nav.astro';
+import Layout from '../Layouts/Layout.astro';
 import Planes from '../components/Planes';
 import "../styles/global.css";
 
 ---
 
-<html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Aviones en África</title>
-  </head>
-  <Nav>
+<Layout title="Africa Planes">
     <Planes region={"Africa"} client:load />
-  </Nav>
-</html>
+</Layout>

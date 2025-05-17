@@ -1,17 +1,11 @@
 ---
 import MapaAviones from '../components/MapaAviones.jsx';
 import Nav from '../components/Nav.astro';
+import Layout from '../Layouts/Layout.astro';
 import "../styles/global.css";
 
 ---
 
-<html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mapa de Aviones</title>
-  </head>
-  <Nav>
+<Layout title="Mapa Aviones">
     <MapaAviones client:load />
-  </Nav>
-</html>
+</Layout>
