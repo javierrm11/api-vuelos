@@ -219,7 +219,7 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
           <tbody className="divide-y divide-gray-700">
             {ordenarAviones(data).map((avion, index) => (
               <tr key={index} className="hover:bg-gray-800 transition-colors group">
-                <td className="px-4 py-2">{avion.pais ?? avion.ubicacion ?? 'N/A'}</td>
+                <td className="px-4 py-2"><img src={`./paises/${avion.pais}.png`} alt="bandera" className="w-6 h-6 inline-block mr-2" />{avion.pais}</td>
                 <td className="px-4 py-2">{avion.hex}</td>
                 <td className="px-4 py-2">{avion.lon ?? 'N/A'}</td>
                 <td className="px-4 py-2">{avion.lat ?? 'N/A'}</td>
