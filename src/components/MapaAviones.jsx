@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 const MapaAviones = () => {
   const mapRef = useRef(null);
   const mapInstance = useRef(null);
-  const markersMap = useRef(new Map()); // hex -> marker
+  const markersMap = useRef(new Map());
   const [pais, setPais] = useState('Spain');
   const [avionesVisibles, setAvionesVisibles] = useState([]);
 
@@ -105,6 +105,34 @@ const MapaAviones = () => {
         attribution: '&copy; OpenStreetMap contributors',
       }).addTo(map);
 
+      // Mostrar ubicación del usuario
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+
+            map.setView([latitude, longitude], 8);
+
+            const userMarker = L.circleMarker([latitude, longitude], {
+              radius: 8,
+              fillColor: "#3388ff",
+              color: "#000",
+              weight: 1,
+              opacity: 1,
+              fillOpacity: 0.8,
+            }).addTo(map);
+
+            userMarker.bindPopup('Tu ubicación').openPopup();
+          },
+          (error) => {
+            console.warn("Error obteniendo ubicación:", error.message);
+          }
+        );
+      } else {
+        console.warn("Geolocalización no soportada por este navegador.");
+      }
+
+      // Leyenda
       const legend = L.control({ position: 'topright' });
 
       legend.onAdd = function () {
@@ -153,14 +181,14 @@ const MapaAviones = () => {
         style={{
           width: '300px',
           height: '99vh',
-          overflowX: 'auto', // Scroll horizontal
-          overflowY: 'auto', // Scroll vertical
+          overflowX: 'auto',
+          overflowY: 'auto',
           padding: '1rem',
           backgroundColor: '#f5f5f5',
           borderRight: '1px solid #ddd',
-          resize: 'horizontal', // Permitir redimensionar horizontalmente
-          minWidth: '150px', // Ancho mínimo
-          maxWidth: '500px', // Ancho máximo
+          resize: 'horizontal',
+          minWidth: '150px',
+          maxWidth: '500px',
         }}
       >
         <table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
@@ -175,7 +203,7 @@ const MapaAviones = () => {
           <tbody>
             {avionesVisibles.map((avion) => (
               <tr key={avion.hex}>
-                <td>{avion.pais}</td>
+                <td><img src={`./paises/${avion.pais}.png`} alt="bandera" style={{ width: '20px', height: '20px' }} /></td>
                 <td>{avion.hex}</td>
                 <td>{avion.alt_baro || 'N/A'}</td>
                 <td>{avion.gs || 'N/A'}</td>
