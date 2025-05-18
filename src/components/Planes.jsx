@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from 'recharts';
 
 function Planes({ region }) {
   const [data, setData] = useState([]);
@@ -8,6 +9,7 @@ function Planes({ region }) {
   const [sortOption, setSortOption] = useState('');
   const [masRapido, setMasRapido] = useState(null);
   const [masLento, setMasLento] = useState(null);
+  const [filterConsumo, setFilterConsumo] = useState('todos'); // Nuevo estado filtro consumo
 
   // Constantes físicas
   const S = 122;
@@ -29,18 +31,16 @@ function Planes({ region }) {
         return response.json();
       })
       .then(resultados => {
-        // Unificamos todos los aviones de todas las ubicaciones
         const allAvionesInfo = resultados.flatMap(r => r.avionesInfo || []);
         const { avgFuelLph, avgCO2Kgh, detalles } = calcularConsumoYEmisiones(allAvionesInfo);
 
-        // Calculamos más rápido y más lento globales
         let masRapido = null, masLento = null;
         if (detalles.length > 0) {
           masRapido = detalles.reduce((prev, curr) => (+curr.gs > +prev.gs ? curr : prev), detalles[0]);
           masLento = detalles.reduce((prev, curr) => (+curr.gs < +prev.gs ? curr : prev), detalles[0]);
         }
 
-        setData(detalles); // Guardamos todos los aviones en un solo array
+        setData(detalles);
         setError(null);
         setAvgFuel(avgFuelLph);
         setAvgCO2(avgCO2Kgh);
@@ -157,6 +157,20 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
     }
   };
 
+  // Función para filtrar los aviones según filtro consumo
+  const filtrarPorConsumo = (aviones) => {
+    if (filterConsumo === 'mayor') {
+      return ordenarAviones(aviones)
+        .sort((a, b) => b.fuelLph - a.fuelLph)
+        .slice(0, 10);
+    } else if (filterConsumo === 'menor') {
+      return ordenarAviones(aviones)
+        .sort((a, b) => a.fuelLph - b.fuelLph)
+        .slice(0, 10);
+    }
+    return ordenarAviones(aviones).slice(0, 10);
+  };
+
   if (error) {
     return <div className="text-red-400 text-center mt-4">Error: {error}</div>;
   }
@@ -189,6 +203,39 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
         <p><strong>Emisión media:</strong> {avgCO2 ?? 'Calculando...'} kg CO₂/h</p>
       </div>
 
+      {/* Selector filtro consumo para la gráfica */}
+      <div className="bg-gray-800 p-4 rounded-xl shadow-md mb-4">
+        <label htmlFor="filtroConsumo" className="text-sm mr-2">Filtro consumo:</label>
+        <select
+          id="filtroConsumo"
+          value={filterConsumo}
+          onChange={e => setFilterConsumo(e.target.value)}
+          className="bg-gray-900 text-white text-xs rounded px-2 py-1"
+        >
+          <option value="todos">Todos</option>
+          <option value="mayor">Mayor consumo</option>
+          <option value="menor">Menor consumo</option>
+        </select>
+      </div>
+
+      {/* Gráfica de barras consumo */}
+      <div className="bg-gray-800 p-4 rounded-xl shadow-md mb-10">
+        <h2 className="text-xl font-semibold mb-4 text-white">Comparativa de Consumo de Combustible (L/h)</h2>
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart
+            data={filtrarPorConsumo(data)}
+            margin={{ top: 5, right: 30, left: 0, bottom: 40 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" stroke="#555" />
+            <XAxis dataKey="hex" angle={-45} textAnchor="end" interval={0} tick={{ fill: '#ccc', fontSize: 12 }} />
+            <YAxis tick={{ fill: '#ccc' }} />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="fuelLph" fill="#38bdf8" name="Consumo L/h" />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+
       <div className="overflow-x-auto bg-gray-900 rounded-xl shadow-md">
         <table className="min-w-full table-auto text-sm text-left text-gray-300">
           <thead className="bg-gray-700 text-gray-200 uppercase text-xs">
@@ -219,7 +266,10 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
           <tbody className="divide-y divide-gray-700">
             {ordenarAviones(data).map((avion, index) => (
               <tr key={index} className="hover:bg-gray-800 transition-colors group">
-                <td className="px-4 py-2"><img src={`./paises/${avion.pais}.png`} alt="bandera" className="w-6 h-6 inline-block mr-2" />{avion.pais}</td>
+                <td className="px-4 py-2">
+                  <img src={`./paises/${avion.pais}.png`} alt="bandera" className="w-6 h-6 inline-block mr-2" />
+                  {avion.pais}
+                </td>
                 <td className="px-4 py-2">{avion.hex}</td>
                 <td className="px-4 py-2">{avion.lon ?? 'N/A'}</td>
                 <td className="px-4 py-2">{avion.lat ?? 'N/A'}</td>
