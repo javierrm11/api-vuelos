@@ -1,18 +1,10 @@
 ---
-import EuropaPlanes from '../components/EuropaPlanes.jsx';
-import Nav from '../components/Nav.astro';
+import Planes from '../components/Planes';
+import Layout from '../Layouts/Layout.astro';
 import "../styles/global.css";
 
 ---
 
-<html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Aviones sobre España</title>
-  </head>
-  <Nav>
-    <h1 class="text-2xl font-bold mb-4">PROYECTO AVIONES</h1>
-    <EuropaPlanes client:load />
-  </Nav>
-</html>
+<Layout title="Europa Planes">
+    <Planes region={"Europa"} client:load />
+</Layout>

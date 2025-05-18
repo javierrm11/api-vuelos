@@ -1,17 +1,9 @@
 ---
-import OceaniaPlanes from '../components/OceaniaPlanes';
-import Nav from '../components/Nav.astro';
+import Planes from '../components/Planes';
 import "../styles/global.css";
+import Layout from '../Layouts/Layout.astro';
 ---
 
-<html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Aviones en Oceanía</title>
-  </head>
-  <Nav>
-    <h1 class="text-2xl font-bold mb-4">PROYECTO AVIONES</h1>
-    <OceaniaPlanes client:load />
-  </Nav>
-</html>
+<Layout title="Oceania Planes">
+    <Planes region={"Oceania"} client:load />
+</Layout>

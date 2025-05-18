@@ -1,5 +1,5 @@
 const elecciones = {
-  Spain: [{ nombre: "Madrid", lat: 40.4168, lon: -3.7038 }],
+  Spain: [{ nombre: "España", lat: 40.4168, lon: -3.7038 }],
   Europa: [
     { nombre: "España", lat: 40.4168, lon: -3.7038 },
     { nombre: "Francia", lat: 48.8566, lon: 2.3522 },
