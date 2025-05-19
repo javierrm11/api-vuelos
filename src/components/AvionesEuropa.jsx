@@ -1,5 +1,3 @@
-// EarthScene.js
-
 import React, { useRef } from 'react';
 import { Canvas, useFrame, useLoader } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
@@ -54,13 +52,93 @@ function Earth() {
 
 export default function EarthScene() {
   return (
-    <div style={{ width: '100%', height: '100vh', background: 'black' }}>
-      <Canvas camera={{ position: [0, 0, 6], fov: 45 }}>
-        <ambientLight intensity={0.5} />
-        <directionalLight position={[5, 3, 5]} intensity={1} />
-        <Earth />
-        <OrbitControls enablePan={false} enableZoom={false} autoRotate autoRotateSpeed={0.5} />
-      </Canvas>
+    <div style={{ minHeight: '100vh', background: 'black' }}>
+      {/* Sección del globo, sticky para que no desaparezca al hacer scroll */}
+      <div style={{
+        height: '100vh',
+        width: '100vw',
+        position: 'relative', // <-- Ahora solo ocupa su sitio
+        background: 'black'
+      }}>
+        <Canvas camera={{ position: [0, 0, 6], fov: 45 }}>
+          <ambientLight intensity={0.5} />
+          <directionalLight position={[5, 3, 5]} intensity={1} />
+          <Earth />
+          <OrbitControls enablePan={false} enableZoom={false} autoRotate autoRotateSpeed={0.5} />
+        </Canvas>
+        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+          <h1 className="text-4xl md:text-6xl font-bold text-white drop-shadow-lg text-center mb-4">
+            APIones Dashboard
+          </h1>
+          <p className="text-lg md:text-2xl text-gray-200 text-center max-w-xl drop-shadow">
+            Visualiza el impacto ambiental de la aviación en tiempo real
+          </p>
+        </div>
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce pointer-events-none">
+          <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="white">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+      </div>
+
+      {/* Sección de información */}
+      <section className="bg-white py-16 px-4" id="info">
+        <div className="max-w-3xl mx-auto text-center">
+          <h2 className="text-3xl font-bold mb-4 text-gray-900">¿Qué es APIones?</h2>
+          <p className="text-lg text-gray-700 mb-6">
+            APIones es un dashboard interactivo que monitoriza vuelos en tiempo real y calcula el consumo de combustible y las emisiones de CO₂ de los aviones sobre cada continente.
+            Utiliza datos abiertos y modelos físicos para estimar el impacto ambiental de la aviación, ayudando a concienciar sobre la huella ecológica del transporte aéreo.
+          </p>
+          <div className="grid md:grid-cols-3 gap-8 mt-10">
+            <div>
+              <h3 className="text-xl font-semibold text-blue-600 mb-2">Datos en tiempo real</h3>
+              <p className="text-gray-600">Actualización automática de vuelos y emisiones por región.</p>
+            </div>
+            <div>
+              <h3 className="text-xl font-semibold text-green-600 mb-2">Visualización interactiva</h3>
+              <p className="text-gray-600">Gráficas y mapas para comparar el impacto entre continentes.</p>
+            </div>
+            <div>
+              <h3 className="text-xl font-semibold text-red-600 mb-2">Conciencia ambiental</h3>
+              <p className="text-gray-600">Promueve la reflexión sobre el papel de la aviación en el cambio climático.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Más contenido extra */}
+      <section className="bg-gray-100 py-16 px-4">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-2xl font-bold mb-4 text-gray-800">¿Por qué importa?</h2>
+          <p className="text-gray-700 mb-6">
+            La aviación es responsable de una parte significativa de las emisiones globales de gases de efecto invernadero.
+            Conocer el impacto de cada vuelo ayuda a tomar decisiones más responsables y a fomentar la innovación hacia un transporte aéreo más sostenible.
+          </p>
+          <div className="grid md:grid-cols-2 gap-8 mt-10">
+            <div>
+              <h3 className="text-lg font-semibold text-indigo-600 mb-2">Transparencia</h3>
+              <p className="text-gray-600">Todos los datos provienen de fuentes abiertas y se procesan en tiempo real.</p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-amber-600 mb-2">Educación</h3>
+              <p className="text-gray-600">El objetivo es informar y concienciar, no solo mostrar cifras.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Aviso legal */}
+      <section className="bg-white py-8 px-4">
+        <div className="max-w-2xl mx-auto text-center">
+          <p className="text-gray-600">
+            Toda la información legal y de privacidad está disponible{' '}
+            <a href="/Legal" className="text-blue-600 underline hover:text-blue-800">AQUÍ</a>.
+          </p>
+        </div>
+      </section>}
+      <footer className="bg-gray-900 text-gray-400 py-6 text-center">
+        Proyecto TFG &copy; {new Date().getFullYear()} | APIones | Autor: Alex
+      </footer>
     </div>
   );
 }
