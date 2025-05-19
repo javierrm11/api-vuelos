@@ -56,7 +56,7 @@ export default function EarthScene() {
       {/* Sección del globo, sticky para que no desaparezca al hacer scroll */}
       <div style={{
         height: '100vh',
-        width: '100vw',
+        width: '100%',
         position: 'relative', // <-- Ahora solo ocupa su sitio
         background: 'black'
       }}>
