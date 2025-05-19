@@ -131,7 +131,7 @@ export default function EarthScene() {
       <section className="bg-white py-8 px-4">
         <div className="max-w-2xl mx-auto text-center">
           <p className="text-gray-600">
-            Toda la información legal y de privacidad está disponible
+            Toda la información legal y de privacidad está disponible{' '}
             <a href="/Legal" className="text-blue-600 underline hover:text-blue-800">AQUÍ</a>.
           </p>
         </div>
