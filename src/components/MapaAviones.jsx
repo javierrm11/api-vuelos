@@ -9,15 +9,28 @@ const MapaAviones = () => {
 
   const obtenerAviones = async () => {
     try {
-      const response = await fetch(`/api/planes?region=${pais}`);
-      const data = await response.json();
+      if (pais === "Global") {
+        const regiones = ["Europa", "America", "Asia", "Africa", "Oceania"];
+        const resultados = await Promise.all(
+          regiones.map(async (region) => {
+            const response = await fetch(`/api/planes?region=${region}`);
+            const data = await response.json();
+            if (data.error) return [];
+            return data.flatMap((ubicacion) => ubicacion.avionesInfo || []);
+          })
+        );
+        return resultados.flat();
+      } else {
+        const response = await fetch(`/api/planes?region=${pais}`);
+        const data = await response.json();
 
-      if (data.error) {
-        console.error(`Error al obtener aviones para ${pais}:`, data.error);
-        return [];
+        if (data.error) {
+          console.error(`Error al obtener aviones para ${pais}:`, data.error);
+          return [];
+        }
+
+        return data.flatMap((ubicacion) => ubicacion.avionesInfo || []);
       }
-
-      return data.flatMap((ubicacion) => ubicacion.avionesInfo || []);
     } catch (error) {
       console.error(`Error al realizar la solicitud para ${pais}:`, error);
       return [];
@@ -224,7 +237,6 @@ const MapaAviones = () => {
           <option value="Asia">Asia</option>
           <option value="America">America</option>
           <option value="Oceania">Oceania</option>
-          <option value="Global">Global</option>
         </select>
         <div ref={mapRef} style={{ height: '95vh', width: '100%', zIndex: 1 }}></div>
       </div>

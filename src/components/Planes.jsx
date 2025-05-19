@@ -9,7 +9,7 @@ function Planes({ region }) {
   const [sortOption, setSortOption] = useState('');
   const [masRapido, setMasRapido] = useState(null);
   const [masLento, setMasLento] = useState(null);
-  const [filterConsumo, setFilterConsumo] = useState('todos'); // Nuevo estado filtro consumo
+  const [filterConsumo, setFilterConsumo] = useState('todos');
 
   // Constantes físicas
   const S = 122;
@@ -157,18 +157,28 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
     }
   };
 
-  // Función para filtrar los aviones según filtro consumo
+  // Nuevo filtro para consumo y emisiones
   const filtrarPorConsumo = (aviones) => {
-    if (filterConsumo === 'mayor') {
-      return ordenarAviones(aviones)
-        .sort((a, b) => b.fuelLph - a.fuelLph)
-        .slice(0, 10);
-    } else if (filterConsumo === 'menor') {
-      return ordenarAviones(aviones)
-        .sort((a, b) => a.fuelLph - b.fuelLph)
-        .slice(0, 10);
+    switch (filterConsumo) {
+      case 'mayorConsumo':
+        return ordenarAviones(aviones)
+          .sort((a, b) => b.fuelLph - a.fuelLph)
+          .slice(0, 10);
+      case 'menorConsumo':
+        return ordenarAviones(aviones)
+          .sort((a, b) => a.fuelLph - b.fuelLph)
+          .slice(0, 10);
+      case 'mayorEmision':
+        return ordenarAviones(aviones)
+          .sort((a, b) => b.co2Kgh - a.co2Kgh)
+          .slice(0, 10);
+      case 'menorEmision':
+        return ordenarAviones(aviones)
+          .sort((a, b) => a.co2Kgh - b.co2Kgh)
+          .slice(0, 10);
+      default:
+        return ordenarAviones(aviones).slice(0, 10);
     }
-    return ordenarAviones(aviones).slice(0, 10);
   };
 
   if (error) {
@@ -203,9 +213,9 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
         <p><strong>Emisión media:</strong> {avgCO2 ?? 'Calculando...'} kg CO₂/h</p>
       </div>
 
-      {/* Selector filtro consumo para la gráfica */}
+      {/* Selector filtro consumo/emisiones para la gráfica */}
       <div className="bg-gray-800 p-4 rounded-xl shadow-md mb-4">
-        <label htmlFor="filtroConsumo" className="text-sm mr-2">Filtro consumo:</label>
+        <label htmlFor="filtroConsumo" className="text-sm mr-2">Filtro gráfico:</label>
         <select
           id="filtroConsumo"
           value={filterConsumo}
@@ -213,14 +223,18 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
           className="bg-gray-900 text-white text-xs rounded px-2 py-1"
         >
           <option value="todos">Todos</option>
-          <option value="mayor">Mayor consumo</option>
-          <option value="menor">Menor consumo</option>
+          <option value="mayorConsumo">Mayor consumo</option>
+          <option value="menorConsumo">Menor consumo</option>
+          <option value="mayorEmision">Mayor emisiones</option>
+          <option value="menorEmision">Menor emisiones</option>
         </select>
       </div>
 
-      {/* Gráfica de barras consumo */}
+      {/* Gráfica de barras consumo y emisiones */}
       <div className="bg-gray-800 p-4 rounded-xl shadow-md mb-10">
-        <h2 className="text-xl font-semibold mb-4 text-white">Comparativa de Consumo de Combustible (L/h)</h2>
+        <h2 className="text-xl font-semibold mb-4 text-white">
+          Comparativa de Consumo de Combustible (L/h) y Emisiones de CO₂ (kg/h)
+        </h2>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart
             data={filtrarPorConsumo(data)}
@@ -232,6 +246,7 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
             <Tooltip />
             <Legend />
             <Bar dataKey="fuelLph" fill="#38bdf8" name="Consumo L/h" />
+            <Bar dataKey="co2Kgh" fill="#f87171" name="CO₂ kg/h" />
           </BarChart>
         </ResponsiveContainer>
       </div>
