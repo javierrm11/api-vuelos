@@ -57,7 +57,10 @@ export default function EarthScene() {
       <div style={{
         height: '100vh',
         width: '100%',
-        position: 'relative', // <-- Ahora solo ocupa su sitio
+        position: 'relative',
+        top: 0,
+        left: 0,
+        zIndex: 10,
         background: 'black'
       }}>
         <Canvas camera={{ position: [0, 0, 6], fov: 45 }}>
