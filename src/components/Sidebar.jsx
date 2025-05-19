@@ -16,6 +16,7 @@ export default function Sidebar({ isOpen, onClose }) {
     { label: 'Asia', href: '/Asia' },
     { label: 'Oceania', href: '/Oceania' },
     { label: 'Mapa', href: '/Mapa' },
+    { label: 'Disclaimer', href: '/Legal' },
   ];
 
   return (
