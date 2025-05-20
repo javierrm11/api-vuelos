@@ -51,6 +51,8 @@ export async function GET(request) {
       const avionesInfo = avionesVolando.map((av) => ({
         pais: ubicacion.nombre,
         hex: av.hex,
+        t: av.t,
+        flight: av.flight,
         gs: av.gs,
         alt_baro: av.alt_baro,
         lat: av.lat,

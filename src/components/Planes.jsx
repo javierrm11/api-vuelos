@@ -257,6 +257,8 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
             <tr>
               <th className="px-4 py-3">País</th>
               <th className="px-4 py-3">Hex</th>
+              <th className="px-4 py-3">Vuelo</th>
+              <th className="px-4 py-3">Tipo</th>
               <th className="px-4 py-3">Longitud</th>
               <th className="px-4 py-3">Latitud</th>
               <th className="px-4 py-3">Consumo (L/h)</th>
@@ -283,9 +285,10 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
               <tr key={index} className="hover:bg-gray-800 transition-colors group">
                 <td className="px-4 py-2">
                   <img src={`./paises/${avion.pais}.png`} alt="bandera" className="w-6 h-6 inline-block mr-2" />
-                  {avion.pais}
                 </td>
                 <td className="px-4 py-2">{avion.hex}</td>
+                <td className="px-4 py-2">{avion.flight ?? 'N/A'}</td>
+                <td className="px-4 py-2">{avion.t ?? 'N/A'}</td>
                 <td className="px-4 py-2">{avion.lon ?? 'N/A'}</td>
                 <td className="px-4 py-2">{avion.lat ?? 'N/A'}</td>
                 <td className="px-4 py-2">{avion.fuelLph ?? 'N/A'}</td>
