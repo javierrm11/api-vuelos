@@ -193,7 +193,7 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
     <div className="max-w-7xl mx-auto px-4 py-8 text-gray-200">
       <h1 className="text-3xl font-bold mb-6 text-center text-black">Estado de vuelos sobre {region}</h1>
 
-      <div className="grid md:grid-cols-2 gap-6 mb-10">
+      <div className="grid md:grid-cols-3 gap-6 mb-10">
         <div className="bg-gray-800 p-4 rounded-xl shadow-md">
           <h2 className="text-xl font-semibold mb-2">Avión más rápido</h2>
           <p><strong>Hex:</strong> {masRapido?.hex ?? 'N/A'}</p>
@@ -204,6 +204,12 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
           <h2 className="text-xl font-semibold mb-2">Avión más lento</h2>
           <p><strong>Hex:</strong> {masLento?.hex ?? 'N/A'}</p>
           <p><strong>Velocidad:</strong> {masLento?.gs?.toFixed(0) ?? 'N/A'} km/h</p>
+        </div>
+        <div className="bg-gray-800 p-4 rounded-xl shadow-md">
+          <h2 className="text-xl font-semibold mb-2">Aviones en vuelo</h2>
+          <p><strong>Total:</strong> {data.length}</p>
+          <p><strong>Región:</strong> {region}</p>
+          <p><strong>Última actualización:</strong> {new Date().toLocaleTimeString()}</p>
         </div>
       </div>
 
