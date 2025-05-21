@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from 'recharts';
+import Loading from './Loading';
 
 function Planes({ region }) {
   const [data, setData] = useState([]);
@@ -186,7 +187,7 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
   }
 
   if (!data.length) {
-    return <div className="text-gray-300 text-center mt-4">Cargando datos iniciales...</div>;
+    return <Loading />
   }
 
   return (
@@ -219,42 +220,42 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
         <p><strong>Emisión media:</strong> {avgCO2 ?? 'Calculando...'} kg CO₂/h</p>
       </div>
 
-      {/* Selector filtro consumo/emisiones para la gráfica */}
-      <div className="bg-gray-800 p-4 rounded-xl shadow-md mb-4">
-        <label htmlFor="filtroConsumo" className="text-sm mr-2">Filtro gráfico:</label>
-        <select
-          id="filtroConsumo"
-          value={filterConsumo}
-          onChange={e => setFilterConsumo(e.target.value)}
-          className="bg-gray-900 text-white text-xs rounded px-2 py-1"
-        >
-          <option value="todos">Todos</option>
-          <option value="mayorConsumo">Mayor consumo</option>
-          <option value="menorConsumo">Menor consumo</option>
-          <option value="mayorEmision">Mayor emisiones</option>
-          <option value="menorEmision">Menor emisiones</option>
-        </select>
-      </div>
-
-      {/* Gráfica de barras consumo y emisiones */}
       <div className="bg-gray-800 p-4 rounded-xl shadow-md mb-10">
+        {/* Selector filtro consumo/emisiones para la gráfica */}
+        <div className="pb-5">
+          <label htmlFor="filtroConsumo" className="text-sm mr-2 pb-5">Filtro gráfico:</label>
+          <select
+            id="filtroConsumo"
+            value={filterConsumo}
+            onChange={e => setFilterConsumo(e.target.value)}
+            className="bg-gray-900 text-white text-xs rounded px-2 py-1"
+          >
+            <option value="todos">Todos</option>
+            <option value="mayorConsumo">Mayor consumo</option>
+            <option value="menorConsumo">Menor consumo</option>
+            <option value="mayorEmision">Mayor emisiones</option>
+            <option value="menorEmision">Menor emisiones</option>
+          </select>
+        </div>
+
+        {/* Gráfica de barras consumo y emisiones */}
         <h2 className="text-xl font-semibold mb-4 text-white">
           Comparativa de Consumo de Combustible (L/h) y Emisiones de CO₂ (kg/h)
         </h2>
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart
-            data={filtrarPorConsumo(data)}
-            margin={{ top: 5, right: 30, left: 0, bottom: 40 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" stroke="#555" />
-            <XAxis dataKey="hex" angle={-45} textAnchor="end" interval={0} tick={{ fill: '#ccc', fontSize: 12 }} />
-            <YAxis tick={{ fill: '#ccc' }} />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="fuelLph" fill="#38bdf8" name="Consumo L/h" />
-            <Bar dataKey="co2Kgh" fill="#f87171" name="CO₂ kg/h" />
-          </BarChart>
-        </ResponsiveContainer>
+<ResponsiveContainer width="100%" height={300}>
+  <BarChart
+    data={filtrarPorConsumo(data)}
+    margin={{ top: 5, right: 30, left: 0, bottom: 40 }}
+  >
+    <CartesianGrid strokeDasharray="3 3" stroke="#555" />
+    <XAxis dataKey="hex" angle={-45} textAnchor="end" interval={0} tick={{ fill: '#ccc', fontSize: 12 }} />
+    <YAxis tick={{ fill: '#ccc' }} />
+    <Tooltip />
+    <Legend wrapperStyle={{ bottom: 10 }} />
+    <Bar dataKey="fuelLph" fill="#38bdf8" name="Consumo L/h" />
+    <Bar dataKey="co2Kgh" fill="#f87171" name="CO₂ kg/h" />
+  </BarChart>
+</ResponsiveContainer>
       </div>
 
       <div className="overflow-x-auto bg-gray-900 rounded-xl shadow-md">
