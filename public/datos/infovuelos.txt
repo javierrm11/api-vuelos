@@ -1,0 +1,2663 @@
+A321-2
+
+Airbus A321 Paint2
+
+477
+
+250
+
+350
+
+200
+
+2400
+
+5600 HARD
+
+18 GATE
+
+100 yes
+
+no
+
+A321-4
+
+Airbus A321 Paint4
+
+477
+
+250
+
+350
+
+200
+
+2400
+
+5600 HARD
+
+18 GATE
+
+100 yes
+
+no
+
+A321-5
+
+Airbus A321 Paint5
+
+477
+
+250
+
+350
+
+200
+
+2400
+
+5600 HARD
+
+18 GATE
+
+100 yes
+
+no
+
+1
+
+fs10.AircraftTypes.csv
+
+A321-2a
+
+Airbus A321 Paint2
+
+477
+
+250
+
+350
+
+200
+
+2400
+
+5600 HARD
+
+18 GATE
+
+100 yes
+
+no
+
+A321-4a
+
+Airbus A321 Paint4
+
+477
+
+250
+
+350
+
+200
+
+2400
+
+5600 HARD
+
+18 GATE
+
+100 yes
+
+no
+
+A321-5a
+
+Airbus A321 Paint5
+
+477
+
+250
+
+350
+
+200
+
+2400
+
+5600 HARD
+
+18 GATE
+
+100 yes
+
+no
+
+A321-2b
+
+Airbus A321 Paint2
+
+477
+
+250
+
+350
+
+200
+
+2400
+
+5600 HARD
+
+18 GATE
+
+100 yes
+
+no
+
+A321-4b
+
+Airbus A321 Paint4
+
+477
+
+250
+
+350
+
+200
+
+2400
+
+5600 HARD
+
+18 GATE
+
+100 yes
+
+no
+
+BE58-1
+
+Beech Baron 58 Paint1
+
+200
+
+40
+
+120
+
+50
+
+661
+
+4000 HARD
+
+6 RAMP
+
+50 yes
+
+no
+
+BE58-2
+
+Beech Baron 58 Paint2
+
+200
+
+40
+
+120
+
+50
+
+661
+
+4000 HARD
+
+6 RAMP
+
+50 yes
+
+no
+
+BE58-3
+
+Beech Baron 58 Paint3
+
+200
+
+40
+
+120
+
+50
+
+661
+
+4000 HARD
+
+6 RAMP
+
+50 yes
+
+no
+
+BE58-1a
+
+Beech Baron 58 Paint1
+
+200
+
+40
+
+120
+
+50
+
+661
+
+4000 HARD
+
+6 RAMP
+
+50 yes
+
+no
+
+BE58-2a
+
+Beech Baron 58 Paint2
+
+200
+
+40
+
+120
+
+50
+
+661
+
+4000 HARD
+
+6 RAMP
+
+50 yes
+
+no
+
+BE58-3a
+
+Beech Baron 58 Paint3
+
+200
+
+40
+
+120
+
+50
+
+661
+
+4000 HARD
+
+6 RAMP
+
+50 yes
+
+no
+
+BE58-1b
+
+Beech Baron 58 Paint1
+
+200
+
+40
+
+120
+
+50
+
+661
+
+4000 HARD
+
+6 RAMP
+
+50 yes
+
+no
+
+BE58-2b
+
+Beech Baron 58 Paint2
+
+200
+
+40
+
+120
+
+50
+
+661
+
+4000 HARD
+
+6 RAMP
+
+50 yes
+
+no
+
+BE58-3b
+
+Beech Baron 58 Paint3
+
+200
+
+40
+
+120
+
+50
+
+661
+
+4000 HARD
+
+6 RAMP
+
+50 yes
+
+no
+
+B350-1
+
+Beech King Air 350 Paint1
+
+315
+
+150
+
+250
+
+100
+
+1298
+
+4000 HARD
+
+9 RAMP
+
+75 yes
+
+no
+
+B350-2
+
+Beech King Air 350 Paint2
+
+315
+
+150
+
+250
+
+100
+
+1298
+
+4000 HARD
+
+9 RAMP
+
+75 yes
+
+no
+
+B350-3
+
+Beech King Air 350 Paint3
+
+315
+
+150
+
+250
+
+100
+
+1298
+
+4000 HARD
+
+9 RAMP
+
+75 yes
+
+no
+
+B350-1a
+
+Beech King Air 350 Paint1
+
+315
+
+150
+
+250
+
+100
+
+1298
+
+4000 HARD
+
+9 RAMP
+
+75 yes
+
+no
+
+B350-2a
+
+Beech King Air 350 Paint2
+
+315
+
+150
+
+250
+
+100
+
+1298
+
+4000 HARD
+
+9 RAMP
+
+75 yes
+
+no
+
+B350-3a
+
+Beech King Air 350 Paint3
+
+315
+
+150
+
+250
+
+100
+
+1298
+
+4000 HARD
+
+9 RAMP
+
+75 yes
+
+no
+
+B350-1b
+
+Beech King Air 350 Paint1
+
+315
+
+150
+
+250
+
+100
+
+1298
+
+4000 HARD
+
+9 RAMP
+
+75 yes
+
+no
+
+B350-2b
+
+Beech King Air 350 Paint2
+
+315
+
+150
+
+250
+
+100
+
+1298
+
+4000 HARD
+
+9 RAMP
+
+75 yes
+
+no
+
+B734-2
+
+Boeing 737-800 Paint2
+
+477
+
+250
+
+350
+
+200
+
+2248
+
+6426 HARD
+
+18 GATE
+
+100 yes
+
+no
+
+B734-4
+
+Boeing 737-800 Paint4
+
+477
+
+250
+
+350
+
+200
+
+2248
+
+6426 HARD
+
+18 GATE
+
+100 yes
+
+no
+
+B734-5
+
+Boeing 737-800 Paint5
+
+477
+
+250
+
+350
+
+200
+
+2248
+
+6426 HARD
+
+18 GATE
+
+100 yes
+
+no
+
+B734-2a
+
+Boeing 737-800 Paint2
+
+477
+
+250
+
+350
+
+200
+
+2248
+
+6426 HARD
+
+18 GATE
+
+100 yes
+
+no
+
+B734-4a
+
+Boeing 737-800 Paint4
+
+477
+
+250
+
+350
+
+200
+
+2248
+
+6426 HARD
+
+18 GATE
+
+100 yes
+
+no
+
+B734-5a
+
+Boeing 737-800 Paint5
+
+477
+
+250
+
+350
+
+200
+
+2248
+
+6426 HARD
+
+18 GATE
+
+100 yes
+
+no
+
+B734-2b
+
+Boeing 737-800 Paint2
+
+477
+
+250
+
+350
+
+200
+
+2248
+
+6426 HARD
+
+18 GATE
+
+100 yes
+
+no
+
+2
+
+fs10.AircraftTypes.csv
+
+B734-4b
+
+Boeing 737-800 Paint4
+
+477
+
+250
+
+350
+
+200
+
+2248
+
+6426 HARD
+
+18 GATE
+
+100 yes
+
+no
+
+B734-5b
+
+Boeing 737-800 Paint5
+
+477
+
+250
+
+350
+
+200
+
+2248
+
+6426 HARD
+
+18 GATE
+
+100 yes
+
+no
+
+B734-2c
+
+Boeing 737-800 Paint2
+
+477
+
+250
+
+350
+
+200
+
+2248
+
+6426 HARD
+
+18 GATE
+
+100 yes
+
+no
+
+B734-4c
+
+Boeing 737-800 Paint4
+
+477
+
+250
+
+350
+
+200
+
+2248
+
+6426 HARD
+
+18 GATE
+
+100 yes
+
+no
+
+B734-5c
+
+Boeing 737-800 Paint5
+
+477
+
+250
+
+350
+
+200
+
+2248
+
+6426 HARD
+
+18 GATE
+
+100 yes
+
+no
+
+B744-0
+
+Boeing 747-400
+
+505
+
+280
+
+400
+
+1000
+
+5394
+
+11000 HARD
+
+40 CARGO
+
+100 yes
+
+no
+
+B744-2
+
+Boeing 747-400 Paint2
+
+505
+
+280
+
+400
+
+1000
+
+5394
+
+11000 HARD
+
+33 GATE
+
+100 yes
+
+no
+
+B744-4
+
+Boeing 747-400 Paint4
+
+505
+
+280
+
+400
+
+1000
+
+5394
+
+11000 HARD
+
+33 GATE
+
+100 yes
+
+no
+
+B744-5
+
+Boeing 747-400 Paint5
+
+505
+
+280
+
+400
+
+1000
+
+5394
+
+11000 HARD
+
+33 GATE
+
+100 yes
+
+no
+
+B744-8
+
+Boeing 747-400 Paint8
+
+505
+
+280
+
+400
+
+1000
+
+5394
+
+11000 HARD
+
+40 CARGO
+
+100 yes
+
+no
+
+CRJ7-0
+
+Bombardier CRJ 700 Paint1
+
+464
+
+300
+
+360
+
+100
+
+2423
+
+5038 HARD
+
+13 GATE|RAMP
+
+100 yes
+
+no
+
+CRJ7-1
+
+Bombardier CRJ 700 Paint2
+
+464
+
+300
+
+360
+
+100
+
+2423
+
+5038 HARD
+
+13 GATE|RAMP
+
+100 yes
+
+no
+
+CRJ7-0a
+
+Bombardier CRJ 700 Paint1
+
+464
+
+300
+
+360
+
+100
+
+2423
+
+5038 HARD
+
+13 GATE|RAMP
+
+100 yes
+
+no
+
+CRJ7-1a
+
+Bombardier CRJ 700 Paint2
+
+464
+
+300
+
+360
+
+100
+
+2423
+
+5038 HARD
+
+13 GATE|RAMP
+
+100 yes
+
+no
+
+CRJ7-0b
+
+Bombardier CRJ 700 Paint1
+
+464
+
+300
+
+360
+
+100
+
+2423
+
+5038 HARD
+
+13 GATE|RAMP
+
+100 yes
+
+no
+
+CRJ7-1b
+
+Bombardier CRJ 700 Paint2
+
+464
+
+300
+
+360
+
+100
+
+2423
+
+5038 HARD
+
+13 GATE|RAMP
+
+100 yes
+
+no
+
+CRJ7-0c
+
+Bombardier CRJ 700 Paint1
+
+464
+
+300
+
+360
+
+100
+
+2423
+
+5038 HARD
+
+13 GATE|RAMP
+
+100 yes
+
+no
+
+CRJ7-1c
+
+Bombardier CRJ 700 Paint2
+
+464
+
+300
+
+360
+
+100
+
+2423
+
+5038 HARD
+
+13 GATE|RAMP
+
+100 yes
+
+no
+
+C208-0
+
+Cessna Grand Caravan
+
+175
+
+30
+
+150
+
+50
+
+1519
+
+4000 HARD|SOFT
+
+8 RAMP
+
+40 yes
+
+no
+
+C208-1
+
+Cessna Grand Caravan Pai
+
+175
+
+30
+
+150
+
+50
+
+1519
+
+4000 HARD|SOFT
+
+8 RAMP
+
+40 yes
+
+no
+
+C208-2
+
+Cessna Grand Caravan Pai
+
+175
+
+30
+
+150
+
+50
+
+1519
+
+4000 HARD|SOFT
+
+8 RAMP
+
+40 yes
+
+no
+
+C208-3
+
+Cessna Grand Caravan Pai
+
+175
+
+30
+
+150
+
+50
+
+1519
+
+4000 HARD|SOFT
+
+8 RAMP
+
+40 yes
+
+no
+
+C208-0a
+
+Cessna Grand Caravan
+
+175
+
+30
+
+150
+
+50
+
+1519
+
+4000 HARD|SOFT
+
+8 RAMP
+
+40 yes
+
+no
+
+C208-1a
+
+Cessna Grand Caravan Pai
+
+175
+
+30
+
+150
+
+50
+
+1519
+
+4000 HARD|SOFT
+
+8 RAMP
+
+40 yes
+
+no
+
+C172-0
+
+Cessna Skyhawk 172SP
+
+129
+
+20
+
+100
+
+15
+
+554
+
+2500 HARD|SOFT
+
+6 RAMP
+
+10 yes
+
+yes
+
+C172-1
+
+Cessna Skyhawk 172SP Pai
+
+129
+
+20
+
+100
+
+15
+
+554
+
+2500 HARD|SOFT
+
+6 RAMP
+
+10 yes
+
+yes
+
+C172-2
+
+Cessna Skyhawk 172SP Pai
+
+129
+
+20
+
+100
+
+15
+
+554
+
+2500 HARD|SOFT
+
+6 RAMP
+
+10 yes
+
+yes
+
+C172-3
+
+Cessna Skyhawk 172SP Pai
+
+129
+
+20
+
+100
+
+15
+
+554
+
+2500 HARD|SOFT
+
+6 RAMP
+
+10 yes
+
+yes
+
+C172-4
+
+Cessna Skyhawk 172SP Pai
+
+129
+
+20
+
+100
+
+15
+
+554
+
+2500 HARD|SOFT
+
+6 RAMP
+
+10 yes
+
+yes
+
+3
+
+fs10.AircraftTypes.csv
+
+C172-0a
+
+Cessna Skyhawk 172SP
+
+129
+
+20
+
+100
+
+15
+
+554
+
+2500 HARD|SOFT
+
+6 RAMP
+
+10 yes
+
+yes
+
+C172-1a
+
+Cessna Skyhawk 172SP Pai
+
+129
+
+20
+
+100
+
+15
+
+554
+
+2500 HARD|SOFT
+
+6 RAMP
+
+10 yes
+
+yes
+
+C172-2a
+
+Cessna Skyhawk 172SP Pai
+
+129
+
+20
+
+100
+
+15
+
+554
+
+2500 HARD|SOFT
+
+6 RAMP
+
+10 yes
+
+yes
+
+C172-3a
+
+Cessna Skyhawk 172SP Pai
+
+129
+
+20
+
+100
+
+15
+
+554
+
+2500 HARD|SOFT
+
+6 RAMP
+
+10 yes
+
+yes
+
+C172-4a
+
+Cessna Skyhawk 172SP Pai
+
+129
+
+20
+
+100
+
+15
+
+554
+
+2500 HARD|SOFT
+
+6 RAMP
+
+10 yes
+
+yes
+
+DHC2-1
+
+DeHavilland Beaver DHC2
+
+175
+
+30
+
+70
+
+50
+
+1519
+
+4000 WATER
+
+8 DOCK
+
+40 no
+
+no
+
+DHC2-2
+
+DeHavilland Beaver DHC2
+
+175
+
+30
+
+70
+
+50
+
+1519
+
+4000 WATER
+
+8 DOCK
+
+40 no
+
+no
+
+DH8A-1
+
+de Havilland Dash 8-100 Pai
+
+265
+
+100
+
+200
+
+50
+
+603
+
+4000 HARD
+
+13 RAMP
+
+100 yes
+
+no
+
+DH8A-2
+
+de Havilland Dash 8-100 Pai
+
+265
+
+100
+
+200
+
+50
+
+603
+
+4000 HARD
+
+13 RAMP
+
+100 yes
+
+no
+
+DH8A-1a
+
+de Havilland Dash 8-100 Pai
+
+265
+
+100
+
+200
+
+50
+
+603
+
+4000 HARD
+
+13 RAMP
+
+100 yes
+
+no
+
+DH8A-2a
+
+de Havilland Dash 8-100 Pai
+
+265
+
+100
+
+200
+
+50
+
+603
+
+4000 HARD
+
+13 RAMP
+
+100 yes
+
+no
+
+DH8A-1b
+
+de Havilland Dash 8-100 Pai
+
+265
+
+100
+
+200
+
+50
+
+603
+
+4000 HARD
+
+13 RAMP
+
+100 yes
+
+no
+
+DH8A-2b
+
+de Havilland Dash 8-100 Pai
+
+265
+
+100
+
+200
+
+50
+
+603
+
+4000 HARD
+
+13 RAMP
+
+100 yes
+
+no
+
+DH8A-1c
+
+de Havilland Dash 8-100 Pai
+
+265
+
+100
+
+200
+
+50
+
+603
+
+4000 HARD
+
+13 RAMP
+
+100 yes
+
+no
+
+DH8A-2c
+
+de Havilland Dash 8-100 Pai
+
+265
+
+100
+
+200
+
+50
+
+603
+
+4000 HARD
+
+13 RAMP
+
+100 yes
+
+no
+
+DC3-0
+
+Douglas DC-3
+
+120
+
+1
+
+287
+
+15
+
+1840
+
+4000 HARD|SOFT|
+
+15 RAMP
+
+50 no
+
+no
+
+DC3-1
+
+Douglas DC-3 Paint1
+
+120
+
+1
+
+287
+
+15
+
+1840
+
+4000 HARD|SOFT|
+
+15 RAMP
+
+50 no
+
+no
+
+DC3-2
+
+Douglas DC-3 Paint2
+
+120
+
+1
+
+287
+
+15
+
+1840
+
+4000 HARD|SOFT|
+
+15 RAMP
+
+50 no
+
+no
+
+DC3-3
+
+Douglas DC-3 Paint3
+
+120
+
+1
+
+287
+
+15
+
+1840
+
+4000 HARD|SOFT|
+
+15 RAMP
+
+50 no
+
+no
+
+#Extra
+
+Extra 300S
+
+178
+
+20
+
+120
+
+50
+
+326
+
+2500 HARD
+
+4 RAMP
+
+0 no
+
+no
+
+G21-1
+
+Grumman Goose G21A pain
+
+175
+
+30
+
+70
+
+50
+
+1519
+
+4000 HARD
+
+8 RAMP
+
+40 no
+
+no
+
+G21-2
+
+Grumman Goose G21A pain
+
+175
+
+30
+
+70
+
+50
+
+1519
+
+4000 HARD
+
+8 RAMP
+
+40 no
+
+no
+
+G21-3
+
+Grumman Goose G21A pain
+
+175
+
+30
+
+70
+
+50
+
+1519
+
+4000 HARD
+
+8 RAMP
+
+40 no
+
+no
+
+G21-5
+
+Grumman Goose G21A pain
+
+175
+
+30
+
+70
+
+50
+
+1519
+
+4000 HARD
+
+8 RAMP
+
+40 no
+
+no
+
+LJ45-0
+
+Learjet 45
+
+464
+
+300
+
+360
+
+100
+
+2423
+
+5038 HARD
+
+8 RAMP
+
+100 yes
+
+no
+
+LJ45-1
+
+Learjet 45 Limited Edition
+
+464
+
+300
+
+360
+
+100
+
+2423
+
+5038 HARD
+
+8 RAMP
+
+100 yes
+
+no
+
+LJ45-0a
+
+Learjet 45
+
+464
+
+300
+
+360
+
+100
+
+2423
+
+5038 HARD
+
+8 RAMP
+
+100 yes
+
+no
+
+LJ45-1a
+
+Learjet 45 Limited Edition
+
+464
+
+300
+
+360
+
+100
+
+2423
+
+5038 HARD
+
+8 RAMP
+
+100 yes
+
+no
+
+LJ45-0b
+
+Learjet 45
+
+464
+
+300
+
+360
+
+100
+
+2423
+
+5038 HARD
+
+8 RAMP
+
+100 yes
+
+no
+
+4
+
+fs10.AircraftTypes.csv
+
+LJ45-1b
+
+Learjet 45 Limited Edition
+
+464
+
+300
+
+360
+
+100
+
+2423
+
+5038 HARD
+
+8 RAMP
+
+100 yes
+
+no
+
+LJ45-0c
+
+Learjet 45
+
+464
+
+300
+
+360
+
+100
+
+2423
+
+5038 HARD
+
+8 RAMP
+
+100 yes
+
+no
+
+M7-1
+
+Maule M7 260C paint1
+
+129
+
+20
+
+100
+
+15
+
+554
+
+2500 HARD|SOFT
+
+6 RAMP
+
+20 yes
+
+yes
+
+M7-4
+
+Maule M7 260C paint4
+
+129
+
+20
+
+100
+
+15
+
+554
+
+2500 HARD|SOFT
+
+6 RAMP
+
+20 yes
+
+yes
+
+M7-1a
+
+Maule M7 260C paint1
+
+129
+
+20
+
+100
+
+15
+
+554
+
+2500 HARD|SOFT
+
+6 RAMP
+
+20 yes
+
+yes
+
+M7-4a
+
+Maule M7 260C paint4
+
+129
+
+20
+
+100
+
+15
+
+554
+
+2500 HARD|SOFT
+
+6 RAMP
+
+20 yes
+
+yes
+
+M7SKI
+
+Maule M7 260C Ski
+
+129
+
+20
+
+100
+
+15
+
+554
+
+2500 SNOW
+
+6 RAMP
+
+10 yes
+
+no
+
+MD83-0
+
+McDonnell-Douglas/Boeing
+
+438
+
+250
+
+350
+
+250
+
+2647
+
+6549 HARD
+
+17 GATE
+
+100 yes
+
+no
+
+MD83-1
+
+McDonnell-Douglas/Boeing
+
+438
+
+250
+
+350
+
+250
+
+2647
+
+6549 HARD
+
+17 GATE
+
+100 yes
+
+no
+
+MD83-2
+
+McDonnell-Douglas/Boeing
+
+438
+
+250
+
+350
+
+250
+
+2647
+
+6549 HARD
+
+17 GATE
+
+100 yes
+
+no
+
+MD83-0a
+
+McDonnell-Douglas/Boeing
+
+438
+
+250
+
+350
+
+250
+
+2647
+
+6549 HARD
+
+17 GATE
+
+100 yes
+
+no
+
+MD83-1a
+
+McDonnell-Douglas/Boeing
+
+438
+
+250
+
+350
+
+250
+
+2647
+
+6549 HARD
+
+17 GATE
+
+100 yes
+
+no
+
+MD83-2a
+
+McDonnell-Douglas/Boeing
+
+438
+
+250
+
+350
+
+250
+
+2647
+
+6549 HARD
+
+17 GATE
+
+100 yes
+
+no
+
+M20-0
+
+Mooney Bravo
+
+195
+
+50
+
+220
+
+50
+
+1029
+
+2500 HARD
+
+6 RAMP
+
+50 yes
+
+no
+
+M20-1
+
+Mooney Bravo Retro
+
+195
+
+50
+
+220
+
+50
+
+1029
+
+2500 HARD
+
+6 RAMP
+
+50 yes
+
+no
+
+M20-0a
+
+Mooney Bravo
+
+195
+
+50
+
+220
+
+50
+
+1029
+
+2500 HARD
+
+6 RAMP
+
+50 yes
+
+no
+
+M20-1a
+
+Mooney Bravo Retro
+
+195
+
+50
+
+220
+
+50
+
+1029
+
+2500 HARD
+
+6 RAMP
+
+50 yes
+
+no
+
+M20-0b
+
+Mooney Bravo
+
+195
+
+50
+
+220
+
+50
+
+1029
+
+2500 HARD
+
+6 RAMP
+
+50 yes
+
+no
+
+M20-1b
+
+Mooney Bravo Retro
+
+195
+
+50
+
+220
+
+50
+
+1029
+
+2500 HARD
+
+6 RAMP
+
+50 yes
+
+no
+
+PA28-0
+
+Piper Cherokee 180
+
+124
+
+20
+
+100
+
+15
+
+497
+
+2500 HARD|SOFT
+
+5 RAMP
+
+10 yes
+
+yes
+
+PA28-1
+
+Piper Cherokee 180 Paint1
+
+124
+
+20
+
+100
+
+15
+
+497
+
+2500 HARD|SOFT
+
+5 RAMP
+
+10 yes
+
+yes
+
+PA28-2
+
+Piper Cherokee 180 Paint2
+
+124
+
+20
+
+100
+
+15
+
+497
+
+2500 HARD|SOFT
+
+5 RAMP
+
+10 yes
+
+yes
+
+PA28-0a
+
+Piper Cherokee 180
+
+124
+
+20
+
+100
+
+15
+
+497
+
+2500 HARD|SOFT
+
+5 RAMP
+
+10 yes
+
+yes
+
+PA28-1a
+
+Piper Cherokee 180 Paint1
+
+124
+
+20
+
+100
+
+15
+
+497
+
+2500 HARD|SOFT
+
+5 RAMP
+
+10 yes
+
+yes
+
+PA28-2a
+
+Piper Cherokee 180 Paint2
+
+124
+
+20
+
+100
+
+15
+
+497
+
+2500 HARD|SOFT
+
+5 RAMP
+
+10 yes
+
+yes
+
+PA28-0b
+
+Piper Cherokee 180
+
+124
+
+20
+
+100
+
+15
+
+497
+
+2500 HARD|SOFT
+
+5 RAMP
+
+10 yes
+
+yes
+
+PA28-1b
+
+Piper Cherokee 180 Paint1
+
+124
+
+20
+
+100
+
+15
+
+497
+
+2500 HARD|SOFT
+
+5 RAMP
+
+10 yes
+
+yes
+
+PA28-2b
+
+Piper Cherokee 180 Paint2
+
+124
+
+20
+
+100
+
+15
+
+497
+
+2500 HARD|SOFT
+
+5 RAMP
+
+10 yes
+
+yes
+
+PA28-0c
+
+Piper Cherokee 180
+
+124
+
+20
+
+100
+
+15
+
+497
+
+2500 HARD|SOFT
+
+5 RAMP
+
+10 yes
+
+yes
+
+5
+
+fs10.AircraftTypes.csv
+
+J3C65-0
+
+Piper Cub
+
+63
+
+1
+
+119
+
+15
+
+152
+
+6
+
+2500 HARD|SOFT|
+
+6 RAMP
+
+0 no
+
+no
+
+

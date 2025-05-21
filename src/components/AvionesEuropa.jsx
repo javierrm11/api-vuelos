@@ -1,11 +1,14 @@
-import React, { useRef } from 'react';
-import { Canvas, useFrame, useLoader } from '@react-three/fiber';
+import React, { useRef, useEffect } from 'react';
+import { Canvas, useFrame, useLoader, useThree } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
+//
 
 function Earth() {
   const earthRef = useRef();
   const cloudsRef = useRef();
+
+  const { size } = useThree(); // <-- accedemos al tamaño del canvas
 
   // Cargar texturas
   const [colorMap, bumpMap, specularMap, cloudMap] = useLoader(THREE.TextureLoader, [
@@ -15,7 +18,24 @@ function Earth() {
     '/textures/earth/earth_clouds.jpg',
   ]);
 
-  // Rotación de la Tierra y las nubes
+  // Escalado dinámico basado en tamaño del canvas
+  useEffect(() => {
+    const width = size.width;
+    let scale = 1;
+
+    if (width < 640) {
+      scale = 0.5;
+    } else if (width < 1024) {
+      scale = 0.8;
+    } else {
+      scale = 1;
+    }
+
+    if (earthRef.current) earthRef.current.scale.set(scale, scale, scale);
+    if (cloudsRef.current) cloudsRef.current.scale.set(scale, scale, scale);
+  }, [size]);
+
+  // Rotación
   useFrame(() => {
     if (earthRef.current) earthRef.current.rotation.y += 0.001;
     if (cloudsRef.current) cloudsRef.current.rotation.y += 0.0012;

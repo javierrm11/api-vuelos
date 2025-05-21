@@ -48,9 +48,9 @@ export default function Sidebar({ isOpen, onClose }) {
   href={href}
   onClick={onClose}
   className={`
-    text-lg px-6 w-54 py-2 ml-4
+    text-lg px-6 lg:w-54 w-30 py-2 ml-4
     transition-all duration-300 ease-in-out
-    rounded-l-xl
+    rounded-xl lg:rounded-l-xl
     ${isActive
       ? 'bg-gray-200 text-black animate-fadeIn'
       : 'bg-transparent text-white hover:bg-gray-200 hover:text-black'}

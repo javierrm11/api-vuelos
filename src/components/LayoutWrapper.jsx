@@ -40,7 +40,11 @@ export default function LayoutWrapper({ children }) {
         {/* Contenido principal */}
         <div className="flex-1">
           <Header onMenuClick={toggleSidebar} isOpen={sidebarOpen} />
+<<<<<<< HEAD
           <main className="bg-gray-200 p-4 pt-20 lg:pt-4 lg:pl-64">{children}</main>
+=======
+          <main className="lg:pl-64 pt-10 lg:pt-0">{children}</main>
+>>>>>>> af07dea297023fd5b23927d9e3e3efff388bf37c
         </div>
         <Footer />
       </div>
