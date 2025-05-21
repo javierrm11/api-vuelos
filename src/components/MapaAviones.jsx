@@ -72,7 +72,7 @@ const MapaAviones = () => {
     }
 
     aviones.forEach((avion) => {
-      const { hex, lat, lon, track, alt_baro, gs } = avion;
+      const { hex, lat, lon, t, flight, pais, track, alt_baro, gs } = avion;
       const iconoDinamico = generarIconoPorAltitud(alt_baro || 0);
 
       if (markersMap.current.has(hex)) {
@@ -88,10 +88,18 @@ const MapaAviones = () => {
         }).addTo(mapInstance.current);
 
         marker.bindPopup(`
-          <b>Hex:</b> ${hex}<br/>
-          <b>Velocidad:</b> ${gs} kt<br/>
-          <b>Altitud:</b> ${alt_baro} ft<br/>
-          <b>Rumbo:</b> ${track || 'N/A'}°
+          <div class="p-2 bg-white rounded shadow-md text-sm">
+            <div class="flex items-center mb-2">
+              <b class="mr-2">País:</b> 
+              <img src="./paises/${avion.pais}.png" alt="bandera" class="w-4 h-4 inline-block mr-1" />
+            </div>
+            <div><b>Hex:</b> ${hex}</div>
+            <div><b>Vuelo:</b> ${flight || 'N/A'}</div>
+            <div><b>Tipo:</b> ${t || 'N/A'}</div>
+            <div><b>Velocidad:</b> ${gs} kt</div>
+            <div><b>Altitud:</b> ${alt_baro} ft</div>
+            <div><b>Rumbo:</b> ${track || 'N/A'}°</div>
+          </div>
         `);
 
         markersMap.current.set(hex, marker);

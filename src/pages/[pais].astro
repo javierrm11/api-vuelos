@@ -1,0 +1,13 @@
+---
+import Planes from '../components/Planes';
+import "../styles/global.css";
+import Layout from '../Layouts/Layout.astro';
+
+// Obtener el parámetro dinámico de la URL
+const { pais } = Astro.params;
+const capitalizedPais = (pais ?? '').charAt(0).toUpperCase() + (pais ?? '').slice(1);
+---
+
+<Layout title={`${capitalizedPais} Planes`}>
+  <Planes region={capitalizedPais} client:load />
+</Layout>
