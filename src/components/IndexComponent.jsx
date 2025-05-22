@@ -1,8 +1,7 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { Canvas, useFrame, useLoader, useThree } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
-//
 
 function Earth() {
   const earthRef = useRef();
@@ -70,7 +69,25 @@ function Earth() {
   );
 }
 
+// Hook para detectar si es móvil o tablet
+function useIsMobileOrTablet() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    function handleResize() {
+      setIsMobile(window.innerWidth < 1024); // 1024px: breakpoint típico de tablet
+    }
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return isMobile;
+}
+
 export default function EarthScene() {
+  const isMobileOrTablet = useIsMobileOrTablet();
+
   return (
     <div style={{ minHeight: '100vh', background: 'black' }}>
       {/* Sección del globo, sticky para que no desaparezca al hacer scroll */}
@@ -87,7 +104,9 @@ export default function EarthScene() {
           <ambientLight intensity={0.5} />
           <directionalLight position={[5, 3, 5]} intensity={1} />
           <Earth />
-          <OrbitControls enablePan={false} enableZoom={false} autoRotate autoRotateSpeed={0.5} />
+          {!isMobileOrTablet && (
+            <OrbitControls enablePan={false} enableZoom={false} autoRotate autoRotateSpeed={0.5} />
+          )}
         </Canvas>
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
           <h1 className="text-4xl md:text-6xl font-bold text-white drop-shadow-lg text-center mb-4">

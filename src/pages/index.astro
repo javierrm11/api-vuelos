@@ -1,10 +1,10 @@
 ---
 // src/pages/index.astro
-import PIA from "../components/AvionesEuropa.jsx";
+import IndexComp from "../components/IndexComponent.jsx";
 import Layout from '../Layouts/Layout.astro';
 import "../styles/global.css";
 ---
 
 <Layout title="Inicio">
-    <PIA client:load />
+    <IndexComp client:load />
 </Layout>
