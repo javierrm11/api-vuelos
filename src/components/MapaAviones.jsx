@@ -6,6 +6,10 @@ const MapaAviones = () => {
   const markersMap = useRef(new Map());
   const [pais, setPais] = useState('Spain');
   const [avionesVisibles, setAvionesVisibles] = useState([]);
+  const [radio, setRadio] = useState(100); // en km
+  const [avionesCerca, setAvionesCerca] = useState(0);
+  const [userPos, setUserPos] = useState(null);
+  const userCircle = useRef(null);
 
   const obtenerAviones = async () => {
     try {
@@ -109,6 +113,35 @@ const MapaAviones = () => {
     setAvionesVisibles(aviones.sort((a, b) => (b.gs || 0) - (a.gs || 0)));
   };
 
+  const distancia = (lat1, lon1, lat2, lon2) => {
+    const R = 6371; // km
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLon = ((lon2 - lon1) * Math.PI) / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  };
+
+  const marcarRadio = () => {
+    if (!navigator.geolocation || !mapInstance.current) return;
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        setUserPos([latitude, longitude]);
+        mapInstance.current.setView([latitude, longitude], 8);
+        // El círculo y el recuento se actualizan automáticamente por el useEffect
+      },
+      (error) => {
+        alert('No se pudo obtener tu ubicación');
+      }
+    );
+  };
+
   useEffect(() => {
     let intervalId;
 
@@ -144,6 +177,9 @@ const MapaAviones = () => {
             }).addTo(map);
 
             userMarker.bindPopup('Tu ubicación').openPopup();
+
+            // Guarda tu ubicación en el estado para el círculo y el recuento
+            setUserPos([latitude, longitude]);
           },
           (error) => {
             console.warn("Error obteniendo ubicación:", error.message);
@@ -195,6 +231,37 @@ const MapaAviones = () => {
       if (intervalId) clearInterval(intervalId);
     };
   }, [pais]);
+  
+  useEffect(() => {
+    if (!mapInstance.current || !userPos) return;
+
+    // Elimina el círculo anterior si existe
+    if (userCircle.current) {
+      userCircle.current.remove();
+    }
+
+    // Dibuja el círculo en la posición seleccionada
+    const L = window.L || mapInstance.current._leaflet;
+    userCircle.current = L.circle(userPos, {
+      radius: radio * 1000,
+      color: '#3388ff',
+      fillColor: '#3388ff',
+      fillOpacity: 0.2,
+    }).addTo(mapInstance.current);
+
+    // Cuenta los aviones dentro del radio
+    let cuenta = 0;
+    avionesVisibles.forEach((avion) => {
+      if (
+        avion.lat &&
+        avion.lon &&
+        distancia(userPos[0], userPos[1], avion.lat, avion.lon) <= radio
+      ) {
+        cuenta++;
+      }
+    });
+    setAvionesCerca(cuenta);
+  }, [avionesVisibles, radio, userPos]);
 
   return (
     <div style={{ display: 'flex' }}>
@@ -232,6 +299,26 @@ const MapaAviones = () => {
             ))}
           </tbody>
         </table>
+        <div style={{ marginTop: '1rem' }}>
+          <label>
+            Radio (km):{' '}
+            <input
+              type="number"
+              min="1"
+              value={radio}
+              onChange={(e) => setRadio(Number(e.target.value))}
+              style={{ width: '60px' }}
+            />
+          </label>
+          <button onClick={marcarRadio} style={{ marginLeft: '8px' }}>
+            Marcar radio
+          </button>
+          {userPos && (
+            <div style={{ marginTop: '0.5rem', fontWeight: 'bold' }}>
+              Hay {avionesCerca} aviones cerca de ti
+            </div>
+          )}
+        </div>
       </aside>
 
       <div style={{ flex: 1 }}>
