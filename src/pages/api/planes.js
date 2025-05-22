@@ -1,10 +1,11 @@
 export const dynamic = 'force-dynamic';
 
-import elecciones from './array'; // Importar el array con las coordenadas de países y continentes
+import elecciones from './array';
+import planesPorIcao from './planes_por_icao.json'; // Importar el JSON con los modelos
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
-  const region = searchParams.get('region'); // Obtener el parámetro 'region' de la URL
+  const region = searchParams.get('region');
 
   if (!region || !elecciones[region]) {
     return new Response(
@@ -19,7 +20,7 @@ export async function GET(request) {
     );
   }
 
-  const seleccion = elecciones[region]; // Obtener las coordenadas de la región seleccionada
+  const seleccion = elecciones[region];
   const resultados = [];
 
   try {
@@ -48,17 +49,21 @@ export async function GET(request) {
         continue;
       }
 
-      const avionesInfo = avionesVolando.map((av) => ({
-        pais: ubicacion.nombre,
-        hex: av.hex,
-        t: av.t,
-        flight: av.flight,
-        gs: av.gs,
-        alt_baro: av.alt_baro,
-        lat: av.lat,
-        lon: av.lon,
-        track: av.track,
-      }));
+      const avionesInfo = avionesVolando.map((av) => {
+        const modelo = av.t && planesPorIcao[av.t]?.modelo || 'Desconocido';
+        return {
+          pais: ubicacion.nombre,
+          hex: av.hex,
+          t: av.t,
+          modelo: modelo,
+          flight: av.flight,
+          gs: av.gs,
+          alt_baro: av.alt_baro,
+          lat: av.lat,
+          lon: av.lon,
+          track: av.track,
+        };
+      });
 
       const masRapido = avionesVolando
         .map((avion) => ({ hex: avion.hex, velocidad: avion.gs }))

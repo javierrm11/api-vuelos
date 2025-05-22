@@ -266,6 +266,7 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
               <th className="px-4 py-3">Hex</th>
               <th className="px-4 py-3">Vuelo</th>
               <th className="px-4 py-3">Tipo</th>
+              <th className="px-4 py-3">Modelo</th>
               <th className="px-4 py-3">Longitud</th>
               <th className="px-4 py-3">Latitud</th>
               <th className="px-4 py-3">Consumo (L/h)</th>
@@ -296,6 +297,7 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
                 <td className="px-4 py-2">{avion.hex}</td>
                 <td className="px-4 py-2">{avion.flight ?? 'N/A'}</td>
                 <td className="px-4 py-2">{avion.t ?? 'N/A'}</td>
+                <td className="px-4 py-2">{avion.modelo ?? 'N/A'}</td>
                 <td className="px-4 py-2">{avion.lon ?? 'N/A'}</td>
                 <td className="px-4 py-2">{avion.lat ?? 'N/A'}</td>
                 <td className="px-4 py-2">{avion.fuelLph ?? 'N/A'}</td>
