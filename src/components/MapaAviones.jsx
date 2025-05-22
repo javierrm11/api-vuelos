@@ -173,7 +173,8 @@ const MapaAviones = () => {
           },
           (error) => {
             console.warn("Error obteniendo ubicación:", error.message);
-          }
+          },
+          { enableHighAccuracy: true } // <-- Añade esta línea
         );
       }
 
