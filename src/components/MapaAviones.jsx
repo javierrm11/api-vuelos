@@ -6,10 +6,11 @@ const MapaAviones = () => {
   const markersMap = useRef(new Map());
   const [pais, setPais] = useState('Spain');
   const [avionesVisibles, setAvionesVisibles] = useState([]);
-  const [radio, setRadio] = useState(100); // en km
+  const [radio, setRadio] = useState(100);
   const [avionesCerca, setAvionesCerca] = useState(0);
   const [userPos, setUserPos] = useState(null);
   const userCircle = useRef(null);
+  const userMarkerRef = useRef(null);
 
   const obtenerAviones = async () => {
     try {
@@ -27,12 +28,10 @@ const MapaAviones = () => {
       } else {
         const response = await fetch(`/api/planes?region=${pais}`);
         const data = await response.json();
-
         if (data.error) {
           console.error(`Error al obtener aviones para ${pais}:`, data.error);
           return [];
         }
-
         return data.flatMap((ubicacion) => ubicacion.avionesInfo || []);
       }
     } catch (error) {
@@ -43,12 +42,8 @@ const MapaAviones = () => {
 
   const generarIconoPorAltitud = (alt_baro) => {
     let color = '#00cc44';
-
-    if (alt_baro <= 10000) {
-      color = '#ff0000';
-    } else if (alt_baro > 10000 && alt_baro <= 30000) {
-      color = '#ffaa00';
-    }
+    if (alt_baro <= 10000) color = '#ff0000';
+    else if (alt_baro <= 30000) color = '#ffaa00';
 
     const svgHTML = `
       <svg width="32" height="32" viewBox="-0.8 -0.8 17.60 17.60" xmlns="http://www.w3.org/2000/svg">
@@ -114,7 +109,7 @@ const MapaAviones = () => {
   };
 
   const distancia = (lat1, lon1, lat2, lon2) => {
-    const R = 6371; // km
+    const R = 6371;
     const dLat = ((lat2 - lat1) * Math.PI) / 180;
     const dLon = ((lon2 - lon1) * Math.PI) / 180;
     const a =
@@ -134,9 +129,8 @@ const MapaAviones = () => {
         const { latitude, longitude } = position.coords;
         setUserPos([latitude, longitude]);
         mapInstance.current.setView([latitude, longitude], 8);
-        // El círculo y el recuento se actualizan automáticamente por el useEffect
       },
-      (error) => {
+      () => {
         alert('No se pudo obtener tu ubicación');
       }
     );
@@ -159,12 +153,11 @@ const MapaAviones = () => {
         attribution: '&copy; OpenStreetMap contributors',
       }).addTo(map);
 
-      // Mostrar ubicación del usuario
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
             const { latitude, longitude } = position.coords;
-
+            setUserPos([latitude, longitude]);
             map.setView([latitude, longitude], 8);
 
             const userMarker = L.circleMarker([latitude, longitude], {
@@ -175,23 +168,16 @@ const MapaAviones = () => {
               opacity: 1,
               fillOpacity: 0.8,
             }).addTo(map);
-
             userMarker.bindPopup('Tu ubicación').openPopup();
-
-            // Guarda tu ubicación en el estado para el círculo y el recuento
-            setUserPos([latitude, longitude]);
+            userMarkerRef.current = userMarker;
           },
           (error) => {
             console.warn("Error obteniendo ubicación:", error.message);
           }
         );
-      } else {
-        console.warn("Geolocalización no soportada por este navegador.");
       }
 
-      // Leyenda
       const legend = L.control({ position: 'topright' });
-
       legend.onAdd = function () {
         const div = L.DomUtil.create('div', 'info legend');
         div.innerHTML += `
@@ -207,7 +193,6 @@ const MapaAviones = () => {
         div.style.fontSize = '14px';
         return div;
       };
-
       legend.addTo(map);
     };
 
@@ -231,16 +216,14 @@ const MapaAviones = () => {
       if (intervalId) clearInterval(intervalId);
     };
   }, [pais]);
-  
+
   useEffect(() => {
     if (!mapInstance.current || !userPos) return;
 
-    // Elimina el círculo anterior si existe
     if (userCircle.current) {
       userCircle.current.remove();
     }
 
-    // Dibuja el círculo en la posición seleccionada
     const L = window.L || mapInstance.current._leaflet;
     userCircle.current = L.circle(userPos, {
       radius: radio * 1000,
@@ -249,7 +232,6 @@ const MapaAviones = () => {
       fillOpacity: 0.2,
     }).addTo(mapInstance.current);
 
-    // Cuenta los aviones dentro del radio
     let cuenta = 0;
     avionesVisibles.forEach((avion) => {
       if (
@@ -265,20 +247,27 @@ const MapaAviones = () => {
 
   return (
     <div style={{ display: 'flex' }}>
-      <aside
-        style={{
-          width: '300px',
-          height: '99vh',
-          overflowX: 'auto',
-          overflowY: 'auto',
-          padding: '1rem',
-          backgroundColor: '#f5f5f5',
-          borderRight: '1px solid #ddd',
-          resize: 'horizontal',
-          minWidth: '150px',
-          maxWidth: '500px',
-        }}
-      >
+      <aside style={{ width: '300px', height: '99vh', overflow: 'auto', padding: '1rem', backgroundColor: '#f5f5f5', borderRight: '1px solid #ddd', resize: 'horizontal', minWidth: '150px', maxWidth: '500px' }}>
+      <div style={{ marginTop: '1rem' }}>
+          <label>
+            Radio (km):{' '}
+            <input
+              type="number"
+              min="1"
+              value={radio}
+              onChange={(e) => setRadio(Number(e.target.value))}
+              style={{ width: '60px' }}
+            />
+          </label>
+          <button onClick={marcarRadio} style={{ marginLeft: '8px' }}>
+            Marcar radio
+          </button>
+          {userPos && (
+            <div style={{ marginTop: '0.5rem', fontWeight: 'bold' }}>
+              Hay {avionesCerca} aviones cerca de ti
+            </div>
+          )}
+        </div>
         <table style={{ width: '100%', fontSize: '14px', borderCollapse: 'collapse' }}>
           <thead>
             <tr>
@@ -299,26 +288,6 @@ const MapaAviones = () => {
             ))}
           </tbody>
         </table>
-        <div style={{ marginTop: '1rem' }}>
-          <label>
-            Radio (km):{' '}
-            <input
-              type="number"
-              min="1"
-              value={radio}
-              onChange={(e) => setRadio(Number(e.target.value))}
-              style={{ width: '60px' }}
-            />
-          </label>
-          <button onClick={marcarRadio} style={{ marginLeft: '8px' }}>
-            Marcar radio
-          </button>
-          {userPos && (
-            <div style={{ marginTop: '0.5rem', fontWeight: 'bold' }}>
-              Hay {avionesCerca} aviones cerca de ti
-            </div>
-          )}
-        </div>
       </aside>
 
       <div style={{ flex: 1 }}>
@@ -327,11 +296,11 @@ const MapaAviones = () => {
           onChange={(e) => setPais(e.target.value)}
         >
           <option value="Spain">España</option>
-          <option value="Europa">Europe</option>
-          <option value="Africa">Africa</option>
+          <option value="Europa">Europa</option>
+          <option value="Africa">África</option>
           <option value="Asia">Asia</option>
-          <option value="America">America</option>
-          <option value="Oceania">Oceania</option>
+          <option value="America">América</option>
+          <option value="Oceania">Oceanía</option>
         </select>
         <div ref={mapRef} style={{ height: '95vh', width: '100%', zIndex: 1 }}></div>
       </div>
