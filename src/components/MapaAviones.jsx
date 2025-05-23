@@ -262,6 +262,7 @@ const MapaAviones = () => {
       style={{
         display: 'flex',
         height: '100vh',
+        zIndex: 0,
         overflow: 'hidden',
         position: 'relative',
         fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
