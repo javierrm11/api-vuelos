@@ -1,12 +1,20 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 
-const regionesDisponibles = ['Spain', 'Europa', 'America', 'Asia', 'Africa', 'Oceania', 'Global'];
+const regionesDisponibles = [
+  "Spain",
+  "Europa",
+  "America",
+  "Asia",
+  "Africa",
+  "Oceania",
+  "Global",
+];
 
 const MapaAviones = () => {
   const mapRef = useRef(null);
   const mapInstance = useRef(null);
   const markersMap = useRef(new Map());
-  const [pais, setPais] = useState('Spain');
+  const [pais, setPais] = useState("Spain");
   const [avionesVisibles, setAvionesVisibles] = useState([]);
   const [radio, setRadio] = useState(100);
   const [avionesCerca, setAvionesCerca] = useState(0);
@@ -15,7 +23,6 @@ const MapaAviones = () => {
   const userMarkerRef = useRef(null);
   const [infoVisible, setInfoVisible] = useState(true);
 
-  // Obtener aviones (igual que antes)
   const obtenerAviones = async () => {
     try {
       if (pais === "Global") {
@@ -44,11 +51,10 @@ const MapaAviones = () => {
     }
   };
 
-  // Generar icono según altitud (igual que antes)
   const generarIconoPorAltitud = (alt_baro) => {
-    let color = '#00cc44';
-    if (alt_baro <= 10000) color = '#ff0000';
-    else if (alt_baro <= 30000) color = '#ffaa00';
+    let color = "#00cc44";
+    if (alt_baro <= 10000) color = "#ff0000";
+    else if (alt_baro <= 30000) color = "#ffaa00";
 
     const svgHTML = `
       <svg width="32" height="32" viewBox="-0.8 -0.8 17.60 17.60" xmlns="http://www.w3.org/2000/svg">
@@ -56,16 +62,15 @@ const MapaAviones = () => {
       </svg>
     `;
 
-    return window.L.divIcon({
+    return L.divIcon({
       html: svgHTML,
-      className: '',
+      className: "",
       iconSize: [32, 32],
       iconAnchor: [16, 16],
       popupAnchor: [0, -16],
     });
   };
 
-  // Actualizar marcadores (igual que antes)
   const updateMarkers = (aviones) => {
     const nuevosHex = new Set(aviones.map((av) => av.hex));
 
@@ -86,24 +91,26 @@ const MapaAviones = () => {
         marker.setRotationAngle(track || 0);
         marker.setIcon(iconoDinamico);
       } else {
-        const marker = window.L.marker([lat, lon], {
+        const marker = L.marker([lat, lon], {
           icon: iconoDinamico,
           rotationAngle: track || 0,
-          rotationOrigin: 'center center',
+          rotationOrigin: "center center",
         }).addTo(mapInstance.current);
 
         marker.bindPopup(`
           <div style="font-size: 14px; line-height: 1.3; max-width: 220px;">
             <div style="display: flex; align-items: center; margin-bottom: 6px;">
               <b style="margin-right: 6px;">País:</b> 
-              <img src="./paises/${avion.pais}.png" alt="bandera" style="width: 18px; height: 12px; margin-left: 4px;"/>
+              <img src="./paises/${
+                avion.pais
+              }.png" alt="bandera" style="width: 18px; height: 12px; margin-left: 4px;"/>
             </div>
             <div><b>Hex:</b> ${hex}</div>
-            <div><b>Vuelo:</b> ${flight || 'N/A'}</div>
-            <div><b>Tipo:</b> ${t || 'N/A'}</div>
+            <div><b>Vuelo:</b> ${flight || "N/A"}</div>
+            <div><b>Tipo:</b> ${t || "N/A"}</div>
             <div><b>Velocidad:</b> ${gs} kt</div>
             <div><b>Altitud:</b> ${alt_baro} ft</div>
-            <div><b>Rumbo:</b> ${track || 'N/A'}°</div>
+            <div><b>Rumbo:</b> ${track || "N/A"}°</div>
           </div>
         `);
 
@@ -114,7 +121,6 @@ const MapaAviones = () => {
     setAvionesVisibles(aviones.sort((a, b) => (b.gs || 0) - (a.gs || 0)));
   };
 
-  // Distancia (igual que antes)
   const distancia = (lat1, lon1, lat2, lon2) => {
     const R = 6371;
     const dLat = ((lat2 - lat1) * Math.PI) / 180;
@@ -122,14 +128,13 @@ const MapaAviones = () => {
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos((lat1 * Math.PI) / 180) *
-      Math.cos((lat2 * Math.PI) / 180) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
   };
 
-  // Marcar radio
   const marcarRadio = () => {
     if (!navigator.geolocation || !mapInstance.current) return;
     navigator.geolocation.getCurrentPosition(
@@ -139,7 +144,7 @@ const MapaAviones = () => {
         mapInstance.current.setView([latitude, longitude], 8);
       },
       () => {
-        alert('No se pudo obtener tu ubicación');
+        alert("No se pudo obtener tu ubicación");
       }
     );
   };
@@ -148,17 +153,17 @@ const MapaAviones = () => {
     let intervalId;
 
     const initMap = async () => {
-      await import('leaflet/dist/leaflet.css');
-      const L = await import('leaflet');
-      await import('leaflet-rotatedmarker');
+      await import("leaflet/dist/leaflet.css");
+      const L = await import("leaflet");
+      await import("leaflet-rotatedmarker");
 
       if (!mapRef.current || mapInstance.current) return;
 
       const map = L.map(mapRef.current).setView([40.4168, -3.7038], 6);
       mapInstance.current = map;
 
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors',
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "&copy; OpenStreetMap contributors",
       }).addTo(map);
 
       if (navigator.geolocation) {
@@ -176,19 +181,19 @@ const MapaAviones = () => {
               opacity: 1,
               fillOpacity: 0.8,
             }).addTo(map);
-            userMarker.bindPopup('Tu ubicación').openPopup();
+            userMarker.bindPopup("Tu ubicación").openPopup();
             userMarkerRef.current = userMarker;
           },
           (error) => {
             console.warn("Error obteniendo ubicación:", error.message);
           },
-          { enableHighAccuracy: true }
+          { enableHighAccuracy: true } // <-- Añade esta línea
         );
       }
 
-      const legend = L.control({ position: 'topright' });
+      const legend = L.control({ position: "topright" });
       legend.onAdd = function () {
-        const div = L.DomUtil.create('div', 'info legend');
+        const div = L.DomUtil.create("div", "info legend");
         div.innerHTML = `
           <h4 style="margin-top: 0; margin-bottom: 8px; font-weight: 600; font-size: 14px;">Altitud</h4>
           <div style="display: flex; align-items: center; margin-bottom: 4px;">
@@ -201,68 +206,71 @@ const MapaAviones = () => {
             <span style="background:#00cc44;width:14px;height:14px;display:inline-block;margin-right:8px; border-radius: 3px;"></span> &gt; 30.000 ft
           </div>
         `;
-        div.style.backgroundColor = '#fff';
-        div.style.padding = '12px 16px';
-        div.style.borderRadius = '8px';
-        div.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
-        div.style.fontSize = '13px';
-        div.style.color = '#222';
+        div.style.backgroundColor = "#fff";
+        div.style.padding = "12px 16px";
+        div.style.borderRadius = "8px";
+        div.style.boxShadow = "0 2px 8px rgba(0,0,0,0.15)";
+        div.style.fontSize = "13px";
+        div.style.color = "#222";
         return div;
       };
       legend.addTo(map);
     };
 
     const startFetching = async () => {
-      await initMap();
+      const aviones = await obtenerAviones();
+      updateMarkers(aviones);
+
       intervalId = setInterval(async () => {
-        const aviones = await obtenerAviones();
-        updateMarkers(aviones);
-      }, 4000);
+        const nuevosAviones = await obtenerAviones();
+        updateMarkers(nuevosAviones);
+      }, 10000);
     };
 
-    startFetching();
+    if (!mapInstance.current) {
+      initMap().then(startFetching);
+    } else {
+      startFetching();
+    }
 
     return () => {
       if (intervalId) clearInterval(intervalId);
-      if (mapInstance.current) {
-        mapInstance.current.remove();
-        mapInstance.current = null;
-      }
     };
   }, [pais]);
 
   useEffect(() => {
-    if (!mapInstance.current) return;
+    if (!mapInstance.current || !userPos) return;
 
     if (userCircle.current) {
       userCircle.current.remove();
-      userCircle.current = null;
     }
 
-    if (userPos) {
-      const L = window.L;
-      userCircle.current = L.circle(userPos, {
-        radius: radio * 1000,
-        color: '#007bff',
-        fillColor: '#007bff',
-        fillOpacity: 0.15,
-      }).addTo(mapInstance.current);
+    const L = window.L || mapInstance.current._leaflet;
+    userCircle.current = L.circle(userPos, {
+      radius: radio * 1000,
+      color: "#3388ff",
+      fillColor: "#3388ff",
+      fillOpacity: 0.2,
+    }).addTo(mapInstance.current);
 
-      const count = avionesVisibles.filter((avion) => {
-        if (!avion.lat || !avion.lon) return false;
-        return distancia(userPos[0], userPos[1], avion.lat, avion.lon) <= radio;
-      }).length;
-
-      setAvionesCerca(count);
-    }
-  }, [radio, userPos, avionesVisibles]);
+    let cuenta = 0;
+    avionesVisibles.forEach((avion) => {
+      if (
+        avion.lat &&
+        avion.lon &&
+        distancia(userPos[0], userPos[1], avion.lat, avion.lon) <= radio
+      ) {
+        cuenta++;
+      }
+    });
+    setAvionesCerca(cuenta);
+  }, [avionesVisibles, radio, userPos]);
 
   return (
     <div
       style={{
         display: 'flex',
         height: '100vh',
-        zIndex: 0,
         overflow: 'hidden',
         position: 'relative',
         fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
@@ -554,5 +562,5 @@ const MapaAviones = () => {
           </div>
         );
       };
-      
-      export default MapaAviones;
+
+export default MapaAviones;
