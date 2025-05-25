@@ -21,9 +21,25 @@ body{
   }
 }
 
+@keyframes fade-in-out {
+  0% { opacity: 0; transform: translateY(-10px); }
+  10% { opacity: 1; transform: translateY(0); }
+  90% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-10px); }
+}
+
 .spin-slow {
   animation: spinSlow 3s linear infinite;
 }
 .spin-more-slow {
   animation: spinMoreSlow 6.5s linear infinite;
+}
+
+.leaflet-left{
+  margin-left: 20px;
+}
+
+
+.animate-fade-in-out {
+  animation: fade-in-out 3s ease-in-out forwards;
 }

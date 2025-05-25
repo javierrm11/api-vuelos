@@ -292,7 +292,7 @@ const MapaAviones = () => {
           display: 'flex',
           flexDirection: 'column',
           userSelect: 'none',
-          zIndex: 1000,
+          zIndex: 30,
         }}
       >
         {infoVisible && (
@@ -535,7 +535,7 @@ const MapaAviones = () => {
             cursor: 'pointer',
             fontSize: 20,
             fontWeight: '600',
-            zIndex: 1100,
+            zIndex: 35,
             userSelect: 'none',
             boxShadow: '0 4px 8px rgba(0,123,255,0.3)',
             transition: 'background-color 0.25s',
@@ -557,6 +557,7 @@ const MapaAviones = () => {
                 position: 'relative',
                 overflow: 'hidden',
                 backgroundColor: '#e4e9f0',
+                zIndex:"20"
               }}
             ></div>
           </div>

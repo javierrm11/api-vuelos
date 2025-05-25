@@ -11,6 +11,7 @@ function Planes({ region }) {
   const [masRapido, setMasRapido] = useState(null);
   const [masLento, setMasLento] = useState(null);
   const [filterConsumo, setFilterConsumo] = useState('todos');
+  const [mensajeCopiado, setMensajeCopiado] = useState(null);
 
   // Constantes físicas
   const S = 122;
@@ -104,18 +105,18 @@ function Planes({ region }) {
     };
   };
 
-  const copiarInfoVuelo = (avion) => {
-    const now = new Date();
-    const horaActual = now.toLocaleString('es-ES', {
-      day: '2-digit',
-      month: 'long',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit'
-    });
+const copiarInfoVuelo = (avion) => {
+  const now = new Date();
+  const horaActual = now.toLocaleString('es-ES', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  });
 
-    const texto = `Información del vuelo - ${avion.hex}
+  const texto = `Información del vuelo - ${avion.hex}
 Hora actual - ${horaActual}
 
 Velocidad -> ${avion.gs ?? 'N/A'} km/h
@@ -125,14 +126,18 @@ Emisiones de CO2 -> ${avion.co2Kgh ?? 'N/A'} kg/h
 
 Datos obtenidos por APIones (http://localhost:4321/${region})`;
 
-    navigator.clipboard.writeText(texto)
-      .then(() => {
-        console.log('Información copiada al portapapeles.');
-      })
-      .catch(err => {
-        console.error('Error al copiar al portapapeles:', err);
-      });
-  };
+  navigator.clipboard.writeText(texto)
+    .then(() => {
+      setMensajeCopiado("Información copiada correctamente ✅");
+    })
+    .catch(() => {
+      setMensajeCopiado("Error al copiar la información ❌");
+    });
+
+  // Oculta el mensaje después de 3 segundos
+  setTimeout(() => setMensajeCopiado(null), 3000);
+};
+
 
   const handleSortChange = (e) => {
     setSortOption(e.target.value);
@@ -290,7 +295,7 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
           </thead>
           <tbody className="divide-y divide-gray-700">
             {ordenarAviones(data).map((avion, index) => (
-              <tr key={index} className="hover:bg-gray-800 transition-colors group">
+              <tr key={index} className="hover:bg-gray-500 group odd:bg-gray-800 even:bg-gray-700 transition-colors group">
                 <td className="px-4 py-2">
                   <img src={`./paises/${avion.pais}.png`} alt="bandera" className="w-6 h-6 inline-block mr-2" />
                 </td>
@@ -314,6 +319,11 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
             ))}
           </tbody>
         </table>
+        {mensajeCopiado && (
+  <div className="fixed top-4 right-4 bg-green-600 text-white px-4 py-2 rounded shadow-md z-50 animate-fade-in-out">
+    {mensajeCopiado}
+  </div>
+)}
       </div>
     </div>
   );

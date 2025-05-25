@@ -25,7 +25,7 @@ export default function LayoutWrapper({ children }) {
     }, []);
 
     return (
-      <div className="relative lg:flex min-h-screen">
+      <div className="relative h-screen">
         {/* Sidebar */}
         <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
