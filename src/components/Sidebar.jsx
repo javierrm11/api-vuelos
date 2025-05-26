@@ -52,8 +52,8 @@ export default function Sidebar({ isOpen, onClose }) {
     transition-all duration-300 ease-in-out
     rounded-xl lg:rounded-l-xl
     ${isActive
-      ? 'bg-gray-200 text-black animate-fadeIn'
-      : 'bg-transparent text-white hover:bg-gray-200 hover:text-black'}
+      ? 'bg-background text-accent animate-fadeIn'
+      : 'bg-transparent text-border hover:bg-background hover:text-accent'}
   `}
 >
   {label}
