@@ -31,11 +31,11 @@ export default function Sidebar({ isOpen, onClose }) {
         {/* 👤 Usuario (solo desktop) */}
         <div className="hidden lg:flex flex-col items-center py-10 pb-10 bg-primary border-b border-gray-700">
           <img
-            src="/usuario.jpg" // ← cambia esto por tu imagen
+            src="https://www.iesgrancapitan.org/wp-content/uploads/sites/2/2021/06/Marca_principal.png" // ← cambia esto por tu imagen
             alt="Usuario"
-            className="w-20 h-20 rounded-full object-cover mb-2"
+            className="w-50 h-50 rounded-full object-cover mb-2 p-3 bg-white"
           />
-          <span className="font-semibold">Nombre Usuario</span>
+          <span className="font-bold text-2xl">ApiVuelos</span>
         </div>
 
         {/* 🌍 Navegación */}
@@ -48,7 +48,7 @@ export default function Sidebar({ isOpen, onClose }) {
   href={href}
   onClick={onClose}
   className={`
-    text-lg px-6 lg:w-54 w-30 py-2 ml-4
+    text-lg px-6 w-30 py-2 ml-4
     transition-all duration-300 ease-in-out
     rounded-xl lg:rounded-l-xl
     ${isActive

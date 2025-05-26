@@ -284,7 +284,7 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
 
       <div className="overflow-x-auto bg-gray-900 rounded-xl shadow-md">
         <table className="min-w-full table-auto text-sm text-left text-gray-300">
-          <thead className="bg-gray-700 text-gray-200 uppercase text-xs">
+          <thead className="bg-primary text-gray-200 uppercase text-xs">
             <tr>
               <th className="px-4 py-3">País</th>
               <th className="px-4 py-3">Hex</th>
@@ -299,7 +299,7 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
                 <select
                   value={sortOption}
                   onChange={handleSortChange}
-                  className="bg-gray-800 text-white text-xs rounded px-1 py-0.5 w-full"
+                  className="bg-border text-white text-xs rounded px-1 py-0.5 w-full"
                 >
                   <option value="">Ordenar por...</option>
                   <option value="velocidadAsc">Velocidad ↑</option>
@@ -312,11 +312,11 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-700">
+          <tbody className="divide-y divide-gray-700 text-black">
             {ordenarAviones(data).map((avion, index) => (
               <tr
                 key={index}
-                className="hover:bg-gray-500 group odd:bg-gray-800 even:bg-gray-700 transition-colors group"
+                className="hover:bg-gray-500 group odd:bg-light even:bg-secondary transition-colors group"
               >
                 <td className="px-4 py-2">
                   <img
