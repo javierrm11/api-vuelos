@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+@theme {
+  --color-primary: #4a90e2;             /* Azul principal, botones activos y detalles */
+  --color-secondary: #b0c4de;           /* Azul grisáceo claro, bordes o fondos secundarios */
+  --color-background: #e6f0fa;          /* Fondo general del dashboard */
+  --color-light: #ffffff;          /* Texto claro, por ejemplo sobre fondos azules */
+  --color-border: #003366;              /* Bordes oscuros, probablemente no muy usados aquí */
+  --color-accent: #007aff;
+}
+
 body{
   background-color: rgb(229, 231, 235);
 }

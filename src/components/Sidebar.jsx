@@ -22,20 +22,20 @@ export default function Sidebar({ isOpen, onClose }) {
   return (
     <aside
       className={`
-        fixed top-15 left-0 h-full w-64 bg-gray-900 text-white z-40 transition-transform transform
+        fixed top-15 left-0 h-full w-64 bg-light text-light z-40 transition-transform transform
         ${isOpen ? 'translate-x-0' : '-translate-x-full'}
         lg:translate-x-0 lg:fixed lg:flex md:h-screen lg:top-0
       `}
     >
       <div className="flex flex-col w-full lg:h-screen">
         {/* 👤 Usuario (solo desktop) */}
-        <div className="hidden lg:flex flex-col items-center py-10 pb-10 bg-blue-900 border-b border-gray-700">
+        <div className="hidden lg:flex flex-col items-center py-10 pb-10 bg-primary border-b border-gray-700">
           <img
             src="/usuario.jpg" // ← cambia esto por tu imagen
             alt="Usuario"
             className="w-20 h-20 rounded-full object-cover mb-2"
           />
-          <span className="text-white font-semibold">Nombre Usuario</span>
+          <span className="font-semibold">Nombre Usuario</span>
         </div>
 
         {/* 🌍 Navegación */}
