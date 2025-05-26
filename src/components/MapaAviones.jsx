@@ -267,33 +267,14 @@ const MapaAviones = () => {
   }, [avionesVisibles, radio, userPos]);
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        height: '100vh',
-        overflow: 'hidden',
-        position: 'relative',
-        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-        backgroundColor: '#f5f7fa',
-        color: '#333',
-      }}
-    >
+    <div className="flex h-screen overflow-hidden relative font-sans bg-gray-100 text-gray-800">
       {/* Panel lateral */}
       <aside
-        style={{
-          width: infoVisible ? 320 : 0,
-          transition: 'width 0.35s ease',
-          height: '100%',
-          overflow: 'hidden',
-          backgroundColor: '#ffffff',
-          borderRight: infoVisible ? '1px solid #ddd' : 'none',
-          boxShadow: infoVisible ? '2px 0 12px rgba(0,0,0,0.07)' : 'none',
-          position: 'relative',
-          display: 'flex',
-          flexDirection: 'column',
-          userSelect: 'none',
-          zIndex: 30,
-        }}
+        className={`${
+          infoVisible ? "w-80" : "w-0"
+        } transition-width duration-300 h-full overflow-hidden bg-white border-r ${
+          infoVisible ? "border-gray-300 shadow-md" : "border-none"
+        } relative flex flex-col select-none z-30`}
       >
         {infoVisible && (
           <>
@@ -302,51 +283,18 @@ const MapaAviones = () => {
               onClick={() => setInfoVisible(false)}
               aria-label="Ocultar panel"
               title="Ocultar panel"
-              style={{
-                position: 'absolute',
-                top: 12,
-                right: 12,
-                background: 'transparent',
-                border: 'none',
-                fontSize: 22,
-                fontWeight: 'bold',
-                cursor: 'pointer',
-                color: '#666',
-                padding: 0,
-                lineHeight: 1,
-                userSelect: 'none',
-                transition: 'color 0.2s',
-              }}
-              onMouseEnter={e => (e.currentTarget.style.color = '#007bff')}
-              onMouseLeave={e => (e.currentTarget.style.color = '#666')}
+              className="absolute top-3 right-3 bg-transparent border-none text-xl font-bold cursor-pointer text-gray-600 p-0 leading-none select-none transition-colors duration-200 hover:text-blue-500"
             >
               ‹
             </button>
 
             {/* Selector de región */}
-            <div
-              style={{
-                padding: '16px 24px 8px 24px',
-                borderBottom: '1px solid #eee',
-                fontWeight: '600',
-                fontSize: 16,
-                color: '#222',
-              }}
-            >
+            <div className="px-6 py-4 border-b border-gray-200 font-semibold text-lg text-gray-900">
               Región:&nbsp;
               <select
                 value={pais}
                 onChange={(e) => setPais(e.target.value)}
-                style={{
-                  padding: '6px 12px',
-                  fontSize: 15,
-                  borderRadius: 6,
-                  border: '1px solid #ccc',
-                  outline: 'none',
-                  cursor: 'pointer',
-                  backgroundColor: '#fafafa',
-                  color: '#333',
-                }}
+                className="px-3 py-2 text-sm rounded-md border border-gray-300 outline-none cursor-pointer bg-gray-100 text-gray-800"
               >
                 {regionesDisponibles.map((region) => (
                   <option key={region} value={region}>
@@ -357,25 +305,10 @@ const MapaAviones = () => {
             </div>
 
             {/* Contenido scrollable */}
-            <div
-              style={{
-                padding: '16px 24px',
-                overflowY: 'auto',
-                flex: 1,
-                fontSize: 14,
-                lineHeight: 1.5,
-                color: '#444',
-              }}
-            >
+            <div className="px-6 py-4 overflow-y-auto flex-1 text-sm leading-relaxed text-gray-700">
               <label
                 htmlFor="input-radio"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  marginBottom: '1rem',
-                  fontWeight: '600',
-                  color: '#333',
-                }}
+                className="flex items-center mb-4 font-semibold text-gray-800"
               >
                 Radio (km):
                 <input
@@ -385,92 +318,41 @@ const MapaAviones = () => {
                   max="1000"
                   value={radio}
                   onChange={(e) => setRadio(Number(e.target.value))}
-                  style={{
-                    width: '70px',
-                    padding: '6px 10px',
-                    marginLeft: '12px',
-                    borderRadius: '6px',
-                    border: '1px solid #ccc',
-                    fontSize: 14,
-                    fontWeight: '500',
-                    color: '#222',
-                    backgroundColor: '#fff',
-                  }}
+                  className="w-20 px-3 py-2 ml-3 rounded-md border border-gray-300 text-sm font-medium text-gray-900 bg-white"
                 />
               </label>
 
               <button
                 onClick={marcarRadio}
-                style={{
-                  width: '100%',
-                  padding: '10px 0',
-                  backgroundColor: '#007bff',
-                  border: 'none',
-                  borderRadius: 8,
-                  color: 'white',
-                  fontWeight: '600',
-                  fontSize: 15,
-                  cursor: 'pointer',
-                  userSelect: 'none',
-                  boxShadow: '0 4px 8px rgb(0 123 255 / 0.3)',
-                  transition: 'background-color 0.25s',
-                }}
-                onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#0056b3')}
-                onMouseLeave={e => (e.currentTarget.style.backgroundColor = '#007bff')}
+                className="w-full py-2 bg-blue-500 border-none rounded-lg text-white font-semibold text-sm cursor-pointer select-none shadow-md transition-colors duration-200 hover:bg-blue-700"
               >
                 Marcar radio con mi ubicación
               </button>
 
               {userPos && (
-                <div
-                  style={{
-                    marginTop: '18px',
-                    fontWeight: '600',
-                    color: '#222',
-                    textAlign: 'center',
-                    fontSize: 15,
-                  }}
-                >
+                <div className="mt-4 font-semibold text-gray-900 text-center text-sm">
                   <span>Aviones dentro del radio: </span>
-                  <span
-                    style={{
-                      backgroundColor: '#007bff',
-                      color: 'white',
-                      padding: '4px 12px',
-                      borderRadius: 20,
-                      fontWeight: '700',
-                      fontSize: 16,
-                      minWidth: 40,
-                      display: 'inline-block',
-                    }}
-                  >
+                  <span className="bg-blue-500 text-white px-3 py-1 rounded-full font-bold text-base inline-block">
                     {avionesCerca}
                   </span>
                 </div>
               )}
 
               {/* Tabla resumen aviones */}
-              <div style={{ marginTop: '24px' }}>
-                <table
-                  style={{
-                    width: '100%',
-                    borderCollapse: 'collapse',
-                    fontSize: '14px',
-                    color: '#444',
-                  }}
-                >
+              <div className="mt-6">
+                <table className="w-full border-collapse text-sm text-gray-700">
                   <thead>
-                    <tr style={{ borderBottom: '2px solid #ccc' }}>
-                      <th style={{ padding: '8px 10px', textAlign: 'left', fontWeight: '600', color: '#222' }}>
+                    <tr className="border-b-2 border-gray-300">
+                      <th className="px-3 py-2 text-left font-semibold text-gray-900">
                         País
                       </th>
-                      <th style={{ padding: '8px 10px', textAlign: 'left', fontWeight: '600', color: '#222' }}>
+                      <th className="px-3 py-2 text-left font-semibold text-gray-900">
                         Hex
                       </th>
-                      <th style={{ padding: '8px 10px', textAlign: 'left', fontWeight: '600', color: '#222' }}>
+                      <th className="px-3 py-2 text-left font-semibold text-gray-900">
                         Altitud (ft)
                       </th>
-                      <th style={{ padding: '8px 10px', textAlign: 'left', fontWeight: '600', color: '#222' }}>
+                      <th className="px-3 py-2 text-left font-semibold text-gray-900">
                         Vel. (kt)
                       </th>
                     </tr>
@@ -478,7 +360,10 @@ const MapaAviones = () => {
                   <tbody>
                     {avionesVisibles.length === 0 ? (
                       <tr>
-                        <td colSpan={4} style={{ padding: '12px', textAlign: 'center', color: '#999' }}>
+                        <td
+                          colSpan={4}
+                          className="px-3 py-3 text-center text-gray-500"
+                        >
                           No hay datos disponibles
                         </td>
                       </tr>
@@ -486,25 +371,22 @@ const MapaAviones = () => {
                       avionesVisibles.map((avion, idx) => (
                         <tr
                           key={`${avion.hex}-${idx}`}
-                          style={{
-                            borderBottom: '1px solid #eee',
-                            transition: 'background-color 0.2s',
-                          }}
-                          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f0f8ff')}
-                          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+                          className="border-b border-gray-200 transition-colors duration-200 hover:bg-blue-50"
                         >
-                          <td style={{ padding: '8px 10px', verticalAlign: 'middle', display: 'flex', alignItems: 'center' }}>
+                          <td className="px-3 py-2 flex items-center">
                             <img
                               src={`./paises/${avion.pais}.png`}
                               alt={avion.pais}
-                              style={{ width: 20, height: 14, marginRight: 8, objectFit: 'cover' }}
-                              onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                              className="w-5 h-4 mr-2 object-cover"
+                              onError={(e) => {
+                                e.currentTarget.style.display = "none";
+                              }}
                             />
                             {avion.pais}
                           </td>
-                          <td style={{ padding: '8px 10px' }}>{avion.hex}</td>
-                          <td style={{ padding: '8px 10px' }}>{avion.alt_baro ?? 'N/A'}</td>
-                          <td style={{ padding: '8px 10px' }}>{avion.gs ?? 'N/A'}</td>
+                          <td className="px-3 py-2">{avion.hex}</td>
+                          <td className="px-3 py-2">{avion.alt_baro ?? "N/A"}</td>
+                          <td className="px-3 py-2">{avion.gs ?? "N/A"}</td>
                         </tr>
                       ))
                     )}
@@ -522,46 +404,19 @@ const MapaAviones = () => {
           onClick={() => setInfoVisible(true)}
           aria-label="Mostrar panel"
           title="Mostrar panel"
-          style={{
-            position: 'absolute',
-            top: 16,
-            left: 0,
-            background: '#007bff',
-            border: 'none',
-            color: 'white',
-            padding: '6px 10px',
-            borderTopRightRadius: 8,
-            borderBottomRightRadius: 8,
-            cursor: 'pointer',
-            fontSize: 20,
-            fontWeight: '600',
-            zIndex: 35,
-            userSelect: 'none',
-            boxShadow: '0 4px 8px rgba(0,123,255,0.3)',
-            transition: 'background-color 0.25s',
-          }}
-          onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#0056b3')}
-          onMouseLeave={e => (e.currentTarget.style.backgroundColor = '#007bff')}
+          className="absolute top-4 left-0 bg-blue-500 border-none text-white px-3 py-2 rounded-tr-lg rounded-br-lg cursor-pointer text-xl font-semibold z-30 select-none shadow-md transition-colors duration-200 hover:bg-blue-700"
         >
           ›
         </button>
       )}
 
-            {/* Contenedor mapa */}
-            <div
-              ref={mapRef}
-              style={{
-                flex: 1,
-                height: '100vh',
-                width: '100%',
-                position: 'relative',
-                overflow: 'hidden',
-                backgroundColor: '#e4e9f0',
-                zIndex:"20"
-              }}
-            ></div>
-          </div>
-        );
+      {/* Contenedor mapa */}
+      <div
+        ref={mapRef}
+        className="flex-1 h-screen w-full relative overflow-hidden  z-20"
+      ></div>
+    </div>
+  );
       };
 
 export default MapaAviones;

@@ -1,23 +1,31 @@
-import { useEffect, useState } from 'react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from 'recharts';
-import Loading from './Loading';
+import { useEffect, useState } from "react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid,
+  Legend,
+} from "recharts";
+import Loading from "./Loading";
 
 function Planes({ region }) {
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
   const [avgFuel, setAvgFuel] = useState(null);
   const [avgCO2, setAvgCO2] = useState(null);
-  const [sortOption, setSortOption] = useState('');
+  const [sortOption, setSortOption] = useState("");
   const [masRapido, setMasRapido] = useState(null);
   const [masLento, setMasLento] = useState(null);
-  const [filterConsumo, setFilterConsumo] = useState('todos');
+  const [filterConsumo, setFilterConsumo] = useState("todos");
   const [mensajeCopiado, setMensajeCopiado] = useState(null);
 
-  // Constantes físicas
   const S = 122;
   const C_D = 0.03;
   const TSFC = 0.000016;
-  const rhoFuel = 0.80;
+  const rhoFuel = 0.8;
   const CO2_F = 3.16;
   const rho0 = 1.225;
   const L = 0.0065;
@@ -26,20 +34,28 @@ function Planes({ region }) {
 
   const fetchData = () => {
     fetch(`/api/planes?region=${region}`)
-      .then(response => {
+      .then((response) => {
         if (!response.ok) {
-          throw new Error('Error en la solicitud: ' + response.statusText);
+          throw new Error("Error en la solicitud: " + response.statusText);
         }
         return response.json();
       })
-      .then(resultados => {
-        const allAvionesInfo = resultados.flatMap(r => r.avionesInfo || []);
-        const { avgFuelLph, avgCO2Kgh, detalles } = calcularConsumoYEmisiones(allAvionesInfo);
+      .then((resultados) => {
+        const allAvionesInfo = resultados.flatMap((r) => r.avionesInfo || []);
+        const { avgFuelLph, avgCO2Kgh, detalles } =
+          calcularConsumoYEmisiones(allAvionesInfo);
 
-        let masRapido = null, masLento = null;
+        let masRapido = null,
+          masLento = null;
         if (detalles.length > 0) {
-          masRapido = detalles.reduce((prev, curr) => (+curr.gs > +prev.gs ? curr : prev), detalles[0]);
-          masLento = detalles.reduce((prev, curr) => (+curr.gs < +prev.gs ? curr : prev), detalles[0]);
+          masRapido = detalles.reduce(
+            (prev, curr) => (+curr.gs > +prev.gs ? curr : prev),
+            detalles[0]
+          );
+          masLento = detalles.reduce(
+            (prev, curr) => (+curr.gs < +prev.gs ? curr : prev),
+            detalles[0]
+          );
         }
 
         setData(detalles);
@@ -48,9 +64,11 @@ function Planes({ region }) {
         setAvgCO2(avgCO2Kgh);
         setMasRapido(masRapido);
         setMasLento(masLento);
-        console.log(`Datos actualizados a las ${new Date().toLocaleTimeString()}`);
+        console.log(
+          `Datos actualizados a las ${new Date().toLocaleTimeString()}`
+        );
       })
-      .catch(error => {
+      .catch((error) => {
         setError(error.message);
       });
   };
@@ -59,29 +77,28 @@ function Planes({ region }) {
     fetchData();
     const intervalId = setInterval(fetchData, 10000);
     return () => clearInterval(intervalId);
-    // eslint-disable-next-line
   }, [region]);
 
   const calcularConsumoYEmisiones = (avionesInfo = []) => {
     const hFallback = 11000;
 
     const valid = avionesInfo
-      .map(av => ({
+      .map((av) => ({
         ...av,
         gs: parseFloat(av.gs),
-        alt_baro: parseFloat(av.alt_baro)
+        alt_baro: parseFloat(av.alt_baro),
       }))
-      .filter(av => !isNaN(av.gs) && av.gs > 0);
+      .filter((av) => !isNaN(av.gs) && av.gs > 0);
 
     if (!valid.length) {
       return {
-        avgFuelLph: 'N/A',
-        avgCO2Kgh: 'N/A',
-        detalles: []
+        avgFuelLph: "N/A",
+        avgCO2Kgh: "N/A",
+        detalles: [],
       };
     }
 
-    const detalles = valid.map(av => {
+    const detalles = valid.map((av) => {
       const V = (av.gs * 1000) / 3600;
       const h = isNaN(av.alt_baro) ? hFallback : av.alt_baro * 0.3048;
       const rho = rho0 * Math.pow(1 - (L * h) / T0, expISA);
@@ -91,7 +108,7 @@ function Planes({ region }) {
       return {
         ...av,
         fuelLph: ((mDot / rhoFuel) * 3600).toFixed(0),
-        co2Kgh: ((mDot * CO2_F) * 3600).toFixed(0)
+        co2Kgh: (mDot * CO2_F * 3600).toFixed(0),
       };
     });
 
@@ -101,43 +118,42 @@ function Planes({ region }) {
     return {
       avgFuelLph: (sumFuel / detalles.length).toFixed(0),
       avgCO2Kgh: (sumCO2 / detalles.length).toFixed(0),
-      detalles
+      detalles,
     };
   };
 
-const copiarInfoVuelo = (avion) => {
-  const now = new Date();
-  const horaActual = now.toLocaleString('es-ES', {
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit'
-  });
+  const copiarInfoVuelo = (avion) => {
+    const now = new Date();
+    const horaActual = now.toLocaleString("es-ES", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
 
-  const texto = `Información del vuelo - ${avion.hex}
+    const texto = `Información del vuelo - ${avion.hex}
 Hora actual - ${horaActual}
 
-Velocidad -> ${avion.gs ?? 'N/A'} km/h
-Altitud -> ${avion.alt_baro ? `${avion.alt_baro} ft` : 'N/A'}
-Consumo -> ${avion.fuelLph ?? 'N/A'} L/h
-Emisiones de CO2 -> ${avion.co2Kgh ?? 'N/A'} kg/h
+Velocidad -> ${avion.gs ?? "N/A"} km/h
+Altitud -> ${avion.alt_baro ? `${avion.alt_baro} ft` : "N/A"}
+Consumo -> ${avion.fuelLph ?? "N/A"} L/h
+Emisiones de CO2 -> ${avion.co2Kgh ?? "N/A"} kg/h
 
 Datos obtenidos por APIones (http://localhost:4321/${region})`;
 
-  navigator.clipboard.writeText(texto)
-    .then(() => {
-      setMensajeCopiado("Información copiada correctamente ✅");
-    })
-    .catch(() => {
-      setMensajeCopiado("Error al copiar la información ❌");
-    });
+    navigator.clipboard
+      .writeText(texto)
+      .then(() => {
+        setMensajeCopiado("Información copiada correctamente ✅");
+      })
+      .catch(() => {
+        setMensajeCopiado("Error al copiar la información ❌");
+      });
 
-  // Oculta el mensaje después de 3 segundos
-  setTimeout(() => setMensajeCopiado(null), 3000);
-};
-
+    setTimeout(() => setMensajeCopiado(null), 3000);
+  };
 
   const handleSortChange = (e) => {
     setSortOption(e.target.value);
@@ -146,39 +162,38 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
   const ordenarAviones = (aviones) => {
     const sorted = [...aviones];
     switch (sortOption) {
-      case 'velocidadAsc':
+      case "velocidadAsc":
         return sorted.sort((a, b) => a.gs - b.gs);
-      case 'velocidadDesc':
+      case "velocidadDesc":
         return sorted.sort((a, b) => b.gs - a.gs);
-      case 'consumoAsc':
+      case "consumoAsc":
         return sorted.sort((a, b) => a.fuelLph - b.fuelLph);
-      case 'consumoDesc':
+      case "consumoDesc":
         return sorted.sort((a, b) => b.fuelLph - a.fuelLph);
-      case 'emisionAsc':
+      case "emisionAsc":
         return sorted.sort((a, b) => a.co2Kgh - b.co2Kgh);
-      case 'emisionDesc':
+      case "emisionDesc":
         return sorted.sort((a, b) => b.co2Kgh - a.co2Kgh);
       default:
         return aviones;
     }
   };
 
-  // Nuevo filtro para consumo y emisiones
   const filtrarPorConsumo = (aviones) => {
     switch (filterConsumo) {
-      case 'mayorConsumo':
+      case "mayorConsumo":
         return ordenarAviones(aviones)
           .sort((a, b) => b.fuelLph - a.fuelLph)
           .slice(0, 10);
-      case 'menorConsumo':
+      case "menorConsumo":
         return ordenarAviones(aviones)
           .sort((a, b) => a.fuelLph - b.fuelLph)
           .slice(0, 10);
-      case 'mayorEmision':
+      case "mayorEmision":
         return ordenarAviones(aviones)
           .sort((a, b) => b.co2Kgh - a.co2Kgh)
           .slice(0, 10);
-      case 'menorEmision':
+      case "menorEmision":
         return ordenarAviones(aviones)
           .sort((a, b) => a.co2Kgh - b.co2Kgh)
           .slice(0, 10);
@@ -192,48 +207,49 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
   }
 
   if (!data.length) {
-    return <Loading />
+    return <Loading />;
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8 text-gray-200">
-      <h1 className="text-3xl font-bold mb-6 text-center text-black">Estado de vuelos sobre {region}</h1>
+    <div className="max-w-7xl mx-auto px-4 py-8 text-light bg-background relative">
+      <p className="absolute right-2 top-2 text-border"><strong>Última actualización:</strong> {new Date().toLocaleTimeString()}</p>
+      <h1 className="text-3xl font-bold mb-6 text-black">
+        Estado de vuelos sobre {region}
+      </h1>
 
       <div className="grid md:grid-cols-3 gap-6 mb-10">
-        <div className="bg-gray-800 p-4 rounded-xl shadow-md">
+        <div className="bg-primary p-4 rounded-xl shadow-md text-light">
           <h2 className="text-xl font-semibold mb-2">Avión más rápido</h2>
-          <p><strong>Hex:</strong> {masRapido?.hex ?? 'N/A'}</p>
-          <p><strong>Velocidad:</strong> {masRapido?.gs?.toFixed(0) ?? 'N/A'} km/h</p>
+          <p><strong>Hex:</strong> {masRapido?.hex ?? "N/A"}</p>
+          <p><strong>Velocidad:</strong> {masRapido?.gs?.toFixed(0) ?? "N/A"} km/h</p>
         </div>
 
-        <div className="bg-gray-800 p-4 rounded-xl shadow-md">
+        <div className="bg-primary p-4 rounded-xl shadow-md text-light">
           <h2 className="text-xl font-semibold mb-2">Avión más lento</h2>
-          <p><strong>Hex:</strong> {masLento?.hex ?? 'N/A'}</p>
-          <p><strong>Velocidad:</strong> {masLento?.gs?.toFixed(0) ?? 'N/A'} km/h</p>
+          <p><strong>Hex:</strong> {masLento?.hex ?? "N/A"}</p>
+          <p><strong>Velocidad:</strong> {masLento?.gs?.toFixed(0) ?? "N/A"} km/h</p>
         </div>
-        <div className="bg-gray-800 p-4 rounded-xl shadow-md">
+
+        <div className="bg-primary p-4 rounded-xl shadow-md text-light">
           <h2 className="text-xl font-semibold mb-2">Aviones en vuelo</h2>
           <p><strong>Total:</strong> {data.length}</p>
-          <p><strong>Región:</strong> {region}</p>
-          <p><strong>Última actualización:</strong> {new Date().toLocaleTimeString()}</p>
         </div>
       </div>
 
-      <div className="bg-gray-800 p-4 rounded-xl shadow-md mb-10">
+      <div className="bg-white text-border p-4 rounded-xl mb-10">
         <h2 className="text-xl font-semibold mb-2">Consumo y emisiones promedio</h2>
-        <p><strong>Consumo medio:</strong> {avgFuel ?? 'Calculando...'} L/h</p>
-        <p><strong>Emisión media:</strong> {avgCO2 ?? 'Calculando...'} kg CO₂/h</p>
+        <p><strong>Consumo medio:</strong> {avgFuel ?? "Calculando..."} L/h</p>
+        <p><strong>Emisión media:</strong> {avgCO2 ?? "Calculando..."} kg CO₂/h</p>
       </div>
 
-      <div className="bg-gray-800 p-4 rounded-xl shadow-md mb-10">
-        {/* Selector filtro consumo/emisiones para la gráfica */}
+      <div className="bg-white p-4 rounded-xl mb-10 text-border">
         <div className="pb-5">
-          <label htmlFor="filtroConsumo" className="text-sm mr-2 pb-5">Filtro gráfico:</label>
+          <label htmlFor="filtroConsumo" className="text-sm mr-2">Filtro gráfico:</label>
           <select
             id="filtroConsumo"
             value={filterConsumo}
-            onChange={e => setFilterConsumo(e.target.value)}
-            className="bg-gray-900 text-white text-xs rounded px-2 py-1"
+            onChange={(e) => setFilterConsumo(e.target.value)}
+            className="bg-secondary text-xs rounded px-2 py-1"
           >
             <option value="todos">Todos</option>
             <option value="mayorConsumo">Mayor consumo</option>
@@ -243,24 +259,27 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
           </select>
         </div>
 
-        {/* Gráfica de barras consumo y emisiones */}
-        <h2 className="text-xl font-semibold mb-4 text-white">
-          Comparativa de Consumo de Combustible (L/h) y Emisiones de CO₂ (kg/h)
-        </h2>
-<ResponsiveContainer width="100%" height={300}>
-  <BarChart
-    data={filtrarPorConsumo(data)}
-    margin={{ top: 5, right: 30, left: 0, bottom: 40 }}
-  >
-    <CartesianGrid strokeDasharray="3 3" stroke="#555" />
-    <XAxis dataKey="hex" angle={-45} textAnchor="end" interval={0} tick={{ fill: '#ccc', fontSize: 12 }} />
-    <YAxis tick={{ fill: '#ccc' }} />
-    <Tooltip />
-    <Legend wrapperStyle={{ bottom: 10 }} />
-    <Bar dataKey="fuelLph" fill="#38bdf8" name="Consumo L/h" />
-    <Bar dataKey="co2Kgh" fill="#f87171" name="CO₂ kg/h" />
-  </BarChart>
-</ResponsiveContainer>
+        <h2 className="text-xl font-semibold mb-4">Comparativa de Consumo de Combustible (L/h) y Emisiones de CO₂ (kg/h)</h2>
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart
+            data={filtrarPorConsumo(data)}
+            margin={{ top: 5, right: 30, left: 0, bottom: 40 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" stroke="#555" />
+            <XAxis
+              dataKey="hex"
+              angle={-45}
+              textAnchor="end"
+              interval={0}
+              tick={{ fill: "#ccc", fontSize: 12 }}
+            />
+            <YAxis tick={{ fill: "#ccc" }} />
+            <Tooltip />
+            <Legend wrapperStyle={{ bottom: 5 }} />
+            <Bar dataKey="fuelLph" fill="var(--color-border)" name="Consumo L/h" />
+            <Bar dataKey="co2Kgh" fill="#f44336" name="CO₂ kg/h" />
+          </BarChart>
+        </ResponsiveContainer>
       </div>
 
       <div className="overflow-x-auto bg-gray-900 rounded-xl shadow-md">
@@ -295,18 +314,25 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
           </thead>
           <tbody className="divide-y divide-gray-700">
             {ordenarAviones(data).map((avion, index) => (
-              <tr key={index} className="hover:bg-gray-500 group odd:bg-gray-800 even:bg-gray-700 transition-colors group">
+              <tr
+                key={index}
+                className="hover:bg-gray-500 group odd:bg-gray-800 even:bg-gray-700 transition-colors group"
+              >
                 <td className="px-4 py-2">
-                  <img src={`./paises/${avion.pais}.png`} alt="bandera" className="w-6 h-6 inline-block mr-2" />
+                  <img
+                    src={`./paises/${avion.pais}.png`}
+                    alt="bandera"
+                    className="w-6 h-6 inline-block mr-2"
+                  />
                 </td>
                 <td className="px-4 py-2">{avion.hex}</td>
-                <td className="px-4 py-2">{avion.flight ?? 'N/A'}</td>
-                <td className="px-4 py-2">{avion.t ?? 'N/A'}</td>
-                <td className="px-4 py-2">{avion.modelo ?? 'N/A'}</td>
-                <td className="px-4 py-2">{avion.lon ?? 'N/A'}</td>
-                <td className="px-4 py-2">{avion.lat ?? 'N/A'}</td>
-                <td className="px-4 py-2">{avion.fuelLph ?? 'N/A'}</td>
-                <td className="px-4 py-2">{avion.co2Kgh ?? 'N/A'}</td>
+                <td className="px-4 py-2">{avion.flight ?? "N/A"}</td>
+                <td className="px-4 py-2">{avion.t ?? "N/A"}</td>
+                <td className="px-4 py-2">{avion.modelo ?? "N/A"}</td>
+                <td className="px-4 py-2">{avion.lon ?? "N/A"}</td>
+                <td className="px-4 py-2">{avion.lat ?? "N/A"}</td>
+                <td className="px-4 py-2">{avion.fuelLph ?? "N/A"}</td>
+                <td className="px-4 py-2">{avion.co2Kgh ?? "N/A"}</td>
                 <td className="px-4 py-2 text-right">
                   <button
                     onClick={() => copiarInfoVuelo(avion)}
@@ -320,10 +346,10 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
           </tbody>
         </table>
         {mensajeCopiado && (
-  <div className="fixed top-4 right-4 bg-green-600 text-white px-4 py-2 rounded shadow-md z-50 animate-fade-in-out">
-    {mensajeCopiado}
-  </div>
-)}
+          <div className="fixed top-4 right-4 bg-green-600 text-white px-4 py-2 rounded shadow-md z-50 animate-fade-in-out">
+            {mensajeCopiado}
+          </div>
+        )}
       </div>
     </div>
   );

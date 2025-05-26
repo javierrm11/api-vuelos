@@ -2,7 +2,7 @@ import { FaGlobeEurope, FaPlane } from 'react-icons/fa';
 
 export default function Loading() {
     return (
-        <div className="h-screen inset-0 z-50 flex items-center justify-center bg-gray-200 bg-opacity-90">
+        <div className="h-screen inset-0 z-50 flex items-center justify-center">
             <div className="flex flex-col items-center space-y-6">
                 <div className="relative w-52 h-52">
                     {/* 🌍 Planeta */}
