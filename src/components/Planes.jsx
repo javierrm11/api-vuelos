@@ -309,91 +309,109 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
         </ResponsiveContainer>
       </div>
 
-      <div className="overflow-x-auto bg-gray-900 rounded-xl shadow-md">
-        {ordenarAviones(data).map((avion, index) => (
-          <div
-            key={avion.hex}
-            className="flex-1 items-center justify-between p-4 border-b border-gray-800 hover:bg-gray-800 relative"
-          >
-            <div className="flex items-center gap-2 mb-1">
-              <img
-                src={`./paises/${avion.pais}.png`}
-                alt="Bandera"
-                className="w-6 h-6"
-              />
-              <h3 className="text-lg font-semibold text-white">
-                {avion.flight}
-              </h3>
-            </div>
-
-            <details className="text-sm text-gray-400">
-              <summary className="cursor-pointer absolute top-5 right-7 text-secondary hover:underline">
-                Detalles del vuelo
-              </summary>
-
-              <div className="mt-6 flex flex-col gap-2 text-xs">
-                {/* Grupo 1: Hex y Velocidad */}
-                <div className="flex flex-col md:flex-row md:gap-4">
-                  <p className="w-full md:w-[33%]">
-                    <strong>Hex:</strong> {avion.hex}
-                  </p>
-                  <p className="w-full md:w-[33%]">
-                    <strong>Velocidad:</strong>{" "}
-                    {avion.gs ? `${avion.gs.toFixed(0)} km/h` : "N/A"}
-                  </p>
-                  <p className="w-full md:w-[33%]">
-                    <strong>Altitud:</strong>{" "}
-                    {avion.alt_baro ? `${avion.alt_baro} ft` : "N/A"}
-                  </p>
-
-                </div>
-
-                {/* Grupo 2: Modelo, Ubicación, Rumbo */}
-                <div className="flex flex-col md:flex-row md:gap-4">
-                  <p className="w-full md:w-[33%]">
-                    <strong>Modelo:</strong> {avion.modelo || "Desconocido"}
-                  </p>
-                  <p className="w-full md:w-[33%]">
-                    <strong>Ubicación:</strong> {avion.lat}, {avion.lon}
-                  </p>
-                  <p className="w-full md:w-[33%]">
-                    <strong>Rumbo:</strong> {avion.track ?? "N/A"}°
-                  </p>
-                </div>
-
-                {/* Grupo 3:Consumo, CO2 */}
-                <div className="flex flex-col md:flex-row md:gap-4">
-                  <p className="w-full md:w-[33%]">
-                    <strong>Consumo:</strong>{" "}
-                    {avion.fuelLph ? `${avion.fuelLph} L/h` : "N/A"}
-                  </p>
-                  <p className="w-full md:w-[33%]">
-                    <strong>Emisiones de CO₂:</strong>{" "}
-                    {avion.co2Kgh ? `${avion.co2Kgh} kg/h` : "N/A"}
-                  </p>
-                  <p className="w-full md:w-[33%]">
-                  </p>
-                </div>
-
-                {/* Botón */}
-                <div className="mt-2">
-                  <button
-                    onClick={() => copiarInfoVuelo(avion)}
-                    className="bg-secondary text-white px-3 py-1 rounded hover:bg-secondary-hover transition-colors"
-                  >
-                    Copiar información
-                  </button>
-                </div>
-              </div>
-            </details>
-          </div>
-        ))}
-        {mensajeCopiado && (
-          <div className="fixed top-4 right-4 bg-green-600 text-white px-4 py-2 rounded shadow-md z-50 animate-fade-in-out">
-            {mensajeCopiado}
-          </div>
-        )}
+      <div
+  className="overflow-x-auto rounded-xl shadow-md"
+  style={{ backgroundColor: "var(--color-background)" }}
+>
+  {ordenarAviones(data).map((avion, index) => (
+    <div
+      key={avion.hex}
+      className="flex-1 items-center justify-between p-4 border-b relative hover:brightness-95"
+      style={{
+        borderColor: "var(--color-secondary)",
+        backgroundColor: "var(--color-light)",
+      }}
+    >
+      <div className="flex items-center gap-2 mb-1">
+        <img
+          src={`./paises/${avion.pais}.png`}
+          alt="Bandera"
+          className="w-6 h-6"
+        />
+        <h3 className="text-lg font-semibold" style={{ color: "var(--color-border)" }}>
+          {avion.flight}
+        </h3>
       </div>
+
+      <details className="text-sm" style={{ color: "var(--color-border)" }}>
+        <summary
+          className="cursor-pointer absolute top-5 right-7 hover:underline"
+          style={{ color: "var(--color-primary)" }}
+        >
+          Detalles del vuelo
+        </summary>
+
+        <div className="mt-6 flex flex-col gap-2 text-xs">
+          {/* Grupo 1 */}
+          <div className="flex flex-col md:flex-row md:gap-4">
+            <p className="w-full md:w-[33%]">
+              <strong>Hex:</strong> {avion.hex}
+            </p>
+            <p className="w-full md:w-[33%]">
+              <strong>Velocidad:</strong>{" "}
+              {avion.gs ? `${avion.gs.toFixed(0)} km/h` : "N/A"}
+            </p>
+            <p className="w-full md:w-[33%]">
+              <strong>Altitud:</strong>{" "}
+              {avion.alt_baro ? `${avion.alt_baro} ft` : "N/A"}
+            </p>
+          </div>
+
+          {/* Grupo 2 */}
+          <div className="flex flex-col md:flex-row md:gap-4">
+            <p className="w-full md:w-[33%]">
+              <strong>Modelo:</strong> {avion.modelo || "Desconocido"}
+            </p>
+            <p className="w-full md:w-[33%]">
+              <strong>Ubicación:</strong> {avion.lat}, {avion.lon}
+            </p>
+            <p className="w-full md:w-[33%]">
+              <strong>Rumbo:</strong> {avion.track ?? "N/A"}°
+            </p>
+          </div>
+
+          {/* Grupo 3 */}
+          <div className="flex flex-col md:flex-row md:gap-4">
+            <p className="w-full md:w-[33%]">
+              <strong>Consumo:</strong>{" "}
+              {avion.fuelLph ? `${avion.fuelLph} L/h` : "N/A"}
+            </p>
+            <p className="w-full md:w-[33%]">
+              <strong>Emisiones de CO₂:</strong>{" "}
+              {avion.co2Kgh ? `${avion.co2Kgh} kg/h` : "N/A"}
+            </p>
+            <p className="w-full md:w-[33%]"></p>
+          </div>
+
+          {/* Botón */}
+          <div className="mt-2">
+            <button
+              onClick={() => copiarInfoVuelo(avion)}
+              className="px-3 py-1 rounded transition-colors"
+              style={{
+                backgroundColor: "var(--color-primary)",
+                color: "var(--color-light)",
+              }}
+            >
+              Copiar información
+            </button>
+          </div>
+        </div>
+      </details>
+    </div>
+  ))}
+
+  {mensajeCopiado && (
+    <div className="fixed top-4 right-4 px-4 py-2 rounded shadow-md z-50 animate-fade-in-out"
+      style={{
+        backgroundColor: "var(--color-accent)",
+        color: "var(--color-light)",
+      }}
+    >
+      {mensajeCopiado}
+    </div>
+  )}
+</div>
     </div>
   );
 }
