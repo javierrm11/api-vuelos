@@ -212,7 +212,9 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 text-light bg-background relative">
-      <p className="absolute right-2 top-2 text-border"><strong>Última actualización:</strong> {new Date().toLocaleTimeString()}</p>
+      <p className="absolute right-2 top-2 text-border">
+        <strong>Última actualización:</strong> {new Date().toLocaleTimeString()}
+      </p>
       <h1 className="text-3xl font-bold mb-6 text-black">
         Estado de vuelos sobre {region}
       </h1>
@@ -220,31 +222,50 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
       <div className="grid md:grid-cols-3 gap-6 mb-10">
         <div className="bg-primary p-4 rounded-xl shadow-md text-light">
           <h2 className="text-xl font-semibold mb-2">Avión más rápido</h2>
-          <p><strong>Hex:</strong> {masRapido?.hex ?? "N/A"}</p>
-          <p><strong>Velocidad:</strong> {masRapido?.gs?.toFixed(0) ?? "N/A"} km/h</p>
+          <p>
+            <strong>Hex:</strong> {masRapido?.hex ?? "N/A"}
+          </p>
+          <p>
+            <strong>Velocidad:</strong> {masRapido?.gs?.toFixed(0) ?? "N/A"}{" "}
+            km/h
+          </p>
         </div>
 
         <div className="bg-primary p-4 rounded-xl shadow-md text-light">
           <h2 className="text-xl font-semibold mb-2">Avión más lento</h2>
-          <p><strong>Hex:</strong> {masLento?.hex ?? "N/A"}</p>
-          <p><strong>Velocidad:</strong> {masLento?.gs?.toFixed(0) ?? "N/A"} km/h</p>
+          <p>
+            <strong>Hex:</strong> {masLento?.hex ?? "N/A"}
+          </p>
+          <p>
+            <strong>Velocidad:</strong> {masLento?.gs?.toFixed(0) ?? "N/A"} km/h
+          </p>
         </div>
 
         <div className="bg-primary p-4 rounded-xl shadow-md text-light">
           <h2 className="text-xl font-semibold mb-2">Aviones en vuelo</h2>
-          <p><strong>Total:</strong> {data.length}</p>
+          <p>
+            <strong>Total:</strong> {data.length}
+          </p>
         </div>
       </div>
 
       <div className="bg-white text-border p-4 rounded-xl mb-10">
-        <h2 className="text-xl font-semibold mb-2">Consumo y emisiones promedio</h2>
-        <p><strong>Consumo medio:</strong> {avgFuel ?? "Calculando..."} L/h</p>
-        <p><strong>Emisión media:</strong> {avgCO2 ?? "Calculando..."} kg CO₂/h</p>
+        <h2 className="text-xl font-semibold mb-2">
+          Consumo y emisiones promedio
+        </h2>
+        <p>
+          <strong>Consumo medio:</strong> {avgFuel ?? "Calculando..."} L/h
+        </p>
+        <p>
+          <strong>Emisión media:</strong> {avgCO2 ?? "Calculando..."} kg CO₂/h
+        </p>
       </div>
 
       <div className="bg-white p-4 rounded-xl mb-10 text-border">
         <div className="pb-5">
-          <label htmlFor="filtroConsumo" className="text-sm mr-2">Filtro gráfico:</label>
+          <label htmlFor="filtroConsumo" className="text-sm mr-2">
+            Filtro gráfico:
+          </label>
           <select
             id="filtroConsumo"
             value={filterConsumo}
@@ -259,7 +280,9 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
           </select>
         </div>
 
-        <h2 className="text-xl font-semibold mb-4">Comparativa de Consumo de Combustible (L/h) y Emisiones de CO₂ (kg/h)</h2>
+        <h2 className="text-xl font-semibold mb-4">
+          Comparativa de Consumo de Combustible (L/h) y Emisiones de CO₂ (kg/h)
+        </h2>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart
             data={filtrarPorConsumo(data)}
@@ -276,75 +299,95 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
             <YAxis tick={{ fill: "#ccc" }} />
             <Tooltip />
             <Legend wrapperStyle={{ bottom: 5 }} />
-            <Bar dataKey="fuelLph" fill="var(--color-border)" name="Consumo L/h" />
+            <Bar
+              dataKey="fuelLph"
+              fill="var(--color-border)"
+              name="Consumo L/h"
+            />
             <Bar dataKey="co2Kgh" fill="#f44336" name="CO₂ kg/h" />
           </BarChart>
         </ResponsiveContainer>
       </div>
 
       <div className="overflow-x-auto bg-gray-900 rounded-xl shadow-md">
-        <table className="min-w-full table-auto text-sm text-left text-gray-300">
-          <thead className="bg-primary text-gray-200 uppercase text-xs">
-            <tr>
-              <th className="px-4 py-3">País</th>
-              <th className="px-4 py-3">Hex</th>
-              <th className="px-4 py-3">Vuelo</th>
-              <th className="px-4 py-3">Tipo</th>
-              <th className="px-4 py-3">Modelo</th>
-              <th className="px-4 py-3">Longitud</th>
-              <th className="px-4 py-3">Latitud</th>
-              <th className="px-4 py-3">Consumo (L/h)</th>
-              <th className="px-4 py-3">Emisión CO₂ (kg/h)</th>
-              <th className="px-2 py-2 w-40 text-right">
-                <select
-                  value={sortOption}
-                  onChange={handleSortChange}
-                  className="bg-border text-white text-xs rounded px-1 py-0.5 w-full"
-                >
-                  <option value="">Ordenar por...</option>
-                  <option value="velocidadAsc">Velocidad ↑</option>
-                  <option value="velocidadDesc">Velocidad ↓</option>
-                  <option value="consumoAsc">Consumo ↑</option>
-                  <option value="consumoDesc">Consumo ↓</option>
-                  <option value="emisionAsc">Emisión ↑</option>
-                  <option value="emisionDesc">Emisión ↓</option>
-                </select>
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-700 text-black">
-            {ordenarAviones(data).map((avion, index) => (
-              <tr
-                key={index}
-                className="hover:bg-gray-500 group odd:bg-light even:bg-secondary transition-colors group"
-              >
-                <td className="px-4 py-2">
-                  <img
-                    src={`./paises/${avion.pais}.png`}
-                    alt="bandera"
-                    className="w-6 h-6 inline-block mr-2"
-                  />
-                </td>
-                <td className="px-4 py-2">{avion.hex}</td>
-                <td className="px-4 py-2">{avion.flight ?? "N/A"}</td>
-                <td className="px-4 py-2">{avion.t ?? "N/A"}</td>
-                <td className="px-4 py-2">{avion.modelo ?? "N/A"}</td>
-                <td className="px-4 py-2">{avion.lon ?? "N/A"}</td>
-                <td className="px-4 py-2">{avion.lat ?? "N/A"}</td>
-                <td className="px-4 py-2">{avion.fuelLph ?? "N/A"}</td>
-                <td className="px-4 py-2">{avion.co2Kgh ?? "N/A"}</td>
-                <td className="px-4 py-2 text-right">
+        {ordenarAviones(data).map((avion, index) => (
+          <div
+            key={avion.hex}
+            className="flex-1 items-center justify-between p-4 border-b border-gray-800 hover:bg-gray-800 relative"
+          >
+            <div className="flex items-center gap-2 mb-1">
+              <img
+                src={`./paises/${avion.pais}.png`}
+                alt="Bandera"
+                className="w-6 h-6"
+              />
+              <h3 className="text-lg font-semibold text-white">
+                {avion.flight}
+              </h3>
+            </div>
+
+            <details className="text-sm text-gray-400">
+              <summary className="cursor-pointer absolute top-5 right-7 text-secondary hover:underline">
+                Detalles del vuelo
+              </summary>
+
+              <div className="mt-6 flex flex-col gap-2 text-xs">
+                {/* Grupo 1: Hex y Velocidad */}
+                <div className="flex flex-col md:flex-row md:gap-4">
+                  <p className="w-full md:w-[33%]">
+                    <strong>Hex:</strong> {avion.hex}
+                  </p>
+                  <p className="w-full md:w-[33%]">
+                    <strong>Velocidad:</strong>{" "}
+                    {avion.gs ? `${avion.gs.toFixed(0)} km/h` : "N/A"}
+                  </p>
+                  <p className="w-full md:w-[33%]">
+                    <strong>Altitud:</strong>{" "}
+                    {avion.alt_baro ? `${avion.alt_baro} ft` : "N/A"}
+                  </p>
+
+                </div>
+
+                {/* Grupo 2: Modelo, Ubicación, Rumbo */}
+                <div className="flex flex-col md:flex-row md:gap-4">
+                  <p className="w-full md:w-[33%]">
+                    <strong>Modelo:</strong> {avion.modelo || "Desconocido"}
+                  </p>
+                  <p className="w-full md:w-[33%]">
+                    <strong>Ubicación:</strong> {avion.lat}, {avion.lon}
+                  </p>
+                  <p className="w-full md:w-[33%]">
+                    <strong>Rumbo:</strong> {avion.track ?? "N/A"}°
+                  </p>
+                </div>
+
+                {/* Grupo 3:Consumo, CO2 */}
+                <div className="flex flex-col md:flex-row md:gap-4">
+                  <p className="w-full md:w-[33%]">
+                    <strong>Consumo:</strong>{" "}
+                    {avion.fuelLph ? `${avion.fuelLph} L/h` : "N/A"}
+                  </p>
+                  <p className="w-full md:w-[33%]">
+                    <strong>Emisiones de CO₂:</strong>{" "}
+                    {avion.co2Kgh ? `${avion.co2Kgh} kg/h` : "N/A"}
+                  </p>
+                  <p className="w-full md:w-[33%]">
+                  </p>
+                </div>
+
+                {/* Botón */}
+                <div className="mt-2">
                   <button
                     onClick={() => copiarInfoVuelo(avion)}
-                    className="text-gray-400 text-xs hover:text-white hover:underline transition-all"
+                    className="bg-secondary text-white px-3 py-1 rounded hover:bg-secondary-hover transition-colors"
                   >
                     Copiar información
                   </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                </div>
+              </div>
+            </details>
+          </div>
+        ))}
         {mensajeCopiado && (
           <div className="fixed top-4 right-4 bg-green-600 text-white px-4 py-2 rounded shadow-md z-50 animate-fade-in-out">
             {mensajeCopiado}
