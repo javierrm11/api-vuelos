@@ -22,10 +22,13 @@ export default function Sidebar({ isOpen, onClose }) {
   return (
     <aside
       className={`
-        fixed top-15 left-0 h-full w-64 bg-light text-light z-40 transition-transform transform
+        fixed top-15 left-0 h-full w-full sm:w-64 lg:w-64 bg-light text-light z-40 transition-transform transform
         ${isOpen ? "translate-x-0" : "-translate-x-full"}
         lg:translate-x-0 lg:fixed lg:flex md:h-screen lg:top-0
       `}
+      style={{
+        maxWidth: window.innerWidth <= 400 ? "100%" : "240px",
+      }}
     >
       <div className="flex flex-col w-full lg:h-screen">
         {/* 👤 Usuario (solo desktop) */}

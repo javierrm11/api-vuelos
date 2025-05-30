@@ -274,7 +274,7 @@ const MapaAviones = () => {
           infoVisible ? "w-80" : "w-0"
         } transition-width duration-300 h-full overflow-hidden bg-white border-r ${
           infoVisible ? "border-gray-300 shadow-md" : "border-none"
-        } relative flex flex-col select-none z-30`}
+        } relative flex flex-col select-none`}
       >
         {infoVisible && (
           <>
