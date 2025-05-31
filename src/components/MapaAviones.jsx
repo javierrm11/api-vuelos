@@ -272,7 +272,7 @@ const MapaAviones = () => {
       <aside
         className={`${
           infoVisible ? "w-80" : "w-0"
-        } transition-width duration-300 h-full overflow-hidden bg-white border-r ${
+        } transition-width duration-300 h-full overflow-hidden bg-white dark:bg-border border-r ${
           infoVisible ? "border-gray-300 shadow-md" : "border-none"
         } relative flex flex-col select-none`}
       >
@@ -283,13 +283,13 @@ const MapaAviones = () => {
               onClick={() => setInfoVisible(false)}
               aria-label="Ocultar panel"
               title="Ocultar panel"
-              className="absolute top-3 right-3 bg-transparent border-none text-xl font-bold cursor-pointer text-gray-600 p-0 leading-none select-none transition-colors duration-200 hover:text-blue-500"
+              className="absolute top-3 right-3 bg-transparent border-none text-xl font-bold cursor-pointer text-gray-600 dark:text-light p-0 leading-none select-none transition-colors duration-200 hover:text-blue-500"
             >
               ‹
             </button>
 
             {/* Selector de región */}
-            <div className="px-6 py-4 border-b border-gray-200 font-semibold text-lg text-gray-900">
+            <div className="px-6 py-4 border-b border-gray-200 font-semibold text-lg text-gray-900 dark:text-light">
               Región:&nbsp;
               <select
                 value={pais}
@@ -308,7 +308,7 @@ const MapaAviones = () => {
             <div className="px-6 py-4 overflow-y-auto flex-1 text-sm leading-relaxed text-gray-700">
               <label
                 htmlFor="input-radio"
-                className="flex items-center mb-4 font-semibold text-gray-800"
+                className="flex items-center mb-4 font-semibold text-gray-800 dark:text-light"
               >
                 Radio (km):
                 <input
@@ -330,7 +330,7 @@ const MapaAviones = () => {
               </button>
 
               {userPos && (
-                <div className="mt-4 font-semibold text-gray-900 text-center text-sm">
+                <div className="mt-4 font-semibold text-gray-900 dark:text-light text-center text-sm">
                   <span>Aviones dentro del radio: </span>
                   <span className="bg-blue-500 text-white px-3 py-1 rounded-full font-bold text-base inline-block">
                     {avionesCerca}
@@ -340,19 +340,19 @@ const MapaAviones = () => {
 
               {/* Tabla resumen aviones */}
               <div className="mt-6">
-                <table className="w-full border-collapse text-sm text-gray-700">
+                <table className="w-full border-collapse text-sm text-gray-700 dark:text-light">
                   <thead>
                     <tr className="border-b-2 border-gray-300">
-                      <th className="px-3 py-2 text-left font-semibold text-gray-900">
+                      <th className="px-3 py-2 text-left font-semibold text-gray-900 dark:text-light">
                         País
                       </th>
-                      <th className="px-3 py-2 text-left font-semibold text-gray-900">
+                      <th className="px-3 py-2 text-left font-semibold text-gray-900 dark:text-light">
                         Hex
                       </th>
-                      <th className="px-3 py-2 text-left font-semibold text-gray-900">
+                      <th className="px-3 py-2 text-left font-semibold text-gray-900 dark:text-light">
                         Altitud (ft)
                       </th>
-                      <th className="px-3 py-2 text-left font-semibold text-gray-900">
+                      <th className="px-3 py-2 text-left font-semibold text-gray-900 dark:text-light">
                         Vel. (kt)
                       </th>
                     </tr>
@@ -371,7 +371,7 @@ const MapaAviones = () => {
                       avionesVisibles.map((avion, idx) => (
                         <tr
                           key={`${avion.hex}-${idx}`}
-                          className="border-b border-gray-200 transition-colors duration-200 hover:bg-blue-50"
+                          className="border-b border-gray-200 dark:border-background transition-colors duration-200 hover:bg-blue-50 dark:hover:bg-gray-800 cursor-pointer"
                         >
                           <td className="px-3 py-2 flex items-center">
                             <img

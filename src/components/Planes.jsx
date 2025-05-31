@@ -212,10 +212,10 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 text-light bg-background relative">
-      <p className="absolute right-2 top-2 text-border">
+      <p className="absolute right-2 top-2 text-border dark:text-light">
         <strong>Última actualización:</strong> {new Date().toLocaleTimeString()}
       </p>
-      <h1 className="text-3xl font-bold mb-6 text-black">
+      <h1 className="text-3xl font-bold mb-6 text-text">
         Estado de vuelos sobre {region}
       </h1>
 
@@ -226,8 +226,7 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
             <strong>Hex:</strong> {masRapido?.hex ?? "N/A"}
           </p>
           <p>
-            <strong>Velocidad:</strong> {masRapido?.gs?.toFixed(0) ?? "N/A"}{" "}
-            km/h
+            <strong>Velocidad:</strong> {masRapido?.gs?.toFixed(0) ?? "N/A"} km/h
           </p>
         </div>
 
@@ -241,7 +240,7 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
           </p>
         </div>
 
-        <div className="bg-primary p-4 rounded-xl shadow-md text-light">
+        <div className="bg-accent p-4 rounded-xl shadow-md text-light">
           <h2 className="text-xl font-semibold mb-2">Aviones en vuelo</h2>
           <p>
             <strong>Total:</strong> {data.length}
@@ -249,10 +248,8 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
         </div>
       </div>
 
-      <div className="bg-white text-border p-4 rounded-xl mb-10">
-        <h2 className="text-xl font-semibold mb-2">
-          Consumo y emisiones promedio
-        </h2>
+      <div className="bg-light dark:bg-border text-border dark:text-light p-4 rounded-xl mb-10">
+        <h2 className="text-xl font-semibold mb-2">Consumo y emisiones promedio</h2>
         <p>
           <strong>Consumo medio:</strong> {avgFuel ?? "Calculando..."} L/h
         </p>
@@ -261,7 +258,7 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
         </p>
       </div>
 
-      <div className="bg-white p-4 rounded-xl mb-10 text-border">
+      <div className="bg-light dark:bg-border dark:text-light p-4 rounded-xl mb-10 text-border">
         <div className="pb-5">
           <label htmlFor="filtroConsumo" className="text-sm mr-2">
             Filtro gráfico:
@@ -301,7 +298,7 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
             <Legend wrapperStyle={{ bottom: 5 }} />
             <Bar
               dataKey="fuelLph"
-              fill="var(--color-border)"
+              className="fill-border dark:fill-light"
               name="Consumo L/h"
             />
             <Bar dataKey="co2Kgh" fill="#f44336" name="CO₂ kg/h" />
@@ -309,18 +306,11 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
         </ResponsiveContainer>
       </div>
 
-      <div
-        className="overflow-x-auto rounded-xl shadow-md"
-        style={{ backgroundColor: "var(--color-background)" }}
-      >
+      <div className="overflow-x-auto rounded-xl shadow-md bg-background">
         {ordenarAviones(data).map((avion, index) => (
           <div
             key={avion.hex}
-            className="flex-1 items-center justify-between p-4 border-b relative hover:brightness-95"
-            style={{
-              borderColor: "var(--color-secondary)",
-              backgroundColor: "var(--color-light)",
-            }}
+            className="flex-1 items-center justify-between p-4 border-b relative hover:brightness-95 bg-light dark:bg-border border-secondary"
           >
             <div className="flex items-center gap-2 mb-1">
               <img
@@ -328,27 +318,15 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
                 alt="Bandera"
                 className="w-6 h-6"
               />
-              <h3
-                className="text-lg font-semibold"
-                style={{ color: "var(--color-border)" }}
-              >
-                {avion.flight}
-              </h3>
+              <h3 className="text-lg font-semibold text-border dark:text-light">{avion.flight}</h3>
             </div>
 
-            <details
-              className="text-sm"
-              style={{ color: "var(--color-border)" }}
-            >
-              <summary
-                className="cursor-pointer absolute top-5 right-7 hover:underline"
-                style={{ color: "var(--color-primary)" }}
-              >
+            <details className="text-sm text-border dark:text-light">
+              <summary className="cursor-pointer absolute top-5 right-7 hover:underline text-primary dark:text-light">
                 Detalles del vuelo
               </summary>
 
               <div className="mt-6 flex flex-col gap-2 text-xs">
-                {/* Grupo 1 */}
                 <div className="flex flex-col md:flex-row md:gap-4">
                   <p className="w-full md:w-[33%]">
                     <strong>Hex:</strong> {avion.hex}
@@ -363,7 +341,6 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
                   </p>
                 </div>
 
-                {/* Grupo 2 */}
                 <div className="flex flex-col md:flex-row md:gap-4">
                   <p className="w-full md:w-[33%]">
                     <strong>Modelo:</strong> {avion.modelo || "Desconocido"}
@@ -376,7 +353,6 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
                   </p>
                 </div>
 
-                {/* Grupo 3 */}
                 <div className="flex flex-col md:flex-row md:gap-4">
                   <p className="w-full md:w-[33%]">
                     <strong>Consumo:</strong>{" "}
@@ -386,18 +362,14 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
                     <strong>Emisiones de CO₂:</strong>{" "}
                     {avion.co2Kgh ? `${avion.co2Kgh} kg/h` : "N/A"}
                   </p>
-                  <p className="w-full md:w-[33%]"></p>
+                  <p className="w-full md:w-[33%]">
+                  </p>
                 </div>
 
-                {/* Botón */}
                 <div className="mt-2">
                   <button
                     onClick={() => copiarInfoVuelo(avion)}
-                    className="px-3 py-1 rounded transition-colors"
-                    style={{
-                      backgroundColor: "var(--color-primary)",
-                      color: "var(--color-light)",
-                    }}
+                    className="px-3 py-1 rounded transition-colors bg-primary text-light"
                   >
                     Copiar información
                   </button>
@@ -408,13 +380,7 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
         ))}
 
         {mensajeCopiado && (
-          <div
-            className="fixed top-4 right-4 px-4 py-2 rounded shadow-md z-50 animate-fade-in-out"
-            style={{
-              backgroundColor: "var(--color-accent)",
-              color: "var(--color-light)",
-            }}
-          >
+          <div className="fixed top-4 right-4 px-4 py-2 rounded shadow-md z-50 animate-fade-in-out bg-accent text-light">
             {mensajeCopiado}
           </div>
         )}

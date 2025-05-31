@@ -22,7 +22,7 @@ export default function Sidebar({ isOpen, onClose }) {
   return (
     <aside
       className={`
-        fixed top-15 left-0 h-full w-full sm:w-64 lg:w-64 bg-light text-light z-40 transition-transform transform
+        fixed top-15 left-0 h-full w-full sm:w-64 lg:w-64 bg-light dark:bg-secondary text-light z-40 transition-transform transform
         ${isOpen ? "translate-x-0" : "-translate-x-full"}
         lg:translate-x-0 lg:fixed lg:flex md:h-screen lg:top-0
       `}
@@ -33,7 +33,7 @@ export default function Sidebar({ isOpen, onClose }) {
           <img
             src="https://www.iesgrancapitan.org/wp-content/uploads/sites/2/2021/06/Marca_principal.png" // ← cambia esto por tu imagen
             alt="Usuario"
-            className="w-50 h-50 rounded-full object-cover mb-2 p-3 bg-white"
+            className="w-50 h-50 rounded-full object-cover mb-2 p-3"
           />
           <span className="font-bold text-2xl">ApiVuelos</span>
         </div>
@@ -54,7 +54,7 @@ export default function Sidebar({ isOpen, onClose }) {
         ${
           isActive
           ? "bg-background text-accent animate-fadeIn"
-          : "bg-transparent text-border hover:bg-background hover:text-accent"
+          : "bg-transparent text-border dark:text-light hover:bg-background hover:text-accent"
         }
         `}
               >
