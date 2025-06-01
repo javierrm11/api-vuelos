@@ -19,7 +19,7 @@ export default function Header({ onMenuClick, isOpen }) {
                 )}
             </button>
             <div className="text-lg font-bold">
-                <img src="https://www.iesgrancapitan.org/wp-content/uploads/sites/2/2021/06/Marca_principal.png" alt="Logo" className="h-8 inline-block mr-2" />
+                <img src="./logo/__Marca horizontal negativo.png" alt="Logo" className="mr-2 h-10 object-contain" />
             </div>
         </header>
     );

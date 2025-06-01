@@ -32,9 +32,9 @@ export default function Sidebar({ isOpen, onClose }) {
         <div className="hidden lg:flex flex-col items-center py-10 pb-10 bg-primary border-b border-gray-700">
           <DarkModeToggle />
           <img
-            src="https://www.iesgrancapitan.org/wp-content/uploads/sites/2/2021/06/Marca_principal.png" // ← cambia esto por tu imagen
+            src="./logo/__Marca principal en negativo.png" // ← cambia esto por tu imagen
             alt="Usuario"
-            className="w-50 h-50 rounded-full object-cover mb-2 p-3"
+            className="h-55 object-contain p-3"
           />
           <span className="font-bold text-2xl">ApiVuelos</span>
         </div>
