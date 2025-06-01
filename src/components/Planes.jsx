@@ -298,7 +298,7 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
             <Legend wrapperStyle={{ bottom: 5 }} />
             <Bar
               dataKey="fuelLph"
-              className="fill-border dark:fill-light"
+              fill="#2196f3"
               name="Consumo L/h"
             />
             <Bar dataKey="co2Kgh" fill="#f44336" name="CO₂ kg/h" />
