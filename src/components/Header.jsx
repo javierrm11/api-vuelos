@@ -18,7 +18,9 @@ export default function Header({ onMenuClick, isOpen }) {
                     </svg>
                 )}
             </button>
-            <div className="text-lg font-bold">MiLogo</div>
+            <div className="text-lg font-bold">
+                <img src="https://www.iesgrancapitan.org/wp-content/uploads/sites/2/2021/06/Marca_principal.png" alt="Logo" className="h-8 inline-block mr-2" />
+            </div>
         </header>
     );
 }

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-
+import  DarkModeToggle from "./DarkModeToogle.jsx"; // Asegúrate de que la ruta sea correcta
 export default function Sidebar({ isOpen, onClose }) {
   const [currentPath, setCurrentPath] = useState("");
 
@@ -30,6 +30,7 @@ export default function Sidebar({ isOpen, onClose }) {
       <div className="flex flex-col w-full lg:h-screen">
         {/* 👤 Usuario (solo desktop) */}
         <div className="hidden lg:flex flex-col items-center py-10 pb-10 bg-primary border-b border-gray-700">
+          <DarkModeToggle />
           <img
             src="https://www.iesgrancapitan.org/wp-content/uploads/sites/2/2021/06/Marca_principal.png" // ← cambia esto por tu imagen
             alt="Usuario"
@@ -48,7 +49,7 @@ export default function Sidebar({ isOpen, onClose }) {
               href={href}
               onClick={onClose}
               className={`
-        text-lg px-6 w-full py-2
+        text-lg px-6 w-full py-1
         transition-all duration-300 ease-in-out
         rounded-l-xl
         ${
