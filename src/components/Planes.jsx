@@ -212,7 +212,7 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 text-light bg-background relative">
-      <p className="absolute right-2 top-2 text-border dark:text-light">
+      <p className="absolute right-2 top-4 text-border dark:text-light">
         <strong>Última actualización:</strong> {new Date().toLocaleTimeString()}
       </p>
       <h1 className="text-3xl font-bold mb-6 text-text">

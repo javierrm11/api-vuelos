@@ -22,7 +22,7 @@ export default function Sidebar({ isOpen, onClose }) {
   return (
     <aside
       className={`
-        fixed top-15 left-0 h-full w-full sm:w-64 lg:w-64 bg-light dark:bg-secondary text-light z-40 transition-transform transform
+        fixed top-15 left-0 h-full w-full sm:w-64 lg:w-64 bg-nav text-light z-40 transition-transform transform
         ${isOpen ? "translate-x-0" : "-translate-x-full"}
         lg:translate-x-0 lg:fixed lg:flex md:h-screen lg:top-0
       `}

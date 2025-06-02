@@ -7,6 +7,7 @@
   --color-secondary: #b0c4de;     /* Azul grisáceo claro */
   --color-background: #e6f0fa;    /* Fondo claro */
   --color-light: #ffffff;         /* Blanco para textos sobre fondo oscuro */
+  --color-nav: #ffffff;         /* Blanco para textos sobre fondo oscuro */
   --color-border: #003366;        /* Azul muy oscuro */
   --color-accent: #007aff;        /* Azul acentuado para énfasis */
   --color-text: #000000;
@@ -14,12 +15,14 @@
 
 .dark {
   --color-primary: #3970b4;       /* Versión más oscura de #4a90e2 */
-  --color-secondary: #1e2f48;     /* Fondo de sidebar, similar al tono intermedio oscuro */
+  --color-nav: #1e2f48;     /* Fondo de sidebar, similar al tono intermedio oscuro */
+  --color-secondary: #395785;
   --color-background: #0f192f;    /* Fondo general oscuro */
   --color-light: #cfd8e3;         /* Texto claro sobre fondo oscuro */
   --color-border: #2a3b55;        /* Bordes entre módulos en modo oscuro */
   --color-accent: #339bff;        /* Azul brillante pero legible sobre fondo oscuro */
-  --color-text: #ffffff;         /* Texto claro para mejor legibilidad */
+  --color-text: #ffffff;          /* Texto claro para mejor legibilidad */
+
 }
 
 

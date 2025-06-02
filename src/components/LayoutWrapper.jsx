@@ -42,7 +42,6 @@ export default function LayoutWrapper({ children }) {
           <Header onMenuClick={toggleSidebar} isOpen={sidebarOpen} />
           <main className="bg-background pt-15 lg:pt-0 lg:pl-64 lg:m-top-8">{children}</main>
         </div>
-        <Footer />
       </div>
     );
 }

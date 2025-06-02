@@ -1,3 +1,5 @@
+import DarkModeToggleMovile from "./DarkModeToogleMovile";
+
 export default function Header({ onMenuClick, isOpen }) {
     return (
         <header className="lg:hidden flex justify-between items-center p-4 bg-gray-800 text-white fixed top-0 w-full z-50">
@@ -18,9 +20,11 @@ export default function Header({ onMenuClick, isOpen }) {
                     </svg>
                 )}
             </button>
+
             <div className="text-lg font-bold">
-                <img src="./logo/__Marca horizontal negativo.png" alt="Logo" className="mr-2 h-10 object-contain" />
+                <img src="./logo/__Isotipo negativo.png" alt="Logo" className="h-10 object-contain" />
             </div>
+                <DarkModeToggleMovile />
         </header>
     );
 }

@@ -1,6 +1,8 @@
 ---
 import Planes from '../components/Planes';
 import Layout from '../Layouts/Layout.astro';
+import Footer from '../components/Footer';
+
 
 // Obtener el parámetro dinámico de la URL
 const { pais } = Astro.params;
@@ -9,4 +11,5 @@ const capitalizedPais = (pais ?? '').charAt(0).toUpperCase() + (pais ?? '').slic
 
 <Layout title={`${capitalizedPais} Planes`}>
   <Planes region={capitalizedPais} client:only />
+  <Footer />
 </Layout>
