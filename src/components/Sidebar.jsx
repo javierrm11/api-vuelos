@@ -9,7 +9,7 @@ export default function Sidebar({ isOpen, onClose }) {
 
   const links = [
     { label: "Inicio", href: "/" },
-    { label: "Spain", href: "/Spain" },
+    { label: "España", href: "/Spain" },
     { label: "Europa", href: "/Europa" },
     { label: "Africa", href: "/Africa" },
     { label: "America", href: "/America" },

@@ -133,15 +133,15 @@ export default function EarthScene() {
           </p>
           <div className="grid md:grid-cols-3 gap-8 mt-10">
             <div>
-              <h3 className="text-xl font-semibold text-blue-600 mb-2">Datos en tiempo real</h3>
+              <h3 className="text-xl font-serif text-red-600 mb-2">Datos en tiempo real</h3>
               <p className="text-text">Actualización automática de vuelos y emisiones por región.</p>
             </div>
             <div>
-              <h3 className="text-xl font-semibold text-green-600 mb-2">Visualización interactiva</h3>
+              <h3 className="text-xl font-serif text-pink-600 mb-2">Visualización interactiva</h3>
               <p className="text-text">Gráficas y mapas para comparar el impacto entre continentes.</p>
             </div>
             <div>
-              <h3 className="text-xl font-semibold text-red-600 mb-2">Conciencia ambiental</h3>
+              <h3 className="text-xl font-serif text-orange-600 mb-2">Conciencia ambiental</h3>
               <p className="text-text">Promueve la reflexión sobre el papel de la aviación en el cambio climático.</p>
             </div>
           </div>
@@ -158,11 +158,11 @@ export default function EarthScene() {
           </p>
           <div className="grid md:grid-cols-2 gap-8 mt-10">
             <div>
-              <h3 className="text-lg font-semibold text-pink-600 mb-2">Transparencia</h3>
+              <h3 className="text-lg font-serif text-pink-600 mb-2">Transparencia</h3>
               <p className="text-text">Todos los datos provienen de fuentes abiertas y se procesan en tiempo real.</p>
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-amber-600 mb-2">Educación</h3>
+              <h3 className="text-lg font-serif text-amber-600 mb-2">Educación</h3>
               <p className="text-text">El objetivo es informar y concienciar, no solo mostrar cifras.</p>
             </div>
           </div>

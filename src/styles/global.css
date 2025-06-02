@@ -22,13 +22,12 @@
   --color-border: #2a3b55;        /* Bordes entre módulos en modo oscuro */
   --color-accent: #339bff;        /* Azul brillante pero legible sobre fondo oscuro */
   --color-text: #ffffff;          /* Texto claro para mejor legibilidad */
-
 }
 
 
 
 body{
-  background-color: rgb(229, 231, 235);
+  background-color: var(--color-background);
 }
 
 @keyframes spinSlow {
