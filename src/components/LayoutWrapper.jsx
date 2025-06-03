@@ -8,18 +8,14 @@ export default function LayoutWrapper({ children }) {
 
     const toggleSidebar = () => setSidebarOpen(prev => !prev);
 
-    // 👇 Cierra el sidebar si cambia de ruta o si en desktop
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth >= 1024) {
                 setSidebarOpen(false);
             }
         };
-
-        // Ejecutar al montar
         handleResize();
 
-        // Escuchar resize
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, []);

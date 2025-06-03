@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
 import { FaRegSun, FaMoon  } from "react-icons/fa";
+import { LuSun }  from "react-icons/lu";
 
 export default function DarkModeToggleMovile() {
   const [isDark, setIsDark] = useState(false);
-  const [hasMounted, setHasMounted] = useState(false); // <- nuevo
+  const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {
     const root = window.document.documentElement;
     const dark = localStorage.getItem("theme") === "dark";
     setIsDark(dark);
     root.classList.toggle("dark", dark);
-    setHasMounted(true); // <- marcamos como montado
+    setHasMounted(true);
   }, []);
 
   const toggleDarkMode = () => {
@@ -21,7 +22,6 @@ export default function DarkModeToggleMovile() {
     setIsDark(newDark);
   };
 
-  // 🔒 Evitamos renderizar hasta que esté montado
   if (!hasMounted) return null;
 
   return (
@@ -35,8 +35,7 @@ export default function DarkModeToggleMovile() {
         </>
       ) : (
         <>
-          <FaRegSun className="animate-fly-right text-light" />
-
+          <LuSun className="animate-fly-right text-light" />
         </>
       )}
     </button>
