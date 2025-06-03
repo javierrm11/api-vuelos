@@ -23,6 +23,8 @@ function Planes({ region }) {
   const [mensajeCopiado, setMensajeCopiado] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
+  const [currentAvionesPage, setCurrentAvionesPage] = useState(1);
+  const [avionesPerPage] = useState(10);
 
   const S = 122;
   const C_D = 0.03;
@@ -161,7 +163,7 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
 
   const handleSortChange = (e) => {
     setSortOption(e.target.value);
-    setCurrentPage(1); // Resetear a la primera página cuando cambia el orden
+    setCurrentPage(1);
   };
 
   const ordenarAviones = (aviones) => {
@@ -199,7 +201,6 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
     }
   };
 
-  // Obtener aviones actuales para la página
   const getAvionesPagina = () => {
     const avionesFiltrados = filtrarPorConsumo(data);
     const indexOfLastItem = currentPage * itemsPerPage;
@@ -207,8 +208,16 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
     return avionesFiltrados.slice(indexOfFirstItem, indexOfLastItem);
   };
 
-  // Cambiar página
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const getCurrentAviones = () => {
+    const startIndex = (currentAvionesPage - 1) * avionesPerPage;
+    const endIndex = startIndex + avionesPerPage;
+    return ordenarAviones(data).slice(startIndex, endIndex);
+  };
+
+  const totalAvionesPages = Math.ceil(data.length / avionesPerPage);
+  const paginateAviones = (pageNumber) => setCurrentAvionesPage(pageNumber);
 
   if (error) {
     return <div className="text-red-400 text-center mt-4">Error: {error}</div>;
@@ -319,7 +328,6 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
           </BarChart>
         </ResponsiveContainer>
 
-        {/* Paginación movida aquí debajo de la gráfica */}
         <div className="flex justify-center items-center gap-2 mt-4">
           <button
             onClick={() => paginate(1)}
@@ -424,7 +432,7 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
       </div>
 
       <div className="overflow-x-auto rounded-xl shadow-md bg-background">
-        {ordenarAviones(data).map((avion, index) => (
+        {getCurrentAviones().map((avion, index) => (
           <div
             key={avion.hex}
             className="flex-1 items-center justify-between p-4 border-b relative hover:brightness-95 bg-light dark:bg-border border-secondary"
@@ -496,6 +504,109 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
             </details>
           </div>
         ))}
+
+        {/* Paginación para el listado de aviones */}
+        <div className="flex justify-center items-center gap-2 p-4 bg-light dark:bg-border">
+          <button
+            onClick={() => paginateAviones(1)}
+            disabled={currentAvionesPage === 1}
+            className={`px-1 py-1 rounded ${
+              currentAvionesPage === 1
+                ? "bg-gray-300 dark:bg-background cursor-not-allowed"
+                : "bg-secondary text-light"
+            }`}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="feather feather-chevrons-left"
+            >
+              <polyline points="11 17 6 12 11 7"></polyline>
+              <polyline points="18 17 13 12 18 7"></polyline>
+            </svg>
+          </button>
+          <button
+            onClick={() => paginateAviones(currentAvionesPage - 1)}
+            disabled={currentAvionesPage === 1}
+            className={`px-1 py-1 rounded ${
+              currentAvionesPage === 1
+                ? "bg-gray-300 dark:bg-background cursor-not-allowed"
+                : "bg-primary text-light"
+            }`}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="feather feather-arrow-left"
+            >
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+          </button>
+          <span className="text-sm text-text">
+            Pág {currentAvionesPage} de {totalAvionesPages}
+          </span>
+          <button
+            onClick={() => paginateAviones(currentAvionesPage + 1)}
+            disabled={currentAvionesPage === totalAvionesPages}
+            className={`px-1 py-1 rounded ${
+              currentAvionesPage === totalAvionesPages
+                ? "bg-gray-300 dark:bg-background cursor-not-allowed"
+                : "bg-primary text-light"
+            }`}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="feather feather-arrow-right"
+            >
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+          <button
+            onClick={() => paginateAviones(totalAvionesPages)}
+            disabled={currentAvionesPage === totalAvionesPages}
+            className={`px-1 py-1 rounded ${
+              currentAvionesPage === totalAvionesPages
+                ? "bg-gray-300 dark:bg-background cursor-not-allowed"
+                : "bg-secondary text-light"
+            }`}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="feather feather-chevrons-right"
+            >
+              <polyline points="13 17 18 12 13 7"></polyline>
+              <polyline points="6 17 11 12 6 7"></polyline>
+            </svg>
+          </button>
+        </div>
 
         {mensajeCopiado && (
           <div className="fixed top-4 right-4 px-4 py-2 rounded shadow-md z-50 animate-fade-in-out bg-accent text-light">
