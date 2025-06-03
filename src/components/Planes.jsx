@@ -146,10 +146,10 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
     navigator.clipboard
       .writeText(texto)
       .then(() => {
-        setMensajeCopiado("Información copiada correctamente ✅");
+        setMensajeCopiado("¡Información copiada correctamente!");
       })
       .catch(() => {
-        setMensajeCopiado("Error al copiar la información ❌");
+        setMensajeCopiado("Error al copiar la información... Inténtalo de nuevo.");
       });
 
     setTimeout(() => setMensajeCopiado(null), 3000);
