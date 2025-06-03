@@ -21,6 +21,8 @@ function Planes({ region }) {
   const [masLento, setMasLento] = useState(null);
   const [filterConsumo, setFilterConsumo] = useState("todos");
   const [mensajeCopiado, setMensajeCopiado] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(5);
 
   const S = 122;
   const C_D = 0.03;
@@ -149,7 +151,9 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
         setMensajeCopiado("¡Información copiada correctamente!");
       })
       .catch(() => {
-        setMensajeCopiado("Error al copiar la información... Inténtalo de nuevo.");
+        setMensajeCopiado(
+          "Error al copiar la información... Inténtalo de nuevo."
+        );
       });
 
     setTimeout(() => setMensajeCopiado(null), 3000);
@@ -157,6 +161,7 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
 
   const handleSortChange = (e) => {
     setSortOption(e.target.value);
+    setCurrentPage(1); // Resetear a la primera página cuando cambia el orden
   };
 
   const ordenarAviones = (aviones) => {
@@ -182,25 +187,28 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
   const filtrarPorConsumo = (aviones) => {
     switch (filterConsumo) {
       case "mayorConsumo":
-        return ordenarAviones(aviones)
-          .sort((a, b) => b.fuelLph - a.fuelLph)
-          .slice(0, 10);
+        return ordenarAviones(aviones).sort((a, b) => b.fuelLph - a.fuelLph);
       case "menorConsumo":
-        return ordenarAviones(aviones)
-          .sort((a, b) => a.fuelLph - b.fuelLph)
-          .slice(0, 10);
+        return ordenarAviones(aviones).sort((a, b) => a.fuelLph - b.fuelLph);
       case "mayorEmision":
-        return ordenarAviones(aviones)
-          .sort((a, b) => b.co2Kgh - a.co2Kgh)
-          .slice(0, 10);
+        return ordenarAviones(aviones).sort((a, b) => b.co2Kgh - a.co2Kgh);
       case "menorEmision":
-        return ordenarAviones(aviones)
-          .sort((a, b) => a.co2Kgh - b.co2Kgh)
-          .slice(0, 10);
+        return ordenarAviones(aviones).sort((a, b) => a.co2Kgh - b.co2Kgh);
       default:
-        return ordenarAviones(aviones).slice(0, 10);
+        return ordenarAviones(aviones);
     }
   };
+
+  // Obtener aviones actuales para la página
+  const getAvionesPagina = () => {
+    const avionesFiltrados = filtrarPorConsumo(data);
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    return avionesFiltrados.slice(indexOfFirstItem, indexOfLastItem);
+  };
+
+  // Cambiar página
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   if (error) {
     return <div className="text-red-400 text-center mt-4">Error: {error}</div>;
@@ -209,6 +217,8 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
   if (!data.length) {
     return <Loading />;
   }
+
+  const totalPages = Math.ceil(filtrarPorConsumo(data).length / itemsPerPage);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 text-light bg-background relative">
@@ -220,17 +230,18 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
       </h1>
 
       <div className="grid md:grid-cols-3 gap-6 mb-10">
-        <div className="bg-primary p-4 rounded-xl shadow-md text-light">
+        <div className="bg-accent p-4 rounded-xl shadow-md text-light">
           <h2 className="text-xl font-semibold mb-2">Avión más rápido</h2>
           <p>
             <strong>Hex:</strong> {masRapido?.hex ?? "N/A"}
           </p>
           <p>
-            <strong>Velocidad:</strong> {masRapido?.gs?.toFixed(0) ?? "N/A"} km/h
+            <strong>Velocidad:</strong> {masRapido?.gs?.toFixed(0) ?? "N/A"}{" "}
+            km/h
           </p>
         </div>
 
-        <div className="bg-primary p-4 rounded-xl shadow-md text-light">
+        <div className="bg-accent p-4 rounded-xl shadow-md text-light">
           <h2 className="text-xl font-semibold mb-2">Avión más lento</h2>
           <p>
             <strong>Hex:</strong> {masLento?.hex ?? "N/A"}
@@ -249,7 +260,9 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
       </div>
 
       <div className="bg-light dark:bg-border text-border dark:text-light p-4 rounded-xl mb-10">
-        <h2 className="text-xl font-semibold mb-2">Consumo y emisiones promedio</h2>
+        <h2 className="text-xl font-semibold mb-2">
+          Consumo y emisiones promedio
+        </h2>
         <p>
           <strong>Consumo medio:</strong> {avgFuel ?? "Calculando..."} L/h
         </p>
@@ -259,22 +272,27 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
       </div>
 
       <div className="bg-light dark:bg-border dark:text-light p-4 rounded-xl mb-10 text-border">
-        <div className="pb-5">
-          <label htmlFor="filtroConsumo" className="text-sm mr-2">
-            Filtro gráfico:
-          </label>
-          <select
-            id="filtroConsumo"
-            value={filterConsumo}
-            onChange={(e) => setFilterConsumo(e.target.value)}
-            className="bg-secondary text-xs rounded px-2 py-1"
-          >
-            <option value="todos">Todos</option>
-            <option value="mayorConsumo">Mayor consumo</option>
-            <option value="menorConsumo">Menor consumo</option>
-            <option value="mayorEmision">Mayor emisiones</option>
-            <option value="menorEmision">Menor emisiones</option>
-          </select>
+        <div className="flex justify-between items-center pb-5">
+          <div>
+            <label htmlFor="filtroConsumo" className="text-sm mr-2">
+              Filtro gráfico:
+            </label>
+            <select
+              id="filtroConsumo"
+              value={filterConsumo}
+              onChange={(e) => {
+                setFilterConsumo(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="bg-secondary text-xs rounded px-2 py-1"
+            >
+              <option value="todos">Todos</option>
+              <option value="mayorConsumo">Mayor consumo</option>
+              <option value="menorConsumo">Menor consumo</option>
+              <option value="mayorEmision">Mayor emisiones</option>
+              <option value="menorEmision">Menor emisiones</option>
+            </select>
+          </div>
         </div>
 
         <h2 className="text-xl font-semibold mb-4">
@@ -282,7 +300,7 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
         </h2>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart
-            data={filtrarPorConsumo(data)}
+            data={getAvionesPagina()}
             margin={{ top: 5, right: 30, left: 0, bottom: 40 }}
           >
             <CartesianGrid strokeDasharray="3 3" stroke="#555" />
@@ -296,14 +314,113 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
             <YAxis tick={{ fill: "#ccc" }} />
             <Tooltip />
             <Legend wrapperStyle={{ bottom: 5 }} />
-            <Bar
-              dataKey="fuelLph"
-              fill="#2196f3"
-              name="Consumo L/h"
-            />
+            <Bar dataKey="fuelLph" fill="#2196f3" name="Consumo L/h" />
             <Bar dataKey="co2Kgh" fill="#f44336" name="CO₂ kg/h" />
           </BarChart>
         </ResponsiveContainer>
+
+        {/* Paginación movida aquí debajo de la gráfica */}
+        <div className="flex justify-center items-center gap-2 mt-4">
+          <button
+            onClick={() => paginate(1)}
+            disabled={currentPage === 1}
+            className={`px-1 py-1 rounded ${
+              currentPage === 1
+                ? "bg-gray-300 dark:bg-background cursor-not-allowed"
+                : "bg-secondary text-light"
+            }`}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="feather feather-chevrons-left"
+            >
+              <polyline points="11 17 6 12 11 7"></polyline>
+              <polyline points="18 17 13 12 18 7"></polyline>
+            </svg>
+          </button>
+          <button
+            onClick={() => paginate(currentPage - 1)}
+            disabled={currentPage === 1}
+            className={`px-1 py-1 rounded ${
+              currentPage === 1
+                ? "bg-gray-300 dark:bg-background cursor-not-allowed"
+                : "bg-primary text-light"
+            }`}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="feather feather-arrow-left"
+            >
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+          </button>
+          <span className="text-sm">
+            Pág {currentPage} de {totalPages}
+          </span>
+          <button
+            onClick={() => paginate(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className={`px-1 py-1 rounded ${
+              currentPage === totalPages
+                ? "bg-gray-300 dark:bg-background cursor-not-allowed"
+                : "bg-primary text-light"
+            }`}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="feather feather-arrow-right"
+            >
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+          <button
+            onClick={() => paginate(totalPages)}
+            disabled={currentPage === totalPages}
+            className={`px-1 py-1 rounded ${
+              currentPage === totalPages
+                ? "bg-gray-300 dark:bg-background cursor-not-allowed"
+                : "bg-primary text-light"
+            }`}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="feather feather-chevrons-right"
+            >
+              <polyline points="13 17 18 12 13 7"></polyline>
+              <polyline points="6 17 11 12 6 7"></polyline>
+            </svg>
+          </button>
+        </div>
       </div>
 
       <div className="overflow-x-auto rounded-xl shadow-md bg-background">
@@ -318,7 +435,9 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
                 alt="Bandera"
                 className="w-6 h-6"
               />
-              <h3 className="text-lg font-semibold text-border dark:text-light">{avion.flight}</h3>
+              <h3 className="text-lg font-semibold text-border dark:text-light">
+                {avion.flight}
+              </h3>
             </div>
 
             <details className="text-sm text-border dark:text-light">
@@ -362,8 +481,7 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
                     <strong>Emisiones de CO₂:</strong>{" "}
                     {avion.co2Kgh ? `${avion.co2Kgh} kg/h` : "N/A"}
                   </p>
-                  <p className="w-full md:w-[33%]">
-                  </p>
+                  <p className="w-full md:w-[33%]"></p>
                 </div>
 
                 <div className="mt-2">
