@@ -26,6 +26,8 @@ function Planes({ region }) {
   const [currentAvionesPage, setCurrentAvionesPage] = useState(1);
   const [avionesPerPage] = useState(10);
   const [avionesSortOption, setAvionesSortOption] = useState("");
+  const [filterPais, setFilterPais] = useState("todos");
+  const [paisesDisponibles, setPaisesDisponibles] = useState([]);
 
   const S = 122;
   const C_D = 0.03;
@@ -62,6 +64,10 @@ function Planes({ region }) {
             detalles[0]
           );
         }
+
+        // Extraer países únicos
+        const paises = [...new Set(detalles.map(avion => avion.pais))].filter(Boolean);
+        setPaisesDisponibles(paises);
 
         setData(detalles);
         setError(null);
@@ -172,6 +178,12 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
     setCurrentAvionesPage(1);
   };
 
+  const handlePaisFilterChange = (e) => {
+    setFilterPais(e.target.value);
+    setCurrentAvionesPage(1);
+    setCurrentPage(1);
+  };
+
   const ordenarAviones = (aviones) => {
     const sorted = [...aviones];
     switch (sortOption) {
@@ -235,8 +247,13 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
     }
   };
 
+  const filtrarPorPais = (aviones) => {
+    if (filterPais === "todos") return aviones;
+    return aviones.filter(avion => avion.pais === filterPais);
+  };
+
   const getAvionesPagina = () => {
-    const avionesFiltrados = filtrarPorConsumo(data);
+    const avionesFiltrados = filtrarPorConsumo(filtrarPorPais(data));
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     return avionesFiltrados.slice(indexOfFirstItem, indexOfLastItem);
@@ -247,10 +264,10 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
   const getCurrentAviones = () => {
     const startIndex = (currentAvionesPage - 1) * avionesPerPage;
     const endIndex = startIndex + avionesPerPage;
-    return ordenarAvionesListado(data).slice(startIndex, endIndex);
+    return filtrarPorPais(ordenarAvionesListado(data)).slice(startIndex, endIndex);
   };
 
-  const totalAvionesPages = Math.ceil(data.length / avionesPerPage);
+  const totalAvionesPages = Math.ceil(filtrarPorPais(data).length / avionesPerPage);
   const paginateAviones = (pageNumber) => setCurrentAvionesPage(pageNumber);
 
   if (error) {
@@ -261,7 +278,7 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
     return <Loading />;
   }
 
-  const totalPages = Math.ceil(filtrarPorConsumo(data).length / itemsPerPage);
+  const totalPages = Math.ceil(filtrarPorConsumo(filtrarPorPais(data)).length / itemsPerPage);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 text-light bg-background relative">
@@ -316,25 +333,45 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
 
       <div className="bg-light dark:bg-border dark:text-light p-4 rounded-xl mb-10 text-border">
         <div className="flex justify-between items-center pb-5">
-          <div>
-            <label htmlFor="filtroConsumo" className="text-sm mr-2">
-              Filtro gráfico:
-            </label>
-            <select
-              id="filtroConsumo"
-              value={filterConsumo}
-              onChange={(e) => {
-                setFilterConsumo(e.target.value);
-                setCurrentPage(1);
-              }}
-              className="bg-secondary text-xs rounded px-2 py-1"
-            >
-              <option value="todos">Todos</option>
-              <option value="mayorConsumo">Mayor consumo</option>
-              <option value="menorConsumo">Menor consumo</option>
-              <option value="mayorEmision">Mayor emisiones</option>
-              <option value="menorEmision">Menor emisiones</option>
-            </select>
+          <div className="flex gap-4">
+            <div>
+              <label htmlFor="filtroConsumo" className="text-sm mr-2">
+                Filtro gráfico:
+              </label>
+              <select
+                id="filtroConsumo"
+                value={filterConsumo}
+                onChange={(e) => {
+                  setFilterConsumo(e.target.value);
+                  setCurrentPage(1);
+                }}
+                className="bg-secondary text-xs rounded px-2 py-1"
+              >
+                <option value="todos">Todos</option>
+                <option value="mayorConsumo">Mayor consumo</option>
+                <option value="menorConsumo">Menor consumo</option>
+                <option value="mayorEmision">Mayor emisiones</option>
+                <option value="menorEmision">Menor emisiones</option>
+              </select>
+            </div>
+            <div>
+              <label htmlFor="filtroPais" className="text-sm mr-2">
+                País:
+              </label>
+              <select
+                id="filtroPais"
+                value={filterPais}
+                onChange={handlePaisFilterChange}
+                className="bg-secondary text-xs rounded px-2 py-1"
+              >
+                <option value="todos">Todos los países</option>
+                {paisesDisponibles.map(pais => (
+                  <option key={pais} value={pais}>
+                    {pais}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
 
@@ -469,28 +506,45 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
       </div>
 
       <div className="overflow-x-auto rounded-xl shadow-md bg-background">
-        <div className="p-4 bg-light dark:bg-border">
-          <label htmlFor="avionesSort" className="text-sm mr-2 text:text">
-            Ordenar aviones por:
-          </label>
-          <select
-            id="avionesSort"
-            value={avionesSortOption}
-            onChange={handleAvionesSortChange}
-            className="bg-secondary text-xs rounded px-2 py-1 text-light"
-          >
-            <option value="">Predeterminado</option>
-            <option value="hexAsc">Hex (A-Z)</option>
-            <option value="hexDesc">Hex (Z-A)</option>
-            <option value="velocidadAsc">Velocidad (↑)</option>
-            <option value="velocidadDesc">Velocidad (↓)</option>
-            <option value="altitudAsc">Altitud (↑)</option>
-            <option value="altitudDesc">Altitud (↓)</option>
-            <option value="consumoAsc">Consumo (↑)</option>
-            <option value="consumoDesc">Consumo (↓)</option>
-            <option value="emisionAsc">Emisiones (↑)</option>
-            <option value="emisionDesc">Emisiones (↓)</option>
-          </select>
+        <div className="p-4 bg-light dark:bg-border flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <label htmlFor="avionesSort" className="text-sm mr-2 text:text">
+              Ordenar:
+            </label>
+            <select
+              id="avionesSort"
+              value={avionesSortOption}
+              onChange={handleAvionesSortChange}
+              className="bg-secondary text-xs rounded px-2 py-1 text-light"
+            >
+              <option value="">Predeterminado</option>
+              <option value="hexAsc">Hex (A-Z)</option>
+              <option value="hexDesc">Hex (Z-A)</option>
+              <option value="velocidadAsc">Velocidad (↑)</option>
+              <option value="velocidadDesc">Velocidad (↓)</option>
+              <option value="altitudAsc">Altitud (↑)</option>
+              <option value="altitudDesc">Altitud (↓)</option>
+              <option value="consumoAsc">Consumo (↑)</option>
+              <option value="consumoDesc">Consumo (↓)</option>
+              <option value="emisionAsc">Emisiones (↑)</option>
+              <option value="emisionDesc">Emisiones (↓)</option>
+            </select>
+          </div>
+          <div>
+            <select
+              id="filtroPaisListado"
+              value={filterPais}
+              onChange={handlePaisFilterChange}
+              className="bg-secondary text-xs rounded px-2 py-1 text-light"
+            >
+              <option value="todos">Todos los países</option>
+              {paisesDisponibles.map(pais => (
+                <option key={pais} value={pais}>
+                  {pais}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         {getCurrentAviones().map((avion, index) => (
@@ -550,7 +604,9 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
                     <strong>Emisiones de CO₂:</strong>{" "}
                     {avion.co2Kgh ? `${avion.co2Kgh} kg/h` : "N/A"}
                   </p>
-                  <p className="w-full md:w-[33%]"></p>
+                  <p className="w-full md:w-[33%]">
+                    <strong>País:</strong> {avion.pais || "Desconocido"}
+                  </p>
                 </div>
 
                 <div className="mt-2">
