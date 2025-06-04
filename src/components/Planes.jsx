@@ -320,7 +320,10 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
               interval={0}
               tick={{ fill: "#ccc", fontSize: 12 }}
             />
-            <YAxis tick={{ fill: "#ccc" }} />
+            <YAxis tick={{ fill: "#ccc" }}
+              domain={[0, 3000]}
+              allowDecimals={false}
+             />
             <Tooltip />
             <Legend wrapperStyle={{ bottom: 5 }} />
             <Bar dataKey="fuelLph" fill="#2196f3" name="Consumo L/h" />
