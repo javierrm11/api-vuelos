@@ -24,7 +24,14 @@
   --color-text: #ffffff;          /* Texto claro para mejor legibilidad */
 }
 
+.b-hover:hover{
+  scale: 1.1;
+  transition: ease-in 0.1s;
+}
 
+select:hover{
+  cursor: pointer;
+}
 
 body{
   background-color: var(--color-background);

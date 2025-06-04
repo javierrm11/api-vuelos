@@ -39,6 +39,7 @@ function Planes({ region }) {
   const T0 = 288.15;
   const expISA = 5.256;
 
+
   const fetchData = () => {
     fetch(`/api/planes?region=${region}`)
       .then((response) => {
@@ -335,7 +336,7 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
         <div className="flex justify-between items-center pb-5">
           <div className="flex gap-4">
             <div>
-              <label htmlFor="filtroConsumo" className="text-sm mr-2">
+              <label htmlFor="filtroConsumo" className="text-sm mr-2 text-text">
                 Filtro gráfico:
               </label>
               <select
@@ -345,7 +346,7 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
                   setFilterConsumo(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="bg-secondary text-xs rounded px-2 py-1"
+                className="bg-secondary text-xs text-text rounded px-2 py-1"
               >
                 <option value="todos">Todos</option>
                 <option value="mayorConsumo">Mayor consumo</option>
@@ -354,24 +355,26 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
                 <option value="menorEmision">Menor emisiones</option>
               </select>
             </div>
-            <div>
-              <label htmlFor="filtroPais" className="text-sm mr-2">
-                País:
-              </label>
-              <select
-                id="filtroPais"
-                value={filterPais}
-                onChange={handlePaisFilterChange}
-                className="bg-secondary text-xs rounded px-2 py-1"
-              >
-                <option value="todos">Todos los países</option>
-                {paisesDisponibles.map(pais => (
-                  <option key={pais} value={pais}>
-                    {pais}
-                  </option>
-                ))}
-              </select>
-            </div>
+            {paisesDisponibles.length > 1 && (
+              <div>
+                <label htmlFor="filtroPais" className="text-sm mr-2">
+                  País:
+                </label>
+                <select
+                  id="filtroPais"
+                  value={filterPais}
+                  onChange={handlePaisFilterChange}
+                  className="bg-secondary text-xs text-text rounded px-2 py-1"
+                >
+                  <option value="todos">Todos los países</option>
+                  {paisesDisponibles.map(pais => (
+                    <option key={pais} value={pais}>
+                      {pais}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
           </div>
         </div>
 
@@ -394,7 +397,7 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
             <YAxis tick={{ fill: "#ccc" }}
               domain={[0, 3000]}
               allowDecimals={false}
-             />
+            />
             <Tooltip />
             <Legend wrapperStyle={{ bottom: 5 }} />
             <Bar dataKey="fuelLph" fill="#2196f3" name="Consumo L/h" />
@@ -406,11 +409,10 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
           <button
             onClick={() => paginate(1)}
             disabled={currentPage === 1}
-            className={`px-1 py-1 rounded ${
-              currentPage === 1
-                ? "bg-gray-300 dark:bg-background cursor-not-allowed"
-                : "bg-secondary text-light"
-            }`}
+            className={`px-1 py-1 rounded ${currentPage === 1
+              ? "bg-gray-300 dark:bg-background cursor-not-allowed"
+              : "b-hover cursor-pointer bg-secondary text-light"
+              }`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -430,11 +432,10 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
           <button
             onClick={() => paginate(currentPage - 1)}
             disabled={currentPage === 1}
-            className={`px-1 py-1 rounded ${
-              currentPage === 1
-                ? "bg-gray-300 dark:bg-background cursor-not-allowed"
-                : "bg-primary text-light"
-            }`}
+            className={`px-1 py-1 rounded ${currentPage === 1
+              ? "bg-gray-300 dark:bg-background cursor-not-allowed"
+              : "b-hover cursor-pointer bg-primary text-light"
+              }`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -457,11 +458,10 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
           <button
             onClick={() => paginate(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className={`px-1 py-1 rounded ${
-              currentPage === totalPages
-                ? "bg-gray-300 dark:bg-background cursor-not-allowed"
-                : "bg-primary text-light"
-            }`}
+            className={`px-1 py-1 rounded ${currentPage === totalPages
+              ? "bg-gray-300 dark:bg-background cursor-not-allowed"
+              : "b-hover cursor-pointer bg-primary text-light"
+              }`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -481,11 +481,10 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
           <button
             onClick={() => paginate(totalPages)}
             disabled={currentPage === totalPages}
-            className={`px-1 py-1 rounded ${
-              currentPage === totalPages
-                ? "bg-gray-300 dark:bg-background cursor-not-allowed"
-                : "bg-primary text-light"
-            }`}
+            className={`px-1 py-1 rounded ${currentPage === totalPages
+              ? "bg-gray-300 dark:bg-background cursor-not-allowed"
+              : "b-hover cursor-pointer bg-secondary text-light"
+              }`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -508,14 +507,14 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
       <div className="overflow-x-auto rounded-xl shadow-md bg-background">
         <div className="p-4 bg-light dark:bg-border flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <label htmlFor="avionesSort" className="text-sm mr-2 text:text">
+            <label htmlFor="avionesSort" className="text-sm mr-2 text-text">
               Ordenar:
             </label>
             <select
               id="avionesSort"
               value={avionesSortOption}
               onChange={handleAvionesSortChange}
-              className="bg-secondary text-xs rounded px-2 py-1 text-light"
+              className="bg-secondary text-xs rounded px-2 py-1 text-text"
             >
               <option value="">Predeterminado</option>
               <option value="hexAsc">Hex (A-Z)</option>
@@ -530,21 +529,24 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
               <option value="emisionDesc">Emisiones (↓)</option>
             </select>
           </div>
-          <div>
-            <select
-              id="filtroPaisListado"
-              value={filterPais}
-              onChange={handlePaisFilterChange}
-              className="bg-secondary text-xs rounded px-2 py-1 text-light"
-            >
-              <option value="todos">Todos los países</option>
-              {paisesDisponibles.map(pais => (
-                <option key={pais} value={pais}>
-                  {pais}
-                </option>
-              ))}
-            </select>
-          </div>
+
+          {paisesDisponibles.length > 1 && (
+            <div>
+              <select
+                id="filtroPaisListado"
+                value={filterPais}
+                onChange={handlePaisFilterChange}
+                className="bg-secondary text-xs rounded px-2 py-1 text-text"
+              >
+                <option value="todos">Todos los países</option>
+                {paisesDisponibles.map(pais => (
+                  <option key={pais} value={pais}>
+                    {pais}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
         </div>
 
         {getCurrentAviones().map((avion, index) => (
@@ -563,56 +565,55 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
               </h3>
             </div>
 
-            <details className="text-sm text-border dark:text-light">
+            <details className="text-sm text-border dark:text-light transition-all duration-500">
               <summary className="cursor-pointer absolute top-5 right-7 hover:underline text-primary dark:text-light">
                 Detalles del vuelo
               </summary>
 
-              <div className="mt-6 flex flex-col gap-2 text-xs">
-                <div className="flex flex-col md:flex-row md:gap-4">
-                  <p className="w-full md:w-[33%]">
+              <div className="text-ms grid grid-cols-1 md:grid-cols-3 sm:grid-cols-2 p-4">
+                <div className="grid md:justify-evenly md:gap-2">
+                  <p className="mt-1 mb-1">
                     <strong>Hex:</strong> {avion.hex}
                   </p>
-                  <p className="w-full md:w-[33%]">
+                  <p className="mt-1 mb-1">
+                    <strong>País:</strong> {avion.pais || "Desconocido"}
+                  </p>
+                  <p className="mt-1 mb-1">
+                    <strong>Modelo:</strong> {avion.modelo || "Desconocido"}
+                  </p>
+                </div>
+
+                <div className="grid md:justify-evenly md:gap-4">
+                  <p className="mt-1 mb-1">
                     <strong>Velocidad:</strong>{" "}
                     {avion.gs ? `${avion.gs.toFixed(0)} km/h` : "N/A"}
                   </p>
-                  <p className="w-full md:w-[33%]">
+                  <p className="mt-1 mb-1">
+                    <strong>Ubicación:</strong> {avion.lat}, {avion.lon}
+                  </p>
+                  <p className="mt-1 mb-1">
                     <strong>Altitud:</strong>{" "}
                     {avion.alt_baro ? `${avion.alt_baro} ft` : "N/A"}
                   </p>
                 </div>
 
-                <div className="flex flex-col md:flex-row md:gap-4">
-                  <p className="w-full md:w-[33%]">
-                    <strong>Modelo:</strong> {avion.modelo || "Desconocido"}
-                  </p>
-                  <p className="w-full md:w-[33%]">
-                    <strong>Ubicación:</strong> {avion.lat}, {avion.lon}
-                  </p>
-                  <p className="w-full md:w-[33%]">
+                <div className="grid md:justify-evenly sm:col-span-2 md:col-span-1 md:gap-4">
+                  <p className="mt-1 mb-1">
                     <strong>Rumbo:</strong> {avion.track ?? "N/A"}°
                   </p>
-                </div>
-
-                <div className="flex flex-col md:flex-row md:gap-4">
-                  <p className="w-full md:w-[33%]">
+                  <p className="mt-1 mb-1">
                     <strong>Consumo:</strong>{" "}
                     {avion.fuelLph ? `${avion.fuelLph} L/h` : "N/A"}
                   </p>
-                  <p className="w-full md:w-[33%]">
+                  <p className="mt-1 mb-1">
                     <strong>Emisiones de CO₂:</strong>{" "}
                     {avion.co2Kgh ? `${avion.co2Kgh} kg/h` : "N/A"}
                   </p>
-                  <p className="w-full md:w-[33%]">
-                    <strong>País:</strong> {avion.pais || "Desconocido"}
-                  </p>
                 </div>
-
-                <div className="mt-2">
+                <div className="mt-2 lg:col-span-3 md:col-span-3 sm:col-span-2 flex justify-end w-full">
                   <button
                     onClick={() => copiarInfoVuelo(avion)}
-                    className="px-3 py-1 rounded transition-colors bg-primary text-light"
+                    className="b-hover cursor-pointer px-3 py-1 rounded transition-colors bg-primary text-light"
                   >
                     Copiar información
                   </button>
@@ -627,11 +628,10 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
           <button
             onClick={() => paginateAviones(1)}
             disabled={currentAvionesPage === 1}
-            className={`px-1 py-1 rounded ${
-              currentAvionesPage === 1
-                ? "bg-gray-300 dark:bg-background cursor-not-allowed"
-                : "bg-secondary text-light"
-            }`}
+            className={`px-1 py-1 rounded ${currentAvionesPage === 1
+              ? "bg-gray-300 dark:bg-background cursor-not-allowed"
+              : "b-hover cursor-pointer bg-secondary text-light"
+              }`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -651,11 +651,10 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
           <button
             onClick={() => paginateAviones(currentAvionesPage - 1)}
             disabled={currentAvionesPage === 1}
-            className={`px-1 py-1 rounded ${
-              currentAvionesPage === 1
-                ? "bg-gray-300 dark:bg-background cursor-not-allowed"
-                : "bg-primary text-light"
-            }`}
+            className={`px-1 py-1 rounded ${currentAvionesPage === 1
+              ? "bg-gray-300 dark:bg-background cursor-not-allowed"
+              : "b-hover cursor-pointer bg-primary text-light"
+              }`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -678,11 +677,10 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
           <button
             onClick={() => paginateAviones(currentAvionesPage + 1)}
             disabled={currentAvionesPage === totalAvionesPages}
-            className={`px-1 py-1 rounded ${
-              currentAvionesPage === totalAvionesPages
-                ? "bg-gray-300 dark:bg-background cursor-not-allowed"
-                : "bg-primary text-light"
-            }`}
+            className={`px-1 py-1 rounded ${currentAvionesPage === totalAvionesPages
+              ? "bg-gray-300 dark:bg-background cursor-not-allowed"
+              : "b-hover cursor-pointer bg-primary text-light"
+              }`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -702,11 +700,10 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
           <button
             onClick={() => paginateAviones(totalAvionesPages)}
             disabled={currentAvionesPage === totalAvionesPages}
-            className={`px-1 py-1 rounded ${
-              currentAvionesPage === totalAvionesPages
-                ? "bg-gray-300 dark:bg-background cursor-not-allowed"
-                : "bg-secondary text-light"
-            }`}
+            className={`px-1 py-1 rounded ${currentAvionesPage === totalAvionesPages
+              ? "bg-gray-300 dark:bg-background cursor-not-allowed"
+              : "b-hover cursor-pointer bg-secondary text-light"
+              }`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
