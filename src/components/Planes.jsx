@@ -25,6 +25,7 @@ function Planes({ region }) {
   const [itemsPerPage] = useState(5);
   const [currentAvionesPage, setCurrentAvionesPage] = useState(1);
   const [avionesPerPage] = useState(10);
+  const [avionesSortOption, setAvionesSortOption] = useState("");
 
   const S = 122;
   const C_D = 0.03;
@@ -166,6 +167,11 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
     setCurrentPage(1);
   };
 
+  const handleAvionesSortChange = (e) => {
+    setAvionesSortOption(e.target.value);
+    setCurrentAvionesPage(1);
+  };
+
   const ordenarAviones = (aviones) => {
     const sorted = [...aviones];
     switch (sortOption) {
@@ -173,6 +179,34 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
         return sorted.sort((a, b) => a.gs - b.gs);
       case "velocidadDesc":
         return sorted.sort((a, b) => b.gs - a.gs);
+      case "consumoAsc":
+        return sorted.sort((a, b) => a.fuelLph - b.fuelLph);
+      case "consumoDesc":
+        return sorted.sort((a, b) => b.fuelLph - a.fuelLph);
+      case "emisionAsc":
+        return sorted.sort((a, b) => a.co2Kgh - b.co2Kgh);
+      case "emisionDesc":
+        return sorted.sort((a, b) => b.co2Kgh - a.co2Kgh);
+      default:
+        return aviones;
+    }
+  };
+
+  const ordenarAvionesListado = (aviones) => {
+    const sorted = [...aviones];
+    switch (avionesSortOption) {
+      case "hexAsc":
+        return sorted.sort((a, b) => a.hex.localeCompare(b.hex));
+      case "hexDesc":
+        return sorted.sort((a, b) => b.hex.localeCompare(a.hex));
+      case "velocidadAsc":
+        return sorted.sort((a, b) => a.gs - b.gs);
+      case "velocidadDesc":
+        return sorted.sort((a, b) => b.gs - a.gs);
+      case "altitudAsc":
+        return sorted.sort((a, b) => (a.alt_baro || 0) - (b.alt_baro || 0));
+      case "altitudDesc":
+        return sorted.sort((a, b) => (b.alt_baro || 0) - (a.alt_baro || 0));
       case "consumoAsc":
         return sorted.sort((a, b) => a.fuelLph - b.fuelLph);
       case "consumoDesc":
@@ -213,7 +247,7 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
   const getCurrentAviones = () => {
     const startIndex = (currentAvionesPage - 1) * avionesPerPage;
     const endIndex = startIndex + avionesPerPage;
-    return ordenarAviones(data).slice(startIndex, endIndex);
+    return ordenarAvionesListado(data).slice(startIndex, endIndex);
   };
 
   const totalAvionesPages = Math.ceil(data.length / avionesPerPage);
@@ -239,7 +273,7 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
       </h1>
 
       <div className="grid md:grid-cols-3 gap-6 mb-10">
-        <div className="bg-accent p-4 rounded-xl shadow-md text-light">
+        <div className="bg-accent p-4 rounded-xl shadow-md text-light dark:text-text">
           <h2 className="text-xl font-semibold mb-2">Avión más rápido</h2>
           <p>
             <strong>Hex:</strong> {masRapido?.hex ?? "N/A"}
@@ -250,7 +284,7 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
           </p>
         </div>
 
-        <div className="bg-accent p-4 rounded-xl shadow-md text-light">
+        <div className="bg-accent p-4 rounded-xl shadow-md text-light dark:text-text">
           <h2 className="text-xl font-semibold mb-2">Avión más lento</h2>
           <p>
             <strong>Hex:</strong> {masLento?.hex ?? "N/A"}
@@ -260,7 +294,7 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
           </p>
         </div>
 
-        <div className="bg-accent p-4 rounded-xl shadow-md text-light">
+        <div className="bg-accent p-4 rounded-xl shadow-md text-light dark:text-text">
           <h2 className="text-xl font-semibold mb-2">Aviones en vuelo</h2>
           <p>
             <strong>Total:</strong> {data.length}
@@ -435,6 +469,30 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
       </div>
 
       <div className="overflow-x-auto rounded-xl shadow-md bg-background">
+        <div className="p-4 bg-light dark:bg-border">
+          <label htmlFor="avionesSort" className="text-sm mr-2 text:text">
+            Ordenar aviones por:
+          </label>
+          <select
+            id="avionesSort"
+            value={avionesSortOption}
+            onChange={handleAvionesSortChange}
+            className="bg-secondary text-xs rounded px-2 py-1 text-light"
+          >
+            <option value="">Predeterminado</option>
+            <option value="hexAsc">Hex (A-Z)</option>
+            <option value="hexDesc">Hex (Z-A)</option>
+            <option value="velocidadAsc">Velocidad (↑)</option>
+            <option value="velocidadDesc">Velocidad (↓)</option>
+            <option value="altitudAsc">Altitud (↑)</option>
+            <option value="altitudDesc">Altitud (↓)</option>
+            <option value="consumoAsc">Consumo (↑)</option>
+            <option value="consumoDesc">Consumo (↓)</option>
+            <option value="emisionAsc">Emisiones (↑)</option>
+            <option value="emisionDesc">Emisiones (↓)</option>
+          </select>
+        </div>
+
         {getCurrentAviones().map((avion, index) => (
           <div
             key={avion.hex}
