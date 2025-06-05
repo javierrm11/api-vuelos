@@ -24,7 +24,7 @@ function Planes({ region }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
   const [currentAvionesPage, setCurrentAvionesPage] = useState(1);
-  const [avionesPerPage] = useState(10);
+  const [avionesPerPage] = useState(12);
   const [avionesSortOption, setAvionesSortOption] = useState("");
   const [filterPais, setFilterPais] = useState("todos");
   const [paisesDisponibles, setPaisesDisponibles] = useState([]);
@@ -548,80 +548,81 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
             </div>
           )}
         </div>
-
-        {getCurrentAviones().map((avion, index) => (
-          <div
-            key={avion.hex}
-            className="flex-1 items-center justify-between p-4 border-b relative hover:brightness-95 bg-light dark:bg-border border-secondary"
-          >
-            <div className="flex items-center gap-2 mb-1">
-              <img
-                src={`./paises/${avion.pais}.png`}
-                alt="Bandera"
-                className="w-6 h-6"
-              />
-              <h3 className="text-lg font-semibold text-border dark:text-light">
-                {avion.flight}
-              </h3>
-            </div>
-
-            <details className="text-sm text-border dark:text-light transition-all duration-500">
-              <summary className="cursor-pointer absolute top-5 right-7 hover:underline text-primary dark:text-light">
-                Detalles del vuelo
-              </summary>
-
-              <div className="text-ms grid grid-cols-1 md:grid-cols-3 sm:grid-cols-2 p-4">
-                <div className="grid md:justify-evenly md:gap-2">
-                  <p className="mt-1 mb-1">
-                    <strong>Hex:</strong> {avion.hex}
-                  </p>
-                  <p className="mt-1 mb-1">
-                    <strong>País:</strong> {avion.pais || "Desconocido"}
-                  </p>
-                  <p className="mt-1 mb-1">
-                    <strong>Modelo:</strong> {avion.modelo || "Desconocido"}
-                  </p>
-                </div>
-
-                <div className="grid md:justify-evenly md:gap-4">
-                  <p className="mt-1 mb-1">
-                    <strong>Velocidad:</strong>{" "}
-                    {avion.gs ? `${avion.gs.toFixed(0)} km/h` : "N/A"}
-                  </p>
-                  <p className="mt-1 mb-1">
-                    <strong>Ubicación:</strong> {avion.lat}, {avion.lon}
-                  </p>
-                  <p className="mt-1 mb-1">
-                    <strong>Altitud:</strong>{" "}
-                    {avion.alt_baro ? `${avion.alt_baro} ft` : "N/A"}
-                  </p>
-                </div>
-
-                <div className="grid md:justify-evenly sm:col-span-2 md:col-span-1 md:gap-4">
-                  <p className="mt-1 mb-1">
-                    <strong>Rumbo:</strong> {avion.track ?? "N/A"}°
-                  </p>
-                  <p className="mt-1 mb-1">
-                    <strong>Consumo:</strong>{" "}
-                    {avion.fuelLph ? `${avion.fuelLph} L/h` : "N/A"}
-                  </p>
-                  <p className="mt-1 mb-1">
-                    <strong>Emisiones de CO₂:</strong>{" "}
-                    {avion.co2Kgh ? `${avion.co2Kgh} kg/h` : "N/A"}
-                  </p>
-                </div>
-                <div className="mt-2 lg:col-span-3 md:col-span-3 sm:col-span-2 flex justify-end w-full">
-                  <button
-                    onClick={() => copiarInfoVuelo(avion)}
-                    className="b-hover cursor-pointer px-3 py-1 rounded transition-colors bg-primary text-light"
-                  >
-                    Copiar información
-                  </button>
-                </div>
+        <div className="flex flex-wrap">
+          {getCurrentAviones().map((avion, index) => (
+            <div
+              key={avion.hex}
+              className="flex-1 flex-[0_0_100%] md:flex-[1_1_40%] 2xl:flex-[1_1_30%] items-center justify-between p-4 border-b relative hover:brightness-95 bg-light dark:bg-border border-secondary"
+            >
+              <div className="flex items-center gap-2 mb-1">
+                <img
+                  src={`./paises/${avion.pais}.png`}
+                  alt="Bandera"
+                  className="w-6 h-6"
+                />
+                <h3 className="text-lg font-semibold text-border dark:text-light">
+                  {avion.flight}
+                </h3>
               </div>
-            </details>
-          </div>
-        ))}
+
+              <details className="text-sm text-border dark:text-light transition-all duration-500">
+                <summary className="cursor-pointer absolute top-5 right-7 hover:underline text-primary dark:text-light">
+                  Detalles del vuelo
+                </summary>
+
+                <div className="text-ms grid grid-cols-1 md:grid-cols-3 sm:grid-cols-2 p-4">
+                  <div className="grid md:justify-evenly md:gap-2">
+                    <p className="mt-1 mb-1">
+                      <strong>Hex:</strong> {avion.hex}
+                    </p>
+                    <p className="mt-1 mb-1">
+                      <strong>País:</strong> {avion.pais || "Desconocido"}
+                    </p>
+                    <p className="mt-1 mb-1">
+                      <strong>Modelo:</strong> {avion.modelo || "Desconocido"}
+                    </p>
+                  </div>
+
+                  <div className="grid md:justify-evenly md:gap-4">
+                    <p className="mt-1 mb-1">
+                      <strong>Velocidad:</strong>{" "}
+                      {avion.gs ? `${avion.gs.toFixed(0)} km/h` : "N/A"}
+                    </p>
+                    <p className="mt-1 mb-1">
+                      <strong>Ubicación:</strong> {avion.lat}, {avion.lon}
+                    </p>
+                    <p className="mt-1 mb-1">
+                      <strong>Altitud:</strong>{" "}
+                      {avion.alt_baro ? `${avion.alt_baro} ft` : "N/A"}
+                    </p>
+                  </div>
+
+                  <div className="grid md:justify-evenly sm:col-span-2 md:col-span-1 md:gap-4">
+                    <p className="mt-1 mb-1">
+                      <strong>Rumbo:</strong> {avion.track ?? "N/A"}°
+                    </p>
+                    <p className="mt-1 mb-1">
+                      <strong>Consumo:</strong>{" "}
+                      {avion.fuelLph ? `${avion.fuelLph} L/h` : "N/A"}
+                    </p>
+                    <p className="mt-1 mb-1">
+                      <strong>Emisiones de CO₂:</strong>{" "}
+                      {avion.co2Kgh ? `${avion.co2Kgh} kg/h` : "N/A"}
+                    </p>
+                  </div>
+                  <div className="mt-2 lg:col-span-3 md:col-span-3 sm:col-span-2 flex justify-end w-full">
+                    <button
+                      onClick={() => copiarInfoVuelo(avion)}
+                      className="b-hover cursor-pointer px-3 py-1 rounded transition-colors bg-primary text-light"
+                    >
+                      Copiar información
+                    </button>
+                  </div>
+                </div>
+              </details>
+            </div>
+          ))}
+        </div>
 
         {/* Paginación para el listado de aviones */}
         <div className="flex justify-center items-center gap-2 p-4 bg-light dark:bg-border">

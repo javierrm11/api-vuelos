@@ -1,5 +1,5 @@
 ---
-import Nav from '../components/Nav.astro';
+import LayoutWrapper from '../components/LayoutWrapper.jsx';
 import Footer from '../components/Footer';
 import "../styles/global.css";
 interface Props {
@@ -14,8 +14,8 @@ const { title } = Astro.props as Props;
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
   </head>
-  <Nav>
-    <slot></slot>
-  </Nav>
+  <LayoutWrapper client:only>
+    <slot />
+  </LayoutWrapper>
   <Footer />
 </html>
