@@ -16,6 +16,8 @@ function Planes({ region }) {
   const [error, setError] = useState(null);
   const [avgFuel, setAvgFuel] = useState(null);
   const [avgCO2, setAvgCO2] = useState(null);
+  const [totalFuel, setTotalFuel] = useState(null);
+  const [totalCO2, setTotalCO2] = useState(null);
   const [sortOption, setSortOption] = useState("");
   const [masRapido, setMasRapido] = useState(null);
   const [masLento, setMasLento] = useState(null);
@@ -26,8 +28,8 @@ function Planes({ region }) {
   const [currentAvionesPage, setCurrentAvionesPage] = useState(1);
   const [avionesPerPage] = useState(12);
   const [avionesSortOption, setAvionesSortOption] = useState("");
-  const [filterPaisChart, setFilterPaisChart] = useState("todos"); // Separate state for chart
-  const [filterPaisList, setFilterPaisList] = useState("todos"); // Separate state for list
+  const [filterPaisChart, setFilterPaisChart] = useState("todos");
+  const [filterPaisList, setFilterPaisList] = useState("todos");
   const [paisesDisponibles, setPaisesDisponibles] = useState([]);
 
   const S = 122;
@@ -50,7 +52,7 @@ function Planes({ region }) {
       })
       .then((resultados) => {
         const allAvionesInfo = resultados.flatMap((r) => r.avionesInfo || []);
-        const { avgFuelLph, avgCO2Kgh, detalles } =
+        const { avgFuelLph, avgCO2Kgh, totalFuelLph, totalCO2Kgh, detalles } =
           calcularConsumoYEmisiones(allAvionesInfo);
 
         let masRapido = null,
@@ -74,6 +76,8 @@ function Planes({ region }) {
         setError(null);
         setAvgFuel(avgFuelLph);
         setAvgCO2(avgCO2Kgh);
+        setTotalFuel(totalFuelLph);
+        setTotalCO2(totalCO2Kgh);
         setMasRapido(masRapido);
         setMasLento(masLento);
         console.log(
@@ -106,6 +110,8 @@ function Planes({ region }) {
       return {
         avgFuelLph: "N/A",
         avgCO2Kgh: "N/A",
+        totalFuelLph: "N/A",
+        totalCO2Kgh: "N/A",
         detalles: [],
       };
     }
@@ -130,6 +136,8 @@ function Planes({ region }) {
     return {
       avgFuelLph: (sumFuel / detalles.length).toFixed(0),
       avgCO2Kgh: (sumCO2 / detalles.length).toFixed(0),
+      totalFuelLph: sumFuel.toFixed(0),
+      totalCO2Kgh: sumCO2.toFixed(0),
       detalles,
     };
   };
@@ -299,8 +307,14 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
         Estado de vuelos sobre {region}
       </h1>
 
-      <div className="grid md:grid-cols-3 gap-6 mb-10">
-        <div className="bg-accent p-4 rounded-xl shadow-md text-light dark:text-text">
+      <div className="flex flex-wrap gap-6 mb-6">
+        <div className="flex-[0_0_100%] sm:flex-[1_1_30%] bg-accent p-4 rounded shadow-md text-light dark:text-text">
+          <h2 className="text-xl font-semibold mb-2">Aviones en vuelo</h2>
+          <p>
+            {data.length}
+          </p>
+        </div>
+        <div className="flex-[0_0_100%] sm:flex-[1_1_30%] bg-primary p-4 rounded shadow-md text-light dark:text-text">
           <h2 className="text-xl font-semibold mb-2">Avión más rápido</h2>
           <p>
             <strong>Hex:</strong> {masRapido?.hex ?? "N/A"}
@@ -310,8 +324,7 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
             km/h
           </p>
         </div>
-
-        <div className="bg-accent p-4 rounded-xl shadow-md text-light dark:text-text">
+        <div className="flex-[0_0_100%] sm:flex-[1_1_30%] bg-primary p-4 rounded shadow-md text-light dark:text-text">
           <h2 className="text-xl font-semibold mb-2">Avión más lento</h2>
           <p>
             <strong>Hex:</strong> {masLento?.hex ?? "N/A"}
@@ -320,28 +333,34 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
             <strong>Velocidad:</strong> {masLento?.gs?.toFixed(0) ?? "N/A"} km/h
           </p>
         </div>
-
-        <div className="bg-accent p-4 rounded-xl shadow-md text-light dark:text-text">
-          <h2 className="text-xl font-semibold mb-2">Aviones en vuelo</h2>
+      </div>
+      <div className="grid sm:grid-cols-2 gap-6 mb-6">
+        <div className="bg-light dark:bg-border text-border dark:text-light p-4 rounded">
+          <h2 className="text-xl font-semibold mb-2">
+            Consumo y emisiones totales
+          </h2>
           <p>
-            <strong>Total:</strong> {data.length}
+            <strong>Consumo total:</strong> {totalFuel ?? "Calculando..."} L/h
+          </p>
+          <p>
+            <strong>Emisión total:</strong> {totalCO2 ?? "Calculando..."} kg CO₂/h
+          </p>
+        </div>
+
+        <div className="bg-light dark:bg-border text-border dark:text-light p-4 rounded">
+          <h2 className="text-xl font-semibold mb-2">
+            Consumo y emisiones promedio
+          </h2>
+          <p>
+            <strong>Consumo medio:</strong> {avgFuel ?? "Calculando..."} L/h
+          </p>
+          <p>
+            <strong>Emisión media:</strong> {avgCO2 ?? "Calculando..."} kg CO₂/h
           </p>
         </div>
       </div>
 
-      <div className="bg-light dark:bg-border text-border dark:text-light p-4 rounded-xl mb-10">
-        <h2 className="text-xl font-semibold mb-2">
-          Consumo y emisiones promedio
-        </h2>
-        <p>
-          <strong>Consumo medio:</strong> {avgFuel ?? "Calculando..."} L/h
-        </p>
-        <p>
-          <strong>Emisión media:</strong> {avgCO2 ?? "Calculando..."} kg CO₂/h
-        </p>
-      </div>
-
-      <div className="bg-light dark:bg-border dark:text-light p-4 rounded-xl mb-10 text-border">
+      <div className="bg-light dark:bg-border dark:text-light p-4 rounded mb-10 text-border">
         <div className="flex justify-between items-center pb-5">
           <div className="flex gap-4">
             <div>
@@ -429,10 +448,8 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
               height="24"
               fill="none"
               stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="feather feather-chevrons-left"
+              strokeWidth="2"
+              className="feather feather-chevrons-left"
             >
               <polyline points="11 17 6 12 11 7"></polyline>
               <polyline points="18 17 13 12 18 7"></polyline>
@@ -452,10 +469,8 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
               height="24"
               fill="none"
               stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="feather feather-arrow-left"
+              strokeWidth="2"
+              className="feather feather-arrow-left"
             >
               <line x1="19" y1="12" x2="5" y2="12"></line>
               <polyline points="12 19 5 12 12 5"></polyline>
@@ -478,10 +493,8 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
               height="24"
               fill="none"
               stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="feather feather-arrow-right"
+              strokeWidth="2"
+              className="feather feather-arrow-right"
             >
               <line x1="5" y1="12" x2="19" y2="12"></line>
               <polyline points="12 5 19 12 12 19"></polyline>
@@ -501,10 +514,8 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
               height="24"
               fill="none"
               stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="feather feather-chevrons-right"
+              strokeWidth="2"
+              className="feather feather-chevrons-right"
             >
               <polyline points="13 17 18 12 13 7"></polyline>
               <polyline points="6 17 11 12 6 7"></polyline>
@@ -513,7 +524,7 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
         </div>
       </div>
 
-      <div className="overflow-x-auto rounded-xl shadow-md bg-background">
+      <div className="overflow-x-auto rounded shadow-md bg-background">
         <div className="p-4 bg-light dark:bg-border flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <label htmlFor="avionesSort" className="text-sm mr-2 text-text">
@@ -582,7 +593,7 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
                   Detalles del vuelo
                 </summary>
 
-                <div className="text-ms grid grid-cols-1 md:grid-cols-3 sm:grid-cols-2 p-4">
+                <div className="text-ms grid grid-cols-1 md:grid-cols-2 sm:grid-cols-2 p-4">
                   <div className="grid md:justify-evenly md:gap-2">
                     <p className="mt-1 mb-1">
                       <strong>Hex:</strong> {avion.hex}
@@ -593,9 +604,6 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
                     <p className="mt-1 mb-1">
                       <strong>Modelo:</strong> {avion.modelo || "Desconocido"}
                     </p>
-                  </div>
-
-                  <div className="grid md:justify-evenly md:gap-4">
                     <p className="mt-1 mb-1">
                       <strong>Velocidad:</strong>{" "}
                       {avion.gs ? `${avion.gs.toFixed(0)} km/h` : "N/A"}
@@ -603,13 +611,13 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
                     <p className="mt-1 mb-1">
                       <strong>Ubicación:</strong> {avion.lat}, {avion.lon}
                     </p>
+                  </div>
+
+                  <div className="grid md:justify-evenly md:gap-4">
                     <p className="mt-1 mb-1">
                       <strong>Altitud:</strong>{" "}
                       {avion.alt_baro ? `${avion.alt_baro} ft` : "N/A"}
                     </p>
-                  </div>
-
-                  <div className="grid md:justify-evenly sm:col-span-2 md:col-span-1 md:gap-4">
                     <p className="mt-1 mb-1">
                       <strong>Rumbo:</strong> {avion.track ?? "N/A"}°
                     </p>
@@ -652,10 +660,8 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
               height="24"
               fill="none"
               stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="feather feather-chevrons-left"
+              strokeWidth="2"
+              className="feather feather-chevrons-left"
             >
               <polyline points="11 17 6 12 11 7"></polyline>
               <polyline points="18 17 13 12 18 7"></polyline>
@@ -675,10 +681,8 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
               height="24"
               fill="none"
               stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="feather feather-arrow-left"
+              strokeWidth="2"
+              className="feather feather-arrow-left"
             >
               <line x1="19" y1="12" x2="5" y2="12"></line>
               <polyline points="12 19 5 12 12 5"></polyline>
@@ -701,10 +705,8 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
               height="24"
               fill="none"
               stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="feather feather-arrow-right"
+              strokeWidth="2"
+              className="feather feather-arrow-right"
             >
               <line x1="5" y1="12" x2="19" y2="12"></line>
               <polyline points="12 5 19 12 12 19"></polyline>
@@ -724,10 +726,8 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
               height="24"
               fill="none"
               stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="feather feather-chevrons-right"
+              strokeWidth="2"
+              className="feather feather-chevrons-right"
             >
               <polyline points="13 17 18 12 13 7"></polyline>
               <polyline points="6 17 11 12 6 7"></polyline>
