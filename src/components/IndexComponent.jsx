@@ -1,13 +1,14 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Canvas, useFrame, useLoader, useThree } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
+import { OrbitControls, Stars } from '@react-three/drei';
 import * as THREE from 'three';
 
 function Earth() {
   const earthRef = useRef();
   const cloudsRef = useRef();
+  const glowRef = useRef();
 
-  const { size } = useThree(); // <-- accedemos al tamaño del canvas
+  const { size } = useThree();
 
   // Cargar texturas
   const [colorMap, bumpMap, specularMap, cloudMap] = useLoader(THREE.TextureLoader, [
@@ -42,6 +43,7 @@ function Earth() {
 
   return (
     <>
+
       {/* Tierra */}
       <mesh ref={earthRef}>
         <sphereGeometry args={[2, 64, 64]} />
@@ -55,7 +57,7 @@ function Earth() {
         />
       </mesh>
 
-      {/* Nubes */}
+      {/* Nubes (smaller size) */}
       <mesh ref={cloudsRef}>
         <sphereGeometry args={[2.03, 64, 64]} />
         <meshPhongMaterial
@@ -69,13 +71,12 @@ function Earth() {
   );
 }
 
-// Hook para detectar si es móvil o tablet
 function useIsMobileOrTablet() {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     function handleResize() {
-      setIsMobile(window.innerWidth < 1024); // 1024px: breakpoint típico de tablet
+      setIsMobile(window.innerWidth < 1024);
     }
     handleResize();
     window.addEventListener('resize', handleResize);
@@ -85,99 +86,148 @@ function useIsMobileOrTablet() {
   return isMobile;
 }
 
+const FeatureCard = ({ title, description, color }) => {
+  return (
+    <div className="p-6 rounded-xl backdrop-blur-sm bg-white/5 dark:bg-primary/5 border border-secondary/20 dark:border-accent/20 shadow-lg transition-all duration-300 hover:-translate-y-1">
+      <h3 className={`text-xl mb-2 font-semibold bg-gradient-to-r ${color} bg-clip-text text-transparent`}>
+        {title}
+      </h3>
+      <p className="text-text dark:text-light">{description}</p>
+    </div>
+  );
+};
+
 export default function EarthScene() {
   const isMobileOrTablet = useIsMobileOrTablet();
 
   return (
-    <div style={{ minHeight: '100vh', background: 'bg-background' }}>
-      {/* Sección del globo, sticky para que no desaparezca al hacer scroll */}
-      <div style={{
-        height: '100vh',
-        width: '100%',
-        position: 'relative',
-        top: 0,
-        left: 0,
-        zIndex: 10,
-        background: 'bg-background'
-      }}>
+    <div className="min-h-screen bg-background dark:bg-dark-background text-text dark:text-light transition-colors duration-300">
+      {/* Hero Section */}
+      <div className="h-screen w-full relative overflow-hidden bg-gradient-to-b from-secondary/10 to-primary/10 dark:from-primary/20 dark:to-background/50">
         <Canvas camera={{ position: [0, 0, 6], fov: 45 }}>
           <ambientLight intensity={0.5} />
-          <directionalLight position={[5, 3, 5]} intensity={1} />
+          <pointLight position={[10, 10, 10]} intensity={1} />
+          <directionalLight position={[5, 3, 5]} intensity={1.5} />
           <Earth />
+          <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
           {!isMobileOrTablet && (
-            <OrbitControls enablePan={false} enableZoom={false} autoRotate autoRotateSpeed={0.5} />
+            <OrbitControls 
+              enablePan={false} 
+              enableZoom={false} 
+              autoRotate 
+              autoRotateSpeed={0.5} 
+              minPolarAngle={Math.PI / 3}
+              maxPolarAngle={Math.PI / 3}
+            />
           )}
         </Canvas>
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-          <h1 className="text-4xl md:text-6xl font-bold text-white drop-shadow-lg text-center mb-4">
-            APIones Dashboard
-          </h1>
-          <p className="text-lg md:text-2xl text-gray-200 text-center max-w-xl drop-shadow">
-            Visualiza el impacto ambiental de la aviación en tiempo real
-          </p>
+          <div className="text-center px-4 animate-fade-in-up">
+            <h1 className="text-4xl md:text-6xl font-bold text-primary dark:text-accent mb-4">
+              <span className="bg-gradient-to-r from-primary to-accent dark:from-accent dark:to-primary bg-clip-text text-transparent">
+                APIones
+              </span>{' '}
+              Dashboard
+            </h1>
+            <p className={`text-lg md:text-2xl text-white dark:text-light max-w-xl ${isMobileOrTablet ? 'mx-4' : 'mx-auto'}`}>
+              Visualiza el impacto ambiental de la aviación en tiempo real con datos globales
+            </p>
+          </div>
         </div>
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce pointer-events-none">
-          <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="white">
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 pointer-events-none animate-bounce">
+          <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="text-primary dark:text-accent">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>
         </div>
       </div>
 
-      {/* Sección de información */}
-      <section className="bg-secondary py-16 px-4" id="info">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-4 text-text">¿Qué es APIones?</h2>
-          <p className="text-lg text-text mb-6">
-            APIones es un dashboard interactivo que monitoriza vuelos en tiempo real y calcula el consumo de combustible y las emisiones de CO₂ de los aviones sobre cada continente.
-            Utiliza datos abiertos y modelos físicos para estimar el impacto ambiental de la aviación, ayudando a concienciar sobre la huella ecológica del transporte aéreo.
-          </p>
-          <div className="grid md:grid-cols-3 gap-8 mt-10">
-            <div>
-              <h3 className="text-xl font-serif text-red-600 mb-2">Datos en tiempo real</h3>
-              <p className="text-text">Actualización automática de vuelos y emisiones por región.</p>
+      {/* Content Sections */}
+      <div className="relative z-20">
+        {/* About Section */}
+        <section className="py-20 px-4 max-w-6xl mx-auto" id="about">
+          <div className="mb-16 text-center animate-fade-in">
+            <h2 className="text-3xl md:text-4xl font-bold text-primary dark:text-accent mb-4">
+              ¿Qué es <span className="text-primary dark:text-accent">APIones</span>?
+            </h2>
+            <div className="w-24 h-1 bg-primary dark:bg-accent mx-auto mb-6"></div>
+            <p className="text-lg text-text/80 dark:text-light/80 max-w-3xl mx-auto">
+              APIones es un dashboard interactivo que monitoriza vuelos en tiempo real y calcula el consumo de combustible y las emisiones de CO₂ de los aviones sobre cada continente.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            <FeatureCard
+              title="Datos en tiempo real"
+              description="Actualización automática de vuelos y emisiones por región con información precisa."
+              color="from-red-400 to-pink-500"
+            />
+            <FeatureCard
+              title="Visualización interactiva"
+              description="Gráficas 3D y mapas para comparar el impacto entre continentes y países."
+              color="from-purple-400 to-indigo-500"
+            />
+            <FeatureCard
+              title="Conciencia ambiental"
+              description="Promovemos la reflexión sobre el papel de la aviación en el cambio climático."
+              color="from-amber-400 to-orange-500"
+            />
+          </div>
+        </section>
+
+        {/* Why It Matters Section */}
+        <section className="py-20 px-4 bg-secondary/10 dark:bg-primary/20">
+          <div className="max-w-6xl mx-auto">
+            <div className="mb-16 animate-fade-in-left">
+              <h2 className="text-3xl md:text-4xl font-bold text-primary dark:text-accent mb-4">
+                ¿Por qué es <span className="text-primary dark:text-accent">importante</span>?
+              </h2>
+              <div className="w-24 h-1 bg-primary dark:bg-accent mb-6"></div>
+              <p className="text-lg text-text/80 dark:text-light/80 max-w-3xl">
+                La aviación es responsable de aproximadamente el 2-3% de las emisiones globales de CO₂.
+              </p>
             </div>
-            <div>
-              <h3 className="text-xl font-serif text-pink-600 mb-2">Visualización interactiva</h3>
-              <p className="text-text">Gráficas y mapas para comparar el impacto entre continentes.</p>
-            </div>
-            <div>
-              <h3 className="text-xl font-serif text-orange-600 mb-2">Conciencia ambiental</h3>
-              <p className="text-text">Promueve la reflexión sobre el papel de la aviación en el cambio climático.</p>
+
+            <div className="grid md:grid-cols-2 gap-8">
+              <div className="p-8 bg-white/5 shadow-lg dark:bg-primary/5 rounded-xl border border-secondary/20 dark:border-accent/20 transition-all duration-300 hover:scale-[1.02]">
+                <h3 className="text-2xl font-semibold text-primary dark:text-accent mb-4">Transparencia de datos</h3>
+                <p className="text-text/80 dark:text-light/80 mb-6">
+                  Todos los datos provienen de fuentes abiertas y se procesan con algoritmos verificados.
+                </p>
+                <div className="flex items-center space-x-2">
+                  <div className="w-3 h-3 rounded-full bg-green-400 animate-pulse"></div>
+                  <span className="text-green-500 dark:text-green-400">Datos en vivo</span>
+                </div>
+              </div>
+
+              <div className="p-8 bg-white/5 shadow-lg dark:bg-primary/5 rounded-xl border border-secondary/20 dark:border-accent/20 transition-all duration-300 hover:scale-[1.02]">
+                <h3 className="text-2xl font-semibold text-primary dark:text-accent mb-4">Educación ambiental</h3>
+                <p className="text-text/80 dark:text-light/80 mb-6">
+                  Más que mostrar cifras, nuestro objetivo es educar sobre el impacto real.
+                </p>
+                <div className="flex items-center space-x-2">
+                  <div className="w-3 h-3 rounded-full bg-blue-400 animate-pulse"></div>
+                  <span className="text-blue-500 dark:text-blue-400">Actualizado cada 5 minutos</span>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Más contenido extra */}
-      <section className="bg-background py-16 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-2xl font-bold mb-4 text-text">¿Por qué importa?</h2>
-          <p className="text-text mb-6">
-            La aviación es responsable de una parte significativa de las emisiones globales de gases de efecto invernadero.
-            Conocer el impacto de cada vuelo ayuda a tomar decisiones más responsables y a fomentar la innovación hacia un transporte aéreo más sostenible.
-          </p>
-          <div className="grid md:grid-cols-2 gap-8 mt-10">
-            <div>
-              <h3 className="text-lg font-serif text-pink-600 mb-2">Transparencia</h3>
-              <p className="text-text">Todos los datos provienen de fuentes abiertas y se procesan en tiempo real.</p>
-            </div>
-            <div>
-              <h3 className="text-lg font-serif text-amber-600 mb-2">Educación</h3>
-              <p className="text-text">El objetivo es informar y concienciar, no solo mostrar cifras.</p>
-            </div>
+        {/* Call to Action */}
+        <section className="py-20 px-4 text-center">
+          <div className="max-w-2xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold text-primary dark:text-accent mb-6">
+              Únete a la conversación sobre <span className="text-primary dark:text-accent">aviación sostenible</span>
+            </h2>
+            <p className="text-lg text-text/80 dark:text-light/80 mb-8">
+              Explora los datos y ayuda a crear conciencia sobre el impacto ambiental.
+            </p>
+            <a href="/Spain"className="px-8 py-3 bg-gradient-to-r from-primary to-accent dark:from-accent dark:to-primary text-white rounded-lg font-medium shadow-lg hover:opacity-90 transition-opacity">
+              Explorar Dashboard
+            </a>
           </div>
-        </div>
-      </section>
-
-      {/* Aviso legal */}
-      <section className="bg-secondary py-8 px-4">
-        <div className="max-w-2xl mx-auto text-center">
-          <p className="text-text">
-            Toda la información legal y de privacidad está disponible{' '}
-            <a href="/Legal" className="text-blue-600 underline hover:text-blue-800">AQUÍ</a>.
-          </p>
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
   );
 }
