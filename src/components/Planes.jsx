@@ -26,7 +26,8 @@ function Planes({ region }) {
   const [currentAvionesPage, setCurrentAvionesPage] = useState(1);
   const [avionesPerPage] = useState(12);
   const [avionesSortOption, setAvionesSortOption] = useState("");
-  const [filterPais, setFilterPais] = useState("todos");
+  const [filterPaisChart, setFilterPaisChart] = useState("todos"); // Separate state for chart
+  const [filterPaisList, setFilterPaisList] = useState("todos"); // Separate state for list
   const [paisesDisponibles, setPaisesDisponibles] = useState([]);
 
   const S = 122;
@@ -38,7 +39,6 @@ function Planes({ region }) {
   const L = 0.0065;
   const T0 = 288.15;
   const expISA = 5.256;
-
 
   const fetchData = () => {
     fetch(`/api/planes?region=${region}`)
@@ -179,10 +179,14 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
     setCurrentAvionesPage(1);
   };
 
-  const handlePaisFilterChange = (e) => {
-    setFilterPais(e.target.value);
-    setCurrentAvionesPage(1);
+  const handlePaisChartChange = (e) => {
+    setFilterPaisChart(e.target.value);
     setCurrentPage(1);
+  };
+
+  const handlePaisListChange = (e) => {
+    setFilterPaisList(e.target.value);
+    setCurrentAvionesPage(1);
   };
 
   const ordenarAviones = (aviones) => {
@@ -248,13 +252,18 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
     }
   };
 
-  const filtrarPorPais = (aviones) => {
-    if (filterPais === "todos") return aviones;
-    return aviones.filter(avion => avion.pais === filterPais);
+  const filtrarPorPaisChart = (aviones) => {
+    if (filterPaisChart === "todos") return aviones;
+    return aviones.filter(avion => avion.pais === filterPaisChart);
+  };
+
+  const filtrarPorPaisList = (aviones) => {
+    if (filterPaisList === "todos") return aviones;
+    return aviones.filter(avion => avion.pais === filterPaisList);
   };
 
   const getAvionesPagina = () => {
-    const avionesFiltrados = filtrarPorConsumo(filtrarPorPais(data));
+    const avionesFiltrados = filtrarPorConsumo(filtrarPorPaisChart(data));
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     return avionesFiltrados.slice(indexOfFirstItem, indexOfLastItem);
@@ -265,10 +274,10 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
   const getCurrentAviones = () => {
     const startIndex = (currentAvionesPage - 1) * avionesPerPage;
     const endIndex = startIndex + avionesPerPage;
-    return filtrarPorPais(ordenarAvionesListado(data)).slice(startIndex, endIndex);
+    return filtrarPorPaisList(ordenarAvionesListado(data)).slice(startIndex, endIndex);
   };
 
-  const totalAvionesPages = Math.ceil(filtrarPorPais(data).length / avionesPerPage);
+  const totalAvionesPages = Math.ceil(filtrarPorPaisList(data).length / avionesPerPage);
   const paginateAviones = (pageNumber) => setCurrentAvionesPage(pageNumber);
 
   if (error) {
@@ -279,7 +288,7 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
     return <Loading />;
   }
 
-  const totalPages = Math.ceil(filtrarPorConsumo(filtrarPorPais(data)).length / itemsPerPage);
+  const totalPages = Math.ceil(filtrarPorConsumo(filtrarPorPaisChart(data)).length / itemsPerPage);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 text-light bg-background relative">
@@ -357,13 +366,13 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
             </div>
             {paisesDisponibles.length > 1 && (
               <div>
-                <label htmlFor="filtroPais" className="text-sm mr-2">
-                  País:
+                <label htmlFor="filtroPaisChart" className="text-sm mr-2">
+                  País (Gráfico):
                 </label>
                 <select
-                  id="filtroPais"
-                  value={filterPais}
-                  onChange={handlePaisFilterChange}
+                  id="filtroPaisChart"
+                  value={filterPaisChart}
+                  onChange={handlePaisChartChange}
                   className="bg-secondary text-xs text-text rounded px-2 py-1"
                 >
                   <option value="todos">Todos los países</option>
@@ -532,10 +541,13 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
 
           {paisesDisponibles.length > 1 && (
             <div>
+              <label htmlFor="filtroPaisList" className="text-sm mr-2">
+                País (Listado):
+              </label>
               <select
-                id="filtroPaisListado"
-                value={filterPais}
-                onChange={handlePaisFilterChange}
+                id="filtroPaisList"
+                value={filterPaisList}
+                onChange={handlePaisListChange}
                 className="bg-secondary text-xs rounded px-2 py-1 text-text"
               >
                 <option value="todos">Todos los países</option>
@@ -561,7 +573,7 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
                   className="w-6 h-6"
                 />
                 <h3 className="text-lg font-semibold text-border dark:text-light">
-                  {avion.flight}
+                  {avion.flight || "Desconocido"}
                 </h3>
               </div>
 
