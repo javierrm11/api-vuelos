@@ -310,7 +310,7 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
       <div className="flex flex-wrap gap-6 mb-6">
         <div className="flex-[0_0_100%] sm:flex-[1_1_30%] bg-accent p-4 rounded shadow-md text-light dark:text-text">
           <h2 className="text-xl font-semibold mb-2">Aviones en vuelo</h2>
-          <p>
+          <p className="text-3xl font-bold">
             {data.length}
           </p>
         </div>
@@ -340,10 +340,10 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
             Consumo y emisiones totales
           </h2>
           <p>
-            <strong>Consumo total:</strong> {totalFuel ?? "Calculando..."} L/h
+            <strong>Consumo:</strong> {totalFuel ?? "Calculando..."} L/h
           </p>
           <p>
-            <strong>Emisión total:</strong> {totalCO2 ?? "Calculando..."} kg CO₂/h
+            <strong>Emisión:</strong> {totalCO2 ?? "Calculando..."} kg CO₂/h
           </p>
         </div>
 
@@ -352,10 +352,10 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
             Consumo y emisiones promedio
           </h2>
           <p>
-            <strong>Consumo medio:</strong> {avgFuel ?? "Calculando..."} L/h
+            <strong>Consumo:</strong> {avgFuel ?? "Calculando..."} L/h
           </p>
           <p>
-            <strong>Emisión media:</strong> {avgCO2 ?? "Calculando..."} kg CO₂/h
+            <strong>Emisión:</strong> {avgCO2 ?? "Calculando..."} kg CO₂/h
           </p>
         </div>
       </div>
