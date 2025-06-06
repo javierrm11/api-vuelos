@@ -360,7 +360,7 @@ Datos obtenidos por APIones (http://localhost:4321/${region})`;
         </div>
       </div>
 
-      <div className="bg-light dark:bg-border dark:text-light p-4 rounded mb-10 text-border">
+      <div className="bg-light dark:bg-border dark:text-light p-4 rounded mb-6 text-border">
         <div className="flex justify-between items-center pb-5">
           <div className="flex gap-4">
             <div>
