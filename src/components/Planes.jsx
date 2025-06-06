@@ -26,7 +26,7 @@ function Planes({ region }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
   const [currentAvionesPage, setCurrentAvionesPage] = useState(1);
-  const [avionesPerPage] = useState(12);
+  const [avionesPerPage] = useState(24);
   const [avionesSortOption, setAvionesSortOption] = useState("");
   const [filterPaisChart, setFilterPaisChart] = useState("todos");
   const [filterPaisList, setFilterPaisList] = useState("todos");
