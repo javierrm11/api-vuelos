@@ -21,7 +21,7 @@ const MapaAviones = () => {
   const [userPos, setUserPos] = useState(null);
   const userCircle = useRef(null);
   const userMarkerRef = useRef(null);
-  const [infoVisible, setInfoVisible] = useState(true);
+  const [infoVisible, setInfoVisible] = useState(false);
 
   const obtenerAviones = async () => {
     try {
@@ -385,7 +385,9 @@ const MapaAviones = () => {
                             {avion.pais}
                           </td>
                           <td className="px-3 py-2">{avion.hex}</td>
-                          <td className="px-3 py-2">{avion.alt_baro ?? "N/A"}</td>
+                          <td className="px-3 py-2">
+                            {avion.alt_baro ?? "N/A"}
+                          </td>
                           <td className="px-3 py-2">{avion.gs ?? "N/A"}</td>
                         </tr>
                       ))
@@ -417,6 +419,6 @@ const MapaAviones = () => {
       ></div>
     </div>
   );
-      };
+};
 
 export default MapaAviones;
