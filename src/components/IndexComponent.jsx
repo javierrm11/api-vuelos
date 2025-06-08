@@ -122,9 +122,9 @@ export default function EarthScene() {
           )}
         </Canvas>
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-          <div className="text-center px-4 animate-fade-in-up">
-            <h1 className="text-4xl md:text-6xl font-bold text-primary dark:text-accent mb-4">
-              <span className="bg-gradient-to-r from-primary to-accent dark:from-accent dark:to-primary bg-clip-text text-transparent">
+          <div className="text-center px-[20%] animate-fade-in-up">
+            <h1 className="text-4xl md:text-6xl font-bold text-light mb-4">
+              <span className='text-accent dark:text-accent underline decoration-primary'>
                 APIones
               </span>{' '}
               Dashboard
