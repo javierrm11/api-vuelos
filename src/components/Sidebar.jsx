@@ -20,7 +20,7 @@ export default function Sidebar({ isOpen, onClose }) {
   ];
 
   return (
-    <aside
+    <div
       className={`
         fixed top-15 left-0 h-full w-full sm:w-64 lg:w-64 bg-nav text-light z-40 transition-transform transform
         ${isOpen ? "translate-x-0" : "-translate-x-full"}
@@ -65,6 +65,6 @@ export default function Sidebar({ isOpen, onClose }) {
           })}
         </nav>
       </div>
-    </aside>
+    </div>
   );
 }
