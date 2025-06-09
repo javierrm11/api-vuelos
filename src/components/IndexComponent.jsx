@@ -103,7 +103,7 @@ export default function EarthScene() {
   return (
     <div className="min-h-screen bg-background dark:bg-dark-background text-text dark:text-light transition-colors duration-300">
       {/* Hero Section */}
-      <div className="h-screen w-full relative overflow-hidden bg-gradient-to-b from-secondary/10 to-primary/10 dark:from-primary/20 dark:to-background/50">
+      <div className="h-[90dvh] w-full relative overflow-hidden bg-gradient-to-b from-secondary/10 to-primary/10 dark:from-primary/20 dark:to-background/50">
         <Canvas camera={{ position: [0, 0, 6], fov: 45 }}>
           <ambientLight intensity={0.5} />
           <pointLight position={[10, 10, 10]} intensity={1} />
