@@ -365,7 +365,7 @@ Datos obtenidos por ApiVuelos (http://localhost:4321/${region})`;
           <div className="flex gap-4">
             <div>
               <label htmlFor="filtroConsumo" className="text-sm mr-2 text-text">
-                Filtro (Gráfico):
+                Filtro gráfico:
               </label>
               <select
                 id="filtroConsumo"
