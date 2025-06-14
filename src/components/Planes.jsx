@@ -161,7 +161,7 @@ Altitud -> ${avion.alt_baro ? `${avion.alt_baro} ft` : "N/A"}
 Consumo -> ${avion.fuelLph ?? "N/A"} L/h
 Emisiones de CO2 -> ${avion.co2Kgh ?? "N/A"} kg/h
 
-Datos obtenidos por APIones (http://localhost:4321/${region})`;
+Datos obtenidos por ApiVuelos (http://localhost:4321/${region})`;
 
     navigator.clipboard
       .writeText(texto)

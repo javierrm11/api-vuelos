@@ -125,7 +125,7 @@ export default function EarthScene() {
           <div className="text-center px-[20%] animate-fade-in-up">
             <h1 className="text-4xl md:text-6xl font-bold text-light mb-4">
               <span className='text-accent dark:text-accent underline decoration-primary'>
-                APIones
+                ApiVuelos
               </span>{' '}
               Dashboard
             </h1>
@@ -147,11 +147,11 @@ export default function EarthScene() {
         <section className="py-20 px-4 max-w-6xl mx-auto" id="about">
           <div className="mb-16 text-center animate-fade-in">
             <h2 className="text-3xl md:text-4xl font-bold text-primary dark:text-accent mb-4">
-              ¿Qué es <span className="text-primary dark:text-accent">APIones</span>?
+              ¿Qué es <span className="text-primary dark:text-accent">ApiVuelos</span>?
             </h2>
             <div className="w-24 h-1 bg-primary dark:bg-accent mx-auto mb-6"></div>
             <p className="text-lg text-text/80 dark:text-light/80 max-w-3xl mx-auto">
-              APIones es un dashboard interactivo que monitoriza vuelos en tiempo real y calcula el consumo de combustible y las emisiones de CO₂ de los aviones sobre cada continente.
+              ApiVuelos es un dashboard interactivo que monitoriza vuelos en tiempo real y calcula el consumo de combustible y las emisiones de CO₂ de los aviones sobre cada continente.
             </p>
           </div>
 
