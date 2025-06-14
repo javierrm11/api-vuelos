@@ -307,6 +307,7 @@ Datos obtenidos por ApiVuelos (http://localhost:4321/${region})`;
         Estado de vuelos sobre {region}
       </h1>
 
+      {/* Sección de estadísticas */}
       <div className="flex flex-wrap gap-6 mb-6">
         <div className="flex-[0_0_100%] sm:flex-[1_1_30%] bg-accent p-4 rounded shadow-md text-light dark:text-text">
           <h2 className="text-xl font-semibold mb-2">Aviones en vuelo</h2>
@@ -334,6 +335,8 @@ Datos obtenidos por ApiVuelos (http://localhost:4321/${region})`;
           </p>
         </div>
       </div>
+
+      {/* Sección de consumo y emisiones */}
       <div className="grid sm:grid-cols-2 gap-6 mb-6">
         <div className="bg-light dark:bg-border text-border dark:text-light p-4 rounded">
           <h2 className="text-xl font-semibold mb-2">
@@ -360,39 +363,44 @@ Datos obtenidos por ApiVuelos (http://localhost:4321/${region})`;
         </div>
       </div>
 
+      {/* Sección del gráfico con sus propios filtros */}
       <div className="bg-light dark:bg-border dark:text-light p-4 rounded mb-6 text-border">
-        <div className="flex justify-between items-center pb-5">
-          <div className="flex gap-4">
-            <div>
-              <label htmlFor="filtroConsumo" className="text-sm mr-2 text-text">
-                Filtro gráfico:
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+          <h2 className="text-xl font-semibold">Gráfico de Consumo y Emisiones</h2>
+          
+          {/* Filtros específicos para el gráfico */}
+          <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+            <div className="w-full sm:w-48">
+              <label htmlFor="filtroConsumoChart" className="block text-sm mb-1 text-text">
+                Tipo de filtro:
               </label>
               <select
-                id="filtroConsumo"
+                id="filtroConsumoChart"
                 value={filterConsumo}
                 onChange={(e) => {
                   setFilterConsumo(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="bg-secondary text-xs text-text rounded px-2 py-1"
+                className="w-full bg-secondary text-sm text-text rounded px-3 py-2"
               >
-                <option value="todos">Todos</option>
+                <option value="todos">Todos los aviones</option>
                 <option value="mayorConsumo">Mayor consumo</option>
                 <option value="menorConsumo">Menor consumo</option>
                 <option value="mayorEmision">Mayor emisiones</option>
                 <option value="menorEmision">Menor emisiones</option>
               </select>
             </div>
+
             {paisesDisponibles.length > 1 && (
-              <div>
-                <label htmlFor="filtroPaisChart" className="text-sm mr-2">
-                  País (Gráfico):
+              <div className="w-full sm:w-48">
+                <label htmlFor="filtroPaisChart" className="block text-sm mb-1">
+                  Filtrar por país:
                 </label>
                 <select
                   id="filtroPaisChart"
                   value={filterPaisChart}
                   onChange={handlePaisChartChange}
-                  className="bg-secondary text-xs text-text rounded px-2 py-1"
+                  className="w-full bg-secondary text-sm text-text rounded px-3 py-2"
                 >
                   <option value="todos">Todos los países</option>
                   {paisesDisponibles.map(pais => (
@@ -406,9 +414,6 @@ Datos obtenidos por ApiVuelos (http://localhost:4321/${region})`;
           </div>
         </div>
 
-        <h2 className="text-xl font-semibold mb-4">
-          Comparativa de Consumo de Combustible (L/h) y Emisiones de CO₂ (kg/h)
-        </h2>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart
             data={getAvionesPagina()}
@@ -416,13 +421,14 @@ Datos obtenidos por ApiVuelos (http://localhost:4321/${region})`;
           >
             <CartesianGrid strokeDasharray="3 3" stroke="#555" />
             <XAxis
-              dataKey="hex"
+              dataKey="flight"
               angle={-45}
               textAnchor="end"
               interval={0}
               tick={{ fill: "#ccc", fontSize: 12 }}
             />
-            <YAxis tick={{ fill: "#ccc" }}
+            <YAxis 
+              tick={{ fill: "#ccc" }}
               domain={[0, 3000]}
               allowDecimals={false}
             />
@@ -433,11 +439,12 @@ Datos obtenidos por ApiVuelos (http://localhost:4321/${region})`;
           </BarChart>
         </ResponsiveContainer>
 
+        {/* Paginación del gráfico */}
         <div className="flex justify-center items-center gap-2 mt-4">
           <button
             onClick={() => paginate(1)}
             disabled={currentPage === 1}
-            className={`px-1 py-1 rounded ${currentPage === 1
+            className={`px-3 py-1 rounded ${currentPage === 1
               ? "bg-gray-300 dark:bg-background cursor-not-allowed"
               : "b-hover cursor-pointer bg-secondary text-light"
               }`}
@@ -458,7 +465,7 @@ Datos obtenidos por ApiVuelos (http://localhost:4321/${region})`;
           <button
             onClick={() => paginate(currentPage - 1)}
             disabled={currentPage === 1}
-            className={`px-1 py-1 rounded ${currentPage === 1
+            className={`px-3 py-1 rounded ${currentPage === 1
               ? "bg-gray-300 dark:bg-background cursor-not-allowed"
               : "b-hover cursor-pointer bg-primary text-light"
               }`}
@@ -482,7 +489,7 @@ Datos obtenidos por ApiVuelos (http://localhost:4321/${region})`;
           <button
             onClick={() => paginate(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className={`px-1 py-1 rounded ${currentPage === totalPages
+            className={`px-3 py-1 rounded ${currentPage === totalPages
               ? "bg-gray-300 dark:bg-background cursor-not-allowed"
               : "b-hover cursor-pointer bg-primary text-light"
               }`}
@@ -503,7 +510,7 @@ Datos obtenidos por ApiVuelos (http://localhost:4321/${region})`;
           <button
             onClick={() => paginate(totalPages)}
             disabled={currentPage === totalPages}
-            className={`px-1 py-1 rounded ${currentPage === totalPages
+            className={`px-3 py-1 rounded ${currentPage === totalPages
               ? "bg-gray-300 dark:bg-background cursor-not-allowed"
               : "b-hover cursor-pointer bg-secondary text-light"
               }`}
@@ -524,215 +531,225 @@ Datos obtenidos por ApiVuelos (http://localhost:4321/${region})`;
         </div>
       </div>
 
+      {/* Sección del listado de aviones con sus propios filtros */}
       <div className="overflow-x-auto rounded shadow-md bg-background">
-        <div className="p-4 bg-light dark:bg-border flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div>
-            <label htmlFor="avionesSort" className="text-sm mr-2 text-text">
-              Ordenar:
-            </label>
-            <select
-              id="avionesSort"
-              value={avionesSortOption}
-              onChange={handleAvionesSortChange}
-              className="bg-secondary text-xs rounded px-2 py-1 text-text"
-            >
-              <option value="">Predeterminado</option>
-              <option value="hexAsc">Hex (A-Z)</option>
-              <option value="hexDesc">Hex (Z-A)</option>
-              <option value="velocidadAsc">Velocidad (↑)</option>
-              <option value="velocidadDesc">Velocidad (↓)</option>
-              <option value="altitudAsc">Altitud (↑)</option>
-              <option value="altitudDesc">Altitud (↓)</option>
-              <option value="consumoAsc">Consumo (↑)</option>
-              <option value="consumoDesc">Consumo (↓)</option>
-              <option value="emisionAsc">Emisiones (↑)</option>
-              <option value="emisionDesc">Emisiones (↓)</option>
-            </select>
-          </div>
-
-          {paisesDisponibles.length > 1 && (
-            <div>
-              <label htmlFor="filtroPaisList" className="text-sm mr-2">
-                País (Listado):
-              </label>
-              <select
-                id="filtroPaisList"
-                value={filterPaisList}
-                onChange={handlePaisListChange}
-                className="bg-secondary text-xs rounded px-2 py-1 text-text"
-              >
-                <option value="todos">Todos los países</option>
-                {paisesDisponibles.map(pais => (
-                  <option key={pais} value={pais}>
-                    {pais}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
-        </div>
-        <div className="flex flex-wrap">
-          {getCurrentAviones().map((avion, index) => (
-            <div
-              key={avion.hex}
-              className="flex-1 flex-[0_0_100%] md:flex-[1_1_40%] 2xl:flex-[1_1_30%] items-center justify-between p-4 border-b relative hover:brightness-95 bg-light dark:bg-border border-secondary"
-            >
-              <div className="flex items-center gap-2 mb-1">
-                <img
-                  src={`./paises/${avion.pais}.png`}
-                  alt="Bandera"
-                  className="w-6 h-6"
-                />
-                <h3 className="text-lg font-semibold text-border dark:text-light">
-                  {avion.flight || "Desconocido"}
-                </h3>
+        <div className="p-4 bg-light dark:bg-border">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+            <h2 className="text-xl font-semibold">Listado de Aviones</h2>
+            
+            {/* Filtros específicos para el listado */}
+            <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+              <div className="w-full sm:w-48">
+                <label htmlFor="avionesSort" className="block text-sm mb-1 text-text">
+                  Ordenar por:
+                </label>
+                <select
+                  id="avionesSort"
+                  value={avionesSortOption}
+                  onChange={handleAvionesSortChange}
+                  className="w-full bg-secondary text-sm rounded px-3 py-2 text-text"
+                >
+                  <option value="">Orden predeterminado</option>
+                  <option value="hexAsc">Hex (A-Z)</option>
+                  <option value="hexDesc">Hex (Z-A)</option>
+                  <option value="velocidadAsc">Velocidad (↑)</option>
+                  <option value="velocidadDesc">Velocidad (↓)</option>
+                  <option value="altitudAsc">Altitud (↑)</option>
+                  <option value="altitudDesc">Altitud (↓)</option>
+                  <option value="consumoAsc">Consumo (↑)</option>
+                  <option value="consumoDesc">Consumo (↓)</option>
+                  <option value="emisionAsc">Emisiones (↑)</option>
+                  <option value="emisionDesc">Emisiones (↓)</option>
+                </select>
               </div>
 
-              <details className="text-sm text-border dark:text-light transition-all duration-500">
-                <summary className="cursor-pointer absolute top-5 right-7 hover:underline text-primary dark:text-light">
-                  Detalles del vuelo
-                </summary>
-
-                <div className="text-ms grid grid-cols-1 md:grid-cols-2 sm:grid-cols-2 p-4">
-                  <div className="grid md:justify-evenly md:gap-2">
-                    <p className="mt-1 mb-1">
-                      <strong>Hex:</strong> {avion.hex}
-                    </p>
-                    <p className="mt-1 mb-1">
-                      <strong>País:</strong> {avion.pais || "Desconocido"}
-                    </p>
-                    <p className="mt-1 mb-1">
-                      <strong>Modelo:</strong> {avion.modelo || "Desconocido"}
-                    </p>
-                    <p className="mt-1 mb-1">
-                      <strong>Velocidad:</strong>{" "}
-                      {avion.gs ? `${avion.gs.toFixed(0)} km/h` : "N/A"}
-                    </p>
-                    <p className="mt-1 mb-1">
-                      <strong>Ubicación:</strong> {avion.lat}, {avion.lon}
-                    </p>
-                  </div>
-
-                  <div className="grid md:justify-evenly md:gap-4">
-                    <p className="mt-1 mb-1">
-                      <strong>Altitud:</strong>{" "}
-                      {avion.alt_baro ? `${avion.alt_baro} ft` : "N/A"}
-                    </p>
-                    <p className="mt-1 mb-1">
-                      <strong>Rumbo:</strong> {avion.track ?? "N/A"}°
-                    </p>
-                    <p className="mt-1 mb-1">
-                      <strong>Consumo:</strong>{" "}
-                      {avion.fuelLph ? `${avion.fuelLph} L/h` : "N/A"}
-                    </p>
-                    <p className="mt-1 mb-1">
-                      <strong>Emisiones de CO₂:</strong>{" "}
-                      {avion.co2Kgh ? `${avion.co2Kgh} kg/h` : "N/A"}
-                    </p>
-                  </div>
-                  <div className="mt-2 lg:col-span-3 md:col-span-3 sm:col-span-2 flex justify-end w-full">
-                    <button
-                      onClick={() => copiarInfoVuelo(avion)}
-                      className="b-hover cursor-pointer px-3 py-1 rounded transition-colors bg-primary text-light"
-                    >
-                      Copiar información
-                    </button>
-                  </div>
+              {paisesDisponibles.length > 1 && (
+                <div className="w-full sm:w-48">
+                  <label htmlFor="filtroPaisList" className="block text-sm mb-1">
+                    Filtrar por país:
+                  </label>
+                  <select
+                    id="filtroPaisList"
+                    value={filterPaisList}
+                    onChange={handlePaisListChange}
+                    className="w-full bg-secondary text-sm rounded px-3 py-2 text-text"
+                  >
+                    <option value="todos">Todos los países</option>
+                    {paisesDisponibles.map(pais => (
+                      <option key={pais} value={pais}>
+                        {pais}
+                      </option>
+                    ))}
+                  </select>
                 </div>
-              </details>
+              )}
             </div>
-          ))}
-        </div>
+          </div>
 
-        {/* Paginación para el listado de aviones */}
-        <div className="flex justify-center items-center gap-2 p-4 bg-light dark:bg-border">
-          <button
-            onClick={() => paginateAviones(1)}
-            disabled={currentAvionesPage === 1}
-            className={`px-1 py-1 rounded ${currentAvionesPage === 1
-              ? "bg-gray-300 dark:bg-background cursor-not-allowed"
-              : "b-hover cursor-pointer bg-secondary text-light"
-              }`}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              className="feather feather-chevrons-left"
+          {/* Listado de aviones */}
+          <div className="flex flex-wrap">
+            {getCurrentAviones().map((avion, index) => (
+              <div
+                key={avion.hex}
+                className="flex-1 flex-[0_0_100%] md:flex-[1_1_40%] 2xl:flex-[1_1_30%] items-center justify-between p-4 border-b relative hover:brightness-95 bg-light dark:bg-border border-secondary"
+              >
+                <div className="flex items-center gap-2 mb-1">
+                  <img
+                    src={`./paises/${avion.pais}.png`}
+                    alt="Bandera"
+                    className="w-6 h-6"
+                  />
+                  <h3 className="text-lg font-semibold text-border dark:text-light">
+                    {avion.flight || "Desconocido"}
+                  </h3>
+                </div>
+
+                <details className="text-sm text-border dark:text-light transition-all duration-500">
+                  <summary className="cursor-pointer absolute top-5 right-7 hover:underline text-primary dark:text-light">
+                    Detalles del vuelo
+                  </summary>
+
+                  <div className="text-ms grid grid-cols-1 md:grid-cols-2 sm:grid-cols-2 p-4">
+                    <div className="grid md:justify-evenly md:gap-2">
+                      <p className="mt-1 mb-1">
+                        <strong>Hex:</strong> {avion.hex}
+                      </p>
+                      <p className="mt-1 mb-1">
+                        <strong>País:</strong> {avion.pais || "Desconocido"}
+                      </p>
+                      <p className="mt-1 mb-1">
+                        <strong>Modelo:</strong> {avion.modelo || "Desconocido"}
+                      </p>
+                      <p className="mt-1 mb-1">
+                        <strong>Velocidad:</strong>{" "}
+                        {avion.gs ? `${avion.gs.toFixed(0)} km/h` : "N/A"}
+                      </p>
+                      <p className="mt-1 mb-1">
+                        <strong>Ubicación:</strong> {avion.lat}, {avion.lon}
+                      </p>
+                    </div>
+
+                    <div className="grid md:justify-evenly md:gap-4">
+                      <p className="mt-1 mb-1">
+                        <strong>Altitud:</strong>{" "}
+                        {avion.alt_baro ? `${avion.alt_baro} ft` : "N/A"}
+                      </p>
+                      <p className="mt-1 mb-1">
+                        <strong>Rumbo:</strong> {avion.track ?? "N/A"}°
+                      </p>
+                      <p className="mt-1 mb-1">
+                        <strong>Consumo:</strong>{" "}
+                        {avion.fuelLph ? `${avion.fuelLph} L/h` : "N/A"}
+                      </p>
+                      <p className="mt-1 mb-1">
+                        <strong>Emisiones de CO₂:</strong>{" "}
+                        {avion.co2Kgh ? `${avion.co2Kgh} kg/h` : "N/A"}
+                      </p>
+                    </div>
+                    <div className="mt-2 lg:col-span-3 md:col-span-3 sm:col-span-2 flex justify-end w-full">
+                      <button
+                        onClick={() => copiarInfoVuelo(avion)}
+                        className="b-hover cursor-pointer px-3 py-1 rounded transition-colors bg-primary text-light"
+                      >
+                        Copiar información
+                      </button>
+                    </div>
+                  </div>
+                </details>
+              </div>
+            ))}
+          </div>
+
+          {/* Paginación para el listado de aviones */}
+          <div className="flex justify-center items-center gap-2 p-4 bg-light dark:bg-border">
+            <button
+              onClick={() => paginateAviones(1)}
+              disabled={currentAvionesPage === 1}
+              className={`px-3 py-1 rounded ${currentAvionesPage === 1
+                ? "bg-gray-300 dark:bg-background cursor-not-allowed"
+                : "b-hover cursor-pointer bg-secondary text-light"
+                }`}
             >
-              <polyline points="11 17 6 12 11 7"></polyline>
-              <polyline points="18 17 13 12 18 7"></polyline>
-            </svg>
-          </button>
-          <button
-            onClick={() => paginateAviones(currentAvionesPage - 1)}
-            disabled={currentAvionesPage === 1}
-            className={`px-1 py-1 rounded ${currentAvionesPage === 1
-              ? "bg-gray-300 dark:bg-background cursor-not-allowed"
-              : "b-hover cursor-pointer bg-primary text-light"
-              }`}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              className="feather feather-arrow-left"
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                className="feather feather-chevrons-left"
+              >
+                <polyline points="11 17 6 12 11 7"></polyline>
+                <polyline points="18 17 13 12 18 7"></polyline>
+              </svg>
+            </button>
+            <button
+              onClick={() => paginateAviones(currentAvionesPage - 1)}
+              disabled={currentAvionesPage === 1}
+              className={`px-3 py-1 rounded ${currentAvionesPage === 1
+                ? "bg-gray-300 dark:bg-background cursor-not-allowed"
+                : "b-hover cursor-pointer bg-primary text-light"
+                }`}
             >
-              <line x1="19" y1="12" x2="5" y2="12"></line>
-              <polyline points="12 19 5 12 12 5"></polyline>
-            </svg>
-          </button>
-          <span className="text-sm text-text">
-            Pág {currentAvionesPage} de {totalAvionesPages}
-          </span>
-          <button
-            onClick={() => paginateAviones(currentAvionesPage + 1)}
-            disabled={currentAvionesPage === totalAvionesPages}
-            className={`px-1 py-1 rounded ${currentAvionesPage === totalAvionesPages
-              ? "bg-gray-300 dark:bg-background cursor-not-allowed"
-              : "b-hover cursor-pointer bg-primary text-light"
-              }`}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              className="feather feather-arrow-right"
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                className="feather feather-arrow-left"
+              >
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+            </button>
+            <span className="text-sm text-text">
+              Pág {currentAvionesPage} de {totalAvionesPages}
+            </span>
+            <button
+              onClick={() => paginateAviones(currentAvionesPage + 1)}
+              disabled={currentAvionesPage === totalAvionesPages}
+              className={`px-3 py-1 rounded ${currentAvionesPage === totalAvionesPages
+                ? "bg-gray-300 dark:bg-background cursor-not-allowed"
+                : "b-hover cursor-pointer bg-primary text-light"
+                }`}
             >
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </button>
-          <button
-            onClick={() => paginateAviones(totalAvionesPages)}
-            disabled={currentAvionesPage === totalAvionesPages}
-            className={`px-1 py-1 rounded ${currentAvionesPage === totalAvionesPages
-              ? "bg-gray-300 dark:bg-background cursor-not-allowed"
-              : "b-hover cursor-pointer bg-secondary text-light"
-              }`}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              className="feather feather-chevrons-right"
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                className="feather feather-arrow-right"
+              >
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+            <button
+              onClick={() => paginateAviones(totalAvionesPages)}
+              disabled={currentAvionesPage === totalAvionesPages}
+              className={`px-3 py-1 rounded ${currentAvionesPage === totalAvionesPages
+                ? "bg-gray-300 dark:bg-background cursor-not-allowed"
+                : "b-hover cursor-pointer bg-secondary text-light"
+                }`}
             >
-              <polyline points="13 17 18 12 13 7"></polyline>
-              <polyline points="6 17 11 12 6 7"></polyline>
-            </svg>
-          </button>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                className="feather feather-chevrons-right"
+              >
+                <polyline points="13 17 18 12 13 7"></polyline>
+                <polyline points="6 17 11 12 6 7"></polyline>
+              </svg>
+            </button>
+          </div>
         </div>
 
         {mensajeCopiado && (
