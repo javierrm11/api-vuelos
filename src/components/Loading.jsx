@@ -1,6 +1,8 @@
 import { FaGlobeEurope, FaPlane } from 'react-icons/fa';
 
 export default function Loading() {
+    // Componente de carga que muestra un planeta y un avión orbitando
+    // Este componente utiliza iconos de react-icons para mostrar una animación de carga
     return (
         <div className="h-screen inset-0 z-50 flex items-center justify-center">
             <div className="flex flex-col items-center space-y-6">

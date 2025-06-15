@@ -2,11 +2,17 @@ import { useState, useEffect } from 'react';
 import Header from './Header.jsx';
 import Sidebar from './Sidebar.jsx';
 
+// Componente LayoutWrapper que envuelve el contenido principal de la aplicación
+// Este componente maneja la lógica de apertura y cierre del sidebar
 export default function LayoutWrapper({ children }) {
+    // Estado para controlar la apertura del sidebar
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
+    // Función para alternar el estado del sidebar
     const toggleSidebar = () => setSidebarOpen(prev => !prev);
 
+    // Efecto para cerrar el sidebar al cambiar el tamaño de la ventana
+    // Esto asegura que el sidebar se cierre en pantallas grandes
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth >= 1024) {
@@ -14,7 +20,8 @@ export default function LayoutWrapper({ children }) {
             }
         };
         handleResize();
-
+        // Añadimos un listener para el evento de cambio de tamaño de la ventana
+        // Esto asegura que el sidebar se cierre en pantallas grandes
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, []);

@@ -3,14 +3,22 @@ import { Canvas, useFrame, useLoader, useThree } from '@react-three/fiber';
 import { OrbitControls, Stars } from '@react-three/drei';
 import * as THREE from 'three';
 
+// Componente para renderizar la Tierra con nubes y efectos
+
 function Earth() {
+  // Referencias para los meshes de la Tierra, nubes y brillo
+  // Utilizamos useRef para acceder a los meshes y manipularlos directamente
   const earthRef = useRef();
   const cloudsRef = useRef();
   const glowRef = useRef();
 
+  // Hook para obtener el tamaño del canvas
+  // Utilizamos useThree para acceder a las propiedades de la escena, incluyendo el tamaño del canvas
+
   const { size } = useThree();
 
   // Cargar texturas
+  
   const [colorMap, bumpMap, specularMap, cloudMap] = useLoader(THREE.TextureLoader, [
     '/textures/earth/earth_color.jpg',
     '/textures/earth/earth_bump.jpg',
@@ -30,6 +38,7 @@ function Earth() {
     } else {
       scale = 1;
     }
+    // Aplicamos el escalado a los meshes de la Tierra y las nubes
 
     if (earthRef.current) earthRef.current.scale.set(scale, scale, scale);
     if (cloudsRef.current) cloudsRef.current.scale.set(scale, scale, scale);
@@ -37,6 +46,8 @@ function Earth() {
 
   // Rotación
   useFrame(() => {
+    // Actualizamos la rotación de la Tierra y las nubes en cada frame
+
     if (earthRef.current) earthRef.current.rotation.y += 0.001;
     if (cloudsRef.current) cloudsRef.current.rotation.y += 0.0012;
   });
@@ -70,9 +81,16 @@ function Earth() {
     </>
   );
 }
+// Hook para detectar si el dispositivo es móvil o tablet
 
 function useIsMobileOrTablet() {
   const [isMobile, setIsMobile] = useState(false);
+
+  // Utilizamos useEffect para agregar un listener de resize y actualizar el estado
+  // El hook verifica el ancho de la ventana y actualiza el estado en consecuencia
+  // También se asegura de que el estado inicial sea correcto al cargar la página
+  // Esto permite que el componente se adapte a cambios de tamaño de ventana en tiempo real
+  // y evita el parpadeo inicial al cargar la página
 
   useEffect(() => {
     function handleResize() {
@@ -85,8 +103,10 @@ function useIsMobileOrTablet() {
 
   return isMobile;
 }
-
+// Componente para mostrar tarjetas de características
 const FeatureCard = ({ title, description, color }) => {
+  // Utilizamos Tailwind CSS para estilos y animaciones
+  // Las tarjetas tienen un fondo con desenfoque, bordes redondeados y sombra
   return (
     <div className="p-6 rounded-xl backdrop-blur-sm bg-white/5 dark:bg-primary/5 border border-secondary/20 dark:border-accent/20 shadow-lg transition-all duration-300 hover:-translate-y-1">
       <h3 className={`text-xl mb-2 font-semibold bg-gradient-to-r ${color} bg-clip-text text-transparent`}>
@@ -96,12 +116,15 @@ const FeatureCard = ({ title, description, color }) => {
     </div>
   );
 };
-
+// Componente principal de la escena de la Tierra
 export default function EarthScene() {
+  // Utilizamos un hook personalizado para detectar si el dispositivo es móvil o tablet
   const isMobileOrTablet = useIsMobileOrTablet();
 
   return (
-    <div className="min-h-screen bg-background dark:bg-dark-background text-text dark:text-light transition-colors duration-300">
+    // Componente principal que renderiza la escena de la Tierra
+    // Utilizamos Tailwind CSS para estilos y animaciones
+  <div className="min-h-screen bg-background dark:bg-dark-background text-text dark:text-light transition-colors duration-300">
       {/* Hero Section */}
       <div className="h-[95dvh] lg:h-[100dvh] w-full relative overflow-hidden bg-gradient-to-b from-secondary/10 to-primary/10 dark:from-primary/20 dark:to-background/50">
         <Canvas camera={{ position: [0, 0, 6], fov: 45 }}>
@@ -121,6 +144,7 @@ export default function EarthScene() {
             />
           )}
         </Canvas>
+        {/* Overlay with text and button */}
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
           <div className="text-center px-[20%] animate-fade-in-up">
             <h1 className="text-4xl md:text-6xl font-bold text-light mb-4">
@@ -154,7 +178,7 @@ export default function EarthScene() {
               ApiVuelos es un dashboard interactivo que monitoriza vuelos en tiempo real y calcula el consumo de combustible y las emisiones de CO₂ de los aviones sobre cada continente.
             </p>
           </div>
-
+          {/* Feature Cards */}
           <div className="grid md:grid-cols-3 gap-8">
             <FeatureCard
               title="Datos en tiempo real"

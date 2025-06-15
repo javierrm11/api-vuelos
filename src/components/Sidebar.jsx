@@ -1,6 +1,12 @@
 import { useState, useEffect } from "react";
 import  DarkModeToggle from "./DarkModeToogle.jsx"; // Asegúrate de que la ruta sea correcta
+
+// Componente Sidebar que muestra un menú de navegación lateral
+// Este componente utiliza useState y useEffect para manejar el estado del menú y la ruta actual
 export default function Sidebar({ isOpen, onClose }) {
+  // Estado para almacenar la ruta actual
+  // Este estado se actualiza al cargar el componente para reflejar la ruta actual del navegador
+  // Utilizamos useEffect para sincronizar el estado con la ruta actual
   const [currentPath, setCurrentPath] = useState("");
 
   useEffect(() => {
@@ -20,6 +26,8 @@ export default function Sidebar({ isOpen, onClose }) {
   ];
 
   return (
+    // Componente Sidebar que muestra un menú de navegación lateral
+    // Este componente utiliza clases de Tailwind CSS para el estilo y la animación
     <div
       className={`
         fixed top-15 left-0 h-full w-full sm:w-64 lg:w-64 bg-nav text-light z-40 transition-transform transform

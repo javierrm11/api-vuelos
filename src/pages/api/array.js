@@ -1,4 +1,6 @@
 const elecciones = {
+  // Regiones y países con sus coordenadas
+  // Cada región contiene un array de objetos con el nombre del país y sus coordenadas (latitud y longitud)
   Spain: [{ nombre: "España", lat: 40.4168, lon: -3.7038 }],
   Europa: [
     { nombre: "España", lat: 40.4168, lon: -3.7038 },
