@@ -35,6 +35,12 @@ select:hover{
 
 body{
   background-color: var(--color-background);
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+/* Cuando la página carga */
+body.loaded {
+  opacity: 1;
 }
 
 @keyframes spinSlow {
