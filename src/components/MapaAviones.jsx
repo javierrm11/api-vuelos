@@ -149,7 +149,7 @@ const MapaAviones = () => {
               <b style="margin-right: 6px;">País:</b> 
               <img src="./paises/${
                 avion.pais
-              }.png" alt="bandera" style="width: 18px; height: 12px; margin-left: 4px;"/>
+              }.png" alt="bandera" style="width: 18px; height: 18px; margin-left: 4px;"/>
             </div>
             <div><b>Hex:</b> ${hex}</div>
             <div><b>Vuelo:</b> ${flight || "N/A"}</div>

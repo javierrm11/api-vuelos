@@ -597,7 +597,7 @@ Datos obtenidos por ApiVuelos (http://localhost:4321/${region})`;
           {getCurrentAviones().map((avion, index) => (
             <div
               key={avion.hex}
-              className="flex-1 md:flex-[1_1_40%] 2xl:flex-[1_1_30%] items-center justify-between p-4 border-b relative hover:brightness-95 bg-light dark:bg-border border-secondary"
+              className="flex-[0_0_100%] md:flex-[1_1_40%] 2xl:flex-[1_1_30%] items-center justify-between p-4 border-b relative hover:brightness-95 bg-light dark:bg-border border-secondary"
             >
               <div className="flex items-center gap-2 mb-1">
                 <img
