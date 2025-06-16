@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-// Importa las librerías necesarias
 import {
   BarChart,
   Bar,
@@ -13,28 +12,32 @@ import {
 import Loading from "./Loading";
 
 function Planes({ region }) {
-  // Define el estado inicial y las funciones para manejar los datos de los aviones
+  // Estados principales
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
   const [avgFuel, setAvgFuel] = useState(null);
   const [avgCO2, setAvgCO2] = useState(null);
   const [totalFuel, setTotalFuel] = useState(null);
   const [totalCO2, setTotalCO2] = useState(null);
-  const [sortOption, setSortOption] = useState("");
   const [masRapido, setMasRapido] = useState(null);
   const [masLento, setMasLento] = useState(null);
-  const [filterConsumo, setFilterConsumo] = useState("todos");
   const [mensajeCopiado, setMensajeCopiado] = useState(null);
+  const [paisesDisponibles, setPaisesDisponibles] = useState([]);
+  
+  // Estados para el gráfico
+  const [sortOption, setSortOption] = useState("");
+  const [filterConsumo, setFilterConsumo] = useState("todos");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
+  const [filterPaisChart, setFilterPaisChart] = useState("todos");
+  
+  // Estados para el listado
   const [currentAvionesPage, setCurrentAvionesPage] = useState(1);
   const [avionesPerPage] = useState(30);
   const [avionesSortOption, setAvionesSortOption] = useState("");
-  const [filterPaisChart, setFilterPaisChart] = useState("todos");
   const [filterPaisList, setFilterPaisList] = useState("todos");
-  const [paisesDisponibles, setPaisesDisponibles] = useState([]);
 
-  // Constantes para los cálculos de consumo y emisiones
+  // Constantes para los cálculos
   const S = 122;
   const C_D = 0.03;
   const TSFC = 0.000016;
@@ -45,9 +48,8 @@ function Planes({ region }) {
   const T0 = 288.15;
   const expISA = 5.256;
 
-  // Función para obtener los datos de los aviones desde la API
+  // Obtener datos de la API
   const fetchData = () => {
-    // Realiza una solicitud a la API para obtener los datos de los aviones en la región especificada
     fetch(`/api/planes?region=${region}`)
       .then((response) => {
         if (!response.ok) {
@@ -56,14 +58,11 @@ function Planes({ region }) {
         return response.json();
       })
       .then((resultados) => {
-        // Aplanar los resultados y extraer la información de los aviones
         const allAvionesInfo = resultados.flatMap((r) => r.avionesInfo || []);
         const { avgFuelLph, avgCO2Kgh, totalFuelLph, totalCO2Kgh, detalles } =
           calcularConsumoYEmisiones(allAvionesInfo);
-        // Si no hay aviones, retornar valores por defecto
 
-        let masRapido = null,
-          masLento = null;
+        let masRapido = null, masLento = null;
         if (detalles.length > 0) {
           masRapido = detalles.reduce(
             (prev, curr) => (+curr.gs > +prev.gs ? curr : prev),
@@ -75,10 +74,8 @@ function Planes({ region }) {
           );
         }
 
-        // Extraer países únicos
         const paises = [...new Set(detalles.map(avion => avion.pais))].filter(Boolean);
         setPaisesDisponibles(paises);
-        // Actualizar el estado con los datos obtenidos
         setData(detalles);
         setError(null);
         setAvgFuel(avgFuelLph);
@@ -87,24 +84,18 @@ function Planes({ region }) {
         setTotalCO2(totalCO2Kgh);
         setMasRapido(masRapido);
         setMasLento(masLento);
-        console.log(
-          `Datos actualizados a las ${new Date().toLocaleTimeString()}`
-        );
       })
       .catch((error) => {
         setError(error.message);
       });
   };
-  // Utiliza useEffect para llamar a fetchData al montar el componente y cada 10 segundos
+
   useEffect(() => {
-    // Verifica si la región es válida
     fetchData();
     const intervalId = setInterval(fetchData, 10000);
     return () => clearInterval(intervalId);
   }, [region]);
-  // Función para calcular el consumo y las emisiones de los aviones
-  // Esta función toma un array de objetos con información de aviones y calcula el consumo de combustible y las emisiones de CO2
-  // Si no hay aviones válidos, retorna valores por defecto
+
   const calcularConsumoYEmisiones = (avionesInfo = []) => {
     const hFallback = 11000;
 
@@ -115,7 +106,6 @@ function Planes({ region }) {
         alt_baro: parseFloat(av.alt_baro),
       }))
       .filter((av) => !isNaN(av.gs) && av.gs > 0);
-    // Si no hay aviones válidos, retornar valores por defecto
 
     if (!valid.length) {
       return {
@@ -126,7 +116,6 @@ function Planes({ region }) {
         detalles: [],
       };
     }
-    // Calcular el consumo y las emisiones para cada avión válido
 
     const detalles = valid.map((av) => {
       const V = (av.gs * 1000) / 3600;
@@ -134,7 +123,6 @@ function Planes({ region }) {
       const rho = rho0 * Math.pow(1 - (L * h) / T0, expISA);
       const D = 0.5 * rho * V * V * S * C_D;
       const mDot = TSFC * D;
-      // Calcular el consumo de combustible y las emisiones de CO2
 
       return {
         ...av,
@@ -143,11 +131,9 @@ function Planes({ region }) {
       };
     });
 
-    // Calcular el promedio y total de consumo de combustible y emisiones de CO2
     const sumFuel = detalles.reduce((sum, v) => sum + parseFloat(v.fuelLph), 0);
     const sumCO2 = detalles.reduce((sum, v) => sum + parseFloat(v.co2Kgh), 0);
 
-    // Retornar un objeto con los promedios, totales y detalles de los aviones
     return {
       avgFuelLph: (sumFuel / detalles.length).toFixed(0),
       avgCO2Kgh: (sumCO2 / detalles.length).toFixed(0),
@@ -156,7 +142,7 @@ function Planes({ region }) {
       detalles,
     };
   };
-  // Función para copiar la información del vuelo al portapapeles
+
   const copiarInfoVuelo = (avion) => {
     const now = new Date();
     const horaActual = now.toLocaleString("es-ES", {
@@ -167,7 +153,7 @@ function Planes({ region }) {
       minute: "2-digit",
       second: "2-digit",
     });
-    // Formatear la información del vuelo
+
     const texto = `Información del vuelo - ${avion.hex}
 Hora actual - ${horaActual}
 
@@ -177,45 +163,21 @@ Consumo -> ${avion.fuelLph ?? "N/A"} L/h
 Emisiones de CO2 -> ${avion.co2Kgh ?? "N/A"} kg/h
 
 Datos obtenidos por ApiVuelos (http://localhost:4321/${region})`;
-    // Copiar al portapapeles
+
     navigator.clipboard
       .writeText(texto)
       .then(() => {
         setMensajeCopiado("¡Información copiada correctamente!");
       })
       .catch(() => {
-        setMensajeCopiado(
-          "Error al copiar la información... Inténtalo de nuevo."
-        );
+        setMensajeCopiado("Error al copiar la información... Inténtalo de nuevo.");
       });
-    // Mostrar mensaje de éxito y ocultarlo después de 3 segundos
+
     setTimeout(() => setMensajeCopiado(null), 3000);
   };
 
-  // Funciones para manejar los cambios en los filtros y ordenamientos
-  const handleSortChange = (e) => {
-    setSortOption(e.target.value);
-    setCurrentPage(1);
-  };
-  // Función para manejar el cambio de ordenamiento de la lista de aviones
-  const handleAvionesSortChange = (e) => {
-    setAvionesSortOption(e.target.value);
-    setCurrentAvionesPage(1);
-  };
-  // Función para manejar el cambio de filtro de país en el gráfico
-  const handlePaisChartChange = (e) => {
-    setFilterPaisChart(e.target.value);
-    setCurrentPage(1);
-  };
-  // Función para manejar el cambio de filtro de país en la lista de aviones
-  const handlePaisListChange = (e) => {
-    setFilterPaisList(e.target.value);
-    setCurrentAvionesPage(1);
-  };
-  // Función para ordenar los aviones según la opción seleccionada
   const ordenarAviones = (aviones) => {
     const sorted = [...aviones];
-    // Ordenar los aviones según la opción seleccionada
     switch (sortOption) {
       case "velocidadAsc":
         return sorted.sort((a, b) => a.gs - b.gs);
@@ -236,7 +198,6 @@ Datos obtenidos por ApiVuelos (http://localhost:4321/${region})`;
 
   const ordenarAvionesListado = (aviones) => {
     const sorted = [...aviones];
-    // Ordenar los aviones según la opción seleccionada
     switch (avionesSortOption) {
       case "hexAsc":
         return sorted.sort((a, b) => a.hex.localeCompare(b.hex));
@@ -263,50 +224,65 @@ Datos obtenidos por ApiVuelos (http://localhost:4321/${region})`;
     }
   };
 
-  const filtrarPorConsumo = (aviones) => {
-    if (filterConsumo === "todos") return ordenarAviones(aviones);
+  // Función para filtrar y ordenar los datos del gráfico
+  const getFilteredChartData = () => {
+    let filteredData = [...data];
+    
+    // Aplicar filtro de país solo para el gráfico
+    if (filterPaisChart !== "todos") {
+      filteredData = filteredData.filter(avion => avion.pais === filterPaisChart);
+    }
+    
+    // Aplicar filtro de consumo solo para el gráfico
     switch (filterConsumo) {
       case "mayorConsumo":
-        return ordenarAviones(aviones).sort((a, b) => b.fuelLph - a.fuelLph);
+        return [...filteredData].sort((a, b) => b.fuelLph - a.fuelLph);
       case "menorConsumo":
-        return ordenarAviones(aviones).sort((a, b) => a.fuelLph - b.fuelLph);
+        return [...filteredData].sort((a, b) => a.fuelLph - b.fuelLph);
       case "mayorEmision":
-        return ordenarAviones(aviones).sort((a, b) => b.co2Kgh - a.co2Kgh);
+        return [...filteredData].sort((a, b) => b.co2Kgh - a.co2Kgh);
       case "menorEmision":
-        return ordenarAviones(aviones).sort((a, b) => a.co2Kgh - b.co2Kgh);
+        return [...filteredData].sort((a, b) => a.co2Kgh - b.co2Kgh);
       default:
-        return ordenarAviones(aviones);
+        return ordenarAviones(filteredData);
     }
   };
 
-  const filtrarPorPaisChart = (aviones) => {
-    if (filterPaisChart === "todos") return aviones;
-    return aviones.filter(avion => avion.pais === filterPaisChart);
+  // Función para filtrar y ordenar los datos del listado
+  const getFilteredListData = () => {
+    let filteredData = [...data];
+    
+    // Aplicar filtro de país solo para el listado
+    if (filterPaisList !== "todos") {
+      filteredData = filteredData.filter(avion => avion.pais === filterPaisList);
+    }
+    
+    // Aplicar ordenamiento solo para el listado
+    return ordenarAvionesListado(filteredData);
   };
 
-  const filtrarPorPaisList = (aviones) => {
-    if (filterPaisList === "todos") return aviones;
-    return aviones.filter(avion => avion.pais === filterPaisList);
-  };
-
+  // Función para obtener los datos paginados del gráfico
   const getAvionesPagina = () => {
-    const avionesFiltrados = filtrarPorConsumo(filtrarPorPaisChart(data));
+    const filteredData = getFilteredChartData();
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    return avionesFiltrados.slice(indexOfFirstItem, indexOfLastItem);
+    return filteredData.slice(indexOfFirstItem, indexOfLastItem);
   };
-  // Función para paginar los resultados
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
-  // Función para obtener los aviones actuales según la página y el número de aviones por página
+
+  // Función para obtener los datos paginados del listado
   const getCurrentAviones = () => {
+    const filteredData = getFilteredListData();
     const startIndex = (currentAvionesPage - 1) * avionesPerPage;
     const endIndex = startIndex + avionesPerPage;
-    return filtrarPorPaisList(ordenarAvionesListado(data)).slice(startIndex, endIndex);
+    return filteredData.slice(startIndex, endIndex);
   };
-  // Calcular el número total de páginas para los aviones
-  const totalAvionesPages = Math.ceil(filtrarPorPaisList(data).length / avionesPerPage);
-  const paginateAviones = (pageNumber) => setCurrentAvionesPage(pageNumber);
-  // Renderizar el componente
+
+  // Calcular total de páginas para el gráfico
+  const totalPages = Math.ceil(getFilteredChartData().length / itemsPerPage);
+  
+  // Calcular total de páginas para el listado
+  const totalAvionesPages = Math.ceil(getFilteredListData().length / avionesPerPage);
+
   if (error) {
     return <div className="text-red-400 text-center mt-4">Error: {error}</div>;
   }
@@ -314,9 +290,7 @@ Datos obtenidos por ApiVuelos (http://localhost:4321/${region})`;
   if (!data.length) {
     return <Loading />;
   }
-  // Calcular el número total de páginas para los gráficos
-  const totalPages = Math.ceil(filtrarPorConsumo(filtrarPorPaisChart(data)).length / itemsPerPage);
-  // Renderizar el componente principal con los datos de los aviones
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-10 text-light bg-background relative">
       <p className="absolute right-4 top-4 text-border dark:text-light">
@@ -329,9 +303,7 @@ Datos obtenidos por ApiVuelos (http://localhost:4321/${region})`;
       <div className="flex flex-wrap gap-6 mb-6">
         <div className="flex-[0_0_100%] sm:flex-[1_1_30%] bg-accent p-4 rounded shadow-md text-light dark:text-text">
           <h2 className="text-xl font-semibold mb-2">Aviones en vuelo</h2>
-          <p className="text-3xl font-bold">
-            {data.length}
-          </p>
+          <p className="text-3xl font-bold">{data.length}</p>
         </div>
         <div className="flex-[0_0_100%] sm:flex-[1_1_30%] bg-primary p-4 rounded shadow-md text-light dark:text-text">
           <h2 className="text-xl font-semibold mb-2">Avión más rápido</h2>
@@ -339,8 +311,7 @@ Datos obtenidos por ApiVuelos (http://localhost:4321/${region})`;
             <strong>Hex:</strong> {masRapido?.hex ?? "N/A"}
           </p>
           <p>
-            <strong>Velocidad:</strong> {masRapido?.gs?.toFixed(0) ?? "N/A"}{" "}
-            km/h
+            <strong>Velocidad:</strong> {masRapido?.gs?.toFixed(0) ?? "N/A"} km/h
           </p>
         </div>
         <div className="flex-[0_0_100%] sm:flex-[1_1_30%] bg-primary p-4 rounded shadow-md text-light dark:text-text">
@@ -353,6 +324,7 @@ Datos obtenidos por ApiVuelos (http://localhost:4321/${region})`;
           </p>
         </div>
       </div>
+      
       <div className="grid sm:grid-cols-2 gap-6 mb-6">
         <div className="bg-light dark:bg-border text-border dark:text-light p-4 rounded">
           <h2 className="text-xl font-semibold mb-2">
@@ -386,7 +358,6 @@ Datos obtenidos por ApiVuelos (http://localhost:4321/${region})`;
               <label htmlFor="filtroConsumo" className="text-sm mr-2 text-text">
                 Filtro gráfico:
               </label>
-
               <select
                 id="filtroConsumo"
                 value={filterConsumo}
@@ -405,13 +376,16 @@ Datos obtenidos por ApiVuelos (http://localhost:4321/${region})`;
             </div>
             {paisesDisponibles.length > 1 && (
               <div>
-                <label htmlFor="filtroPaisChart" className="text-sm mr-2">
+                <label htmlFor="filtroPaisChart" className="text-sm mr-2 text-text">
                   País (Gráfico):
                 </label>
                 <select
                   id="filtroPaisChart"
                   value={filterPaisChart}
-                  onChange={handlePaisChartChange}
+                  onChange={(e) => {
+                    setFilterPaisChart(e.target.value);
+                    setCurrentPage(1);
+                  }}
                   className="bg-secondary text-xs text-text rounded px-2 py-1"
                 >
                   <option value="todos">Todos los países</option>
@@ -430,7 +404,6 @@ Datos obtenidos por ApiVuelos (http://localhost:4321/${region})`;
           Comparativa de Consumo de Combustible (L/h) y Emisiones de CO₂ (kg/h)
         </h2>
 
-        {/* Componente de gráfico de barras que muestra el consumo de combustible y las emisiones de CO₂ */}
         <ResponsiveContainer width="100%" height={300}>
           <BarChart
             data={getAvionesPagina()}
@@ -444,7 +417,8 @@ Datos obtenidos por ApiVuelos (http://localhost:4321/${region})`;
               interval={0}
               tick={{ fill: "#ccc", fontSize: 12 }}
             />
-            <YAxis tick={{ fill: "#ccc" }}
+            <YAxis 
+              tick={{ fill: "#ccc" }}
               domain={[0, 3000]}
               allowDecimals={false}
             />
@@ -459,10 +433,11 @@ Datos obtenidos por ApiVuelos (http://localhost:4321/${region})`;
           <button
             onClick={() => paginate(1)}
             disabled={currentPage === 1}
-            className={`px-1 py-1 rounded ${currentPage === 1
-              ? "bg-gray-300 dark:bg-background cursor-not-allowed"
-              : "b-hover cursor-pointer bg-secondary text-light"
-              }`}
+            className={`px-1 py-1 rounded ${
+              currentPage === 1
+                ? "bg-gray-300 dark:bg-background cursor-not-allowed"
+                : "b-hover cursor-pointer bg-secondary text-light"
+            }`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -480,10 +455,11 @@ Datos obtenidos por ApiVuelos (http://localhost:4321/${region})`;
           <button
             onClick={() => paginate(currentPage - 1)}
             disabled={currentPage === 1}
-            className={`px-1 py-1 rounded ${currentPage === 1
-              ? "bg-gray-300 dark:bg-background cursor-not-allowed"
-              : "b-hover cursor-pointer bg-primary text-light"
-              }`}
+            className={`px-1 py-1 rounded ${
+              currentPage === 1
+                ? "bg-gray-300 dark:bg-background cursor-not-allowed"
+                : "b-hover cursor-pointer bg-primary text-light"
+            }`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -504,10 +480,11 @@ Datos obtenidos por ApiVuelos (http://localhost:4321/${region})`;
           <button
             onClick={() => paginate(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className={`px-1 py-1 rounded ${currentPage === totalPages
-              ? "bg-gray-300 dark:bg-background cursor-not-allowed"
-              : "b-hover cursor-pointer bg-primary text-light"
-              }`}
+            className={`px-1 py-1 rounded ${
+              currentPage === totalPages
+                ? "bg-gray-300 dark:bg-background cursor-not-allowed"
+                : "b-hover cursor-pointer bg-primary text-light"
+            }`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -525,10 +502,11 @@ Datos obtenidos por ApiVuelos (http://localhost:4321/${region})`;
           <button
             onClick={() => paginate(totalPages)}
             disabled={currentPage === totalPages}
-            className={`px-1 py-1 rounded ${currentPage === totalPages
-              ? "bg-gray-300 dark:bg-background cursor-not-allowed"
-              : "b-hover cursor-pointer bg-secondary text-light"
-              }`}
+            className={`px-1 py-1 rounded ${
+              currentPage === totalPages
+                ? "bg-gray-300 dark:bg-background cursor-not-allowed"
+                : "b-hover cursor-pointer bg-secondary text-light"
+            }`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -555,7 +533,10 @@ Datos obtenidos por ApiVuelos (http://localhost:4321/${region})`;
             <select
               id="avionesSort"
               value={avionesSortOption}
-              onChange={handleAvionesSortChange}
+              onChange={(e) => {
+                setAvionesSortOption(e.target.value);
+                setCurrentAvionesPage(1);
+              }}
               className="bg-secondary text-xs rounded px-2 py-1 text-text"
             >
               <option value="">Predeterminado</option>
@@ -580,7 +561,10 @@ Datos obtenidos por ApiVuelos (http://localhost:4321/${region})`;
               <select
                 id="filtroPaisList"
                 value={filterPaisList}
-                onChange={handlePaisListChange}
+                onChange={(e) => {
+                  setFilterPaisList(e.target.value);
+                  setCurrentAvionesPage(1);
+                }}
                 className="bg-secondary text-xs rounded px-2 py-1 text-text"
               >
                 <option value="todos">Todos los países</option>
@@ -666,15 +650,15 @@ Datos obtenidos por ApiVuelos (http://localhost:4321/${region})`;
           ))}
         </div>
 
-        {/* Paginación para el listado de aviones */}
         <div className="flex justify-center items-center gap-2 p-4 bg-light dark:bg-border">
           <button
             onClick={() => paginateAviones(1)}
             disabled={currentAvionesPage === 1}
-            className={`px-1 py-1 rounded ${currentAvionesPage === 1
-              ? "bg-gray-300 dark:bg-background cursor-not-allowed"
-              : "b-hover cursor-pointer bg-secondary text-light"
-              }`}
+            className={`px-1 py-1 rounded ${
+              currentAvionesPage === 1
+                ? "bg-gray-300 dark:bg-background cursor-not-allowed"
+                : "b-hover cursor-pointer bg-secondary text-light"
+            }`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -692,10 +676,11 @@ Datos obtenidos por ApiVuelos (http://localhost:4321/${region})`;
           <button
             onClick={() => paginateAviones(currentAvionesPage - 1)}
             disabled={currentAvionesPage === 1}
-            className={`px-1 py-1 rounded ${currentAvionesPage === 1
-              ? "bg-gray-300 dark:bg-background cursor-not-allowed"
-              : "b-hover cursor-pointer bg-primary text-light"
-              }`}
+            className={`px-1 py-1 rounded ${
+              currentAvionesPage === 1
+                ? "bg-gray-300 dark:bg-background cursor-not-allowed"
+                : "b-hover cursor-pointer bg-primary text-light"
+            }`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -716,10 +701,11 @@ Datos obtenidos por ApiVuelos (http://localhost:4321/${region})`;
           <button
             onClick={() => paginateAviones(currentAvionesPage + 1)}
             disabled={currentAvionesPage === totalAvionesPages}
-            className={`px-1 py-1 rounded ${currentAvionesPage === totalAvionesPages
-              ? "bg-gray-300 dark:bg-background cursor-not-allowed"
-              : "b-hover cursor-pointer bg-primary text-light"
-              }`}
+            className={`px-1 py-1 rounded ${
+              currentAvionesPage === totalAvionesPages
+                ? "bg-gray-300 dark:bg-background cursor-not-allowed"
+                : "b-hover cursor-pointer bg-primary text-light"
+            }`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -737,10 +723,11 @@ Datos obtenidos por ApiVuelos (http://localhost:4321/${region})`;
           <button
             onClick={() => paginateAviones(totalAvionesPages)}
             disabled={currentAvionesPage === totalAvionesPages}
-            className={`px-1 py-1 rounded ${currentAvionesPage === totalAvionesPages
-              ? "bg-gray-300 dark:bg-background cursor-not-allowed"
-              : "b-hover cursor-pointer bg-secondary text-light"
-              }`}
+            className={`px-1 py-1 rounded ${
+              currentAvionesPage === totalAvionesPages
+                ? "bg-gray-300 dark:bg-background cursor-not-allowed"
+                : "b-hover cursor-pointer bg-secondary text-light"
+            }`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
